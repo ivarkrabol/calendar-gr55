@@ -1,5 +1,8 @@
 package Models;
 
-public class Group {
+public class Group extends Model{
+	
+	
+	
 
 }
