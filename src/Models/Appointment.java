@@ -1,5 +1,5 @@
 package Models;
 
-public class Appointment {
+public class Appointment extends Attendable{
 
 }
