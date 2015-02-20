@@ -5,17 +5,18 @@ import java.time.LocalTime;
 
 
 //Appointment class
+//TODO: all of the functionality!
 
 
 public class Appointment extends Attendable{
 	
+	private int ID;
 	private String title;
 	private String description;
 	private LocalDate date;
 	private LocalTime startTime;
 	private LocalTime endTime;
 	private Room room;
-	
 	
 	
 	public String getTitle() {
@@ -64,5 +65,13 @@ public class Appointment extends Attendable{
 	
 	public void setRoom(Room room) {
 		this.room = room;
+	}
+
+	public int getID() {
+		return ID;
+	}
+
+	public void setID(int iD) {
+		ID = iD;
 	}
 }
