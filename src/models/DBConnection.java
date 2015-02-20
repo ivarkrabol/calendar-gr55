@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Created by ivar on 20.02.2015.
  */
-public class Database {
+public class DBConnection {
 
     public static Map<String, String> query(String queryStr) {
         return  new HashMap<String, String>();
