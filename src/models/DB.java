@@ -13,13 +13,19 @@ import java.sql.SQLException;
  */
 public class DB {
 
+    public static class DatabaseException extends Exception {
+        public DatabaseException(String message) {
+            super(message);
+        }
+    }
+
     private static DB singleton;
 
     private String url;
     private String database;
     private String user;
     private String pswd;
-    private Class driver;
+    private Class driverClass;
     private Connection connection;
 
     private DB() throws ClassNotFoundException, IllegalAccessException, InstantiationException, SQLException, IOException {
@@ -27,7 +33,7 @@ public class DB {
         database = Config.getProperty("db_database");
         user = Config.getProperty("db_user");
         pswd = Config.getProperty("db_pswd");
-        driver = Class.forName(Config.getProperty("db_driver"));
+        driverClass = Class.forName(Config.getProperty("db_driver"));
 
         connection = getConnection();
     }
@@ -40,14 +46,19 @@ public class DB {
     private Connection getConnection() throws IOException, SQLException, IllegalAccessException, InstantiationException, ClassNotFoundException {
         int dbTimeout = Integer.parseInt(Config.getProperty("db_timeout"));
         if(connection == null || !connection.isValid(dbTimeout)) {
-            driver.newInstance();
+            driverClass.newInstance();
             connection = DriverManager.getConnection(url + database, user, pswd);
         }
         return connection;
     }
 
-    public static ResultSet query(String sql) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException, IOException {
-        Connection connection = getSingleton().getConnection();
+    public static ResultSet query(String sql) throws DatabaseException, SQLException {
+        Connection connection;
+        try {
+            connection = getSingleton().getConnection();
+        } catch(Exception e) {
+            throw new DatabaseException(e.toString());
+        }
         return  connection.createStatement().executeQuery(sql);
     }
 
