@@ -16,7 +16,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(Main.class.getResource("login.fxml"));
+			loader.setLocation(Main.class.getResource("/views/Login.fxml"));
 			root = (AnchorPane) loader.load();
 			Scene scene = new Scene(root);
 			primaryStage.setTitle("Calendar");
