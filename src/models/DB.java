@@ -1,6 +1,7 @@
 package models;
 
 import controllers.Config;
+import exceptions.DBException;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -13,12 +14,6 @@ import java.sql.SQLException;
  */
 public class DB {
 
-    public static class DatabaseException extends Exception {
-        public DatabaseException(String message) {
-            super(message);
-        }
-    }
-
     private static DB singleton;
 
     private String url;
@@ -28,40 +23,45 @@ public class DB {
     private Class driverClass;
     private Connection connection;
 
-    private DB() throws ClassNotFoundException, IllegalAccessException, InstantiationException, SQLException, IOException {
+    private DB() throws IOException, DBException {
         url = Config.getProperty("db_url");
         database = Config.getProperty("db_database");
         user = Config.getProperty("db_user");
         pswd = Config.getProperty("db_pswd");
-        driverClass = Class.forName(Config.getProperty("db_driver"));
+        try {
+            driverClass = Class.forName(Config.getProperty("db_driver"));
+        } catch(ClassNotFoundException e) {
+            throw new DBException(e);
+        }
 
         connection = getConnection();
     }
 
-    private static DB getSingleton() throws ClassNotFoundException, SQLException, InstantiationException, IOException, IllegalAccessException {
+    private static DB getSingleton() throws IOException, DBException {
         if(singleton == null) singleton = new DB();
         return singleton;
     }
 
-    private Connection getConnection() throws IOException, SQLException, IllegalAccessException, InstantiationException, ClassNotFoundException {
+    private Connection getConnection() throws IOException, DBException {
         int dbTimeout = Integer.parseInt(Config.getProperty("db_timeout"));
-        if(connection == null || !connection.isValid(dbTimeout)) {
-            driverClass.newInstance();
-            connection = DriverManager.getConnection(url + database, user, pswd);
+        try {
+            if(connection == null || !connection.isValid(dbTimeout)) {
+                driverClass.newInstance();
+                connection = DriverManager.getConnection(url + database, user, pswd);
+            }
+        } catch(Exception e) {
+            throw new DBException(e);
         }
         return connection;
     }
 
-    public static ResultSet query(String sql) throws DatabaseException, SQLException {
-        Connection connection;
+    public static ResultSet query(String sql) throws DBException, IOException {
+        ResultSet result;
         try {
-            connection = getSingleton().getConnection();
-        } catch(Exception e) {
-            throw new DatabaseException(e.toString());
+            result = getSingleton().getConnection().createStatement().executeQuery(sql);
+        } catch(SQLException e) {
+            throw new DBException(e);
         }
-        return  connection.createStatement().executeQuery(sql);
+        return result;
     }
-
-
-
 }
