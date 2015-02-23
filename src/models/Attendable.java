@@ -9,7 +9,7 @@ public abstract class Attendable extends Model {
     private List<User> attending;
 
     public void attend(User user) {
-        pending.remove(user);
-        attending.remove(user);
+        if(pending.contains(user)) pending.remove(user);
+        if(!attending.contains(user)) attending.add(user);
     }
 }

@@ -1,18 +1,18 @@
 package controllers;
 
 import exceptions.DBException;
-import models.DB;
+import models.Room;
 
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DBTest {
 
-    public static void main(String[] args) throws DBException, SQLException, IOException {
-        ResultSet res = DB.query("SELECT * FROM TEST");
-        while(res.next()) {
-            System.out.println(res.getInt("id"));
-        }
+    public static void main(String[] args) throws IOException, SQLException, DBException {
+        System.out.println(Room.getByID(3));
+        System.out.println(Room.getByID(3));
+        System.out.println(Room.getByID(4));
+        System.out.println(Room.getByID(4));
+        System.out.println(Room.getByID(5));
     }
 }
