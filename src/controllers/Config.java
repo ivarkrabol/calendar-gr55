@@ -16,7 +16,7 @@ public class Config {
 
     private Config() throws IOException {
         prop = new Properties();
-        String propFilePath = "../config.properties";
+        String propFilePath = "config.properties";
 
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propFilePath);
 
