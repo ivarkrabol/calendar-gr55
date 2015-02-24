@@ -1,6 +1,8 @@
 package models;
 
 import exceptions.DBException;
+import util.DB;
+import util.ModelCache;
 
 import java.io.IOException;
 import java.sql.ResultSet;

@@ -1,7 +1,8 @@
-package models;
+package util;
+
+import models.Model;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 /**
  * Created by ivar on 23.02.2015.

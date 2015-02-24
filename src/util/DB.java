@@ -1,6 +1,5 @@
-package models;
+package util;
 
-import controllers.Config;
 import exceptions.DBException;
 
 import java.io.IOException;
