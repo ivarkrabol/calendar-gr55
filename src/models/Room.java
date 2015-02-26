@@ -1,5 +1,7 @@
 package models;
 
+import exceptions.DBConnectionException;
+import exceptions.DBDriverException;
 import exceptions.DBException;
 import util.DB;
 import util.ModelCache;
@@ -37,16 +39,16 @@ public class Room extends Model{
 		return reserved;
 	}
 
-    public static Room getByID(int id) throws DBException, IOException, SQLException {
+    public static Room getByID(int id, DB db, ModelCache modelCache) throws SQLException, DBConnectionException {
         Room room;
-        if(ModelCache.contains(Room.class, id)) room = ModelCache.get(Room.class, id);
+        if(modelCache.contains(Room.class, id)) room = modelCache.get(Room.class, id);
         else room = new Room();
         ResultSet results;
-        results = DB.query("SELECT `name`, `description` FROM `TEST` WHERE `id` = " + id);
+        results = db.query("SELECT `name`, `description` FROM `TEST` WHERE `id` = " + id);
         if(results.next()) {
             room.setName(results.getString("name"));
             room.setDescription(results.getString("description"));
-            ModelCache.put(id, room);
+            modelCache.put(id, room);
             return room;
         }
         throw new NoSuchElementException("SQL result set was empty.");

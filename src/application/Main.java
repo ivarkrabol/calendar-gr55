@@ -10,12 +10,20 @@ import javafx.fxml.Initializable;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import util.Config;
+import util.DB;
+import util.ModelCache;
+
+import java.io.IOException;
 
 
 public class Main extends Application {
 
-	private Stage stage;
-	private User user;
+    private Stage stage;
+    private Config config;
+    private DB db;
+    private ModelCache modelCache;
+    private User user;
 
 	
     @Override
@@ -23,14 +31,35 @@ public class Main extends Application {
         try {
             this.stage = primaryStage;
             this.stage.setTitle("Calendar");
+            loadConfig();
+            setupDB();
+            modelCache = new ModelCache();
             login();
             primaryStage.show();
         } catch (Exception ex) {
         	System.out.println("Exception: " + ex);
         }
     }
-    
-    
+
+    private void loadConfig() {
+        config = new Config();
+        try {
+            config.load("config.properties");
+        } catch (IOException e) {
+            System.out.println("Exception " + e);
+        }
+    }
+
+    private void setupDB() {
+        db = new DB();
+        try {
+            db.configure(config);
+            db.connect();
+        }catch(Exception e){
+            System.out.println("Exception " + e);
+        }
+    }
+
     private void login(){
         try {
             LoginController login = (LoginController) replaceSceneContent("/views/Login.fxml");
@@ -50,7 +79,19 @@ public class Main extends Application {
         return (Initializable) loader.getController();
     }
 
-	public User getUser() {
+    public Config getConfig() {
+        return config;
+    }
+
+    public DB getDb() {
+        return db;
+    }
+
+    public ModelCache getModelCache() {
+        return modelCache;
+    }
+
+    public User getUser() {
 		return user;
 	}
 

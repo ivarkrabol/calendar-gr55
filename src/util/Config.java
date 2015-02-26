@@ -1,8 +1,11 @@
 package util;
 
+import exceptions.MissingPropertyException;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Properties;
 
 /**
@@ -10,16 +13,11 @@ import java.util.Properties;
  */
 public class Config {
 
-    private static Config singleton;
-
     private Properties prop;
 
-    private Config() throws IOException {
+    public void load(String propFilePath) throws IOException {
         prop = new Properties();
-        String propFilePath = "config.properties";
-
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propFilePath);
-
         if (inputStream != null) {
             prop.load(inputStream);
         } else {
@@ -27,13 +25,25 @@ public class Config {
         }
     }
 
-    private static Config getSingleton() throws IOException {
-        if(singleton == null) singleton = new Config();
-        return singleton;
+    public String getProperty(String propertyName) throws MissingPropertyException {
+        String property = prop.getProperty(propertyName);
+        if(property == null) throw new MissingPropertyException("Missing property '" + propertyName + "' in config file");
+        return property;
     }
 
-    public static String getProperty(String propertyName) throws IOException {
-        return getSingleton().prop.getProperty(propertyName);
+    public HashMap<String, String> getProperties(String[] propertyNames) throws MissingPropertyException {
+        HashMap<String, String> properties = new HashMap<String, String>();
+        StringBuilder msg = new StringBuilder();
+        for(String propertyName : propertyNames) {
+            try {
+                properties.put(propertyName, getProperty(propertyName));
+            } catch (MissingPropertyException e) {
+                if (msg.length() != 0) msg.append(", ");
+                msg.append(e.getMessage());
+            }
+        }
+        if (msg.length() != 0) throw new MissingPropertyException(msg.toString());
+        return properties;
     }
 
 }
