@@ -2,14 +2,13 @@
 
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import java.lang.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.layout.BorderPane?>
+
 
 
 <AnchorPane layoutX="0.5" prefHeight="524.0" prefWidth="680.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CalendarController">
-   <children>
-      <BorderPane layoutX="0.5" prefHeight="524.0" prefWidth="680.0">
+    <children>
+    <BorderPane layoutX="0.5" prefHeight="524.0" prefWidth="680.0">
          <center>
             <GridPane minHeight="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER">
               <columnConstraints>
@@ -62,7 +61,7 @@
                               <Insets />
                            </GridPane.margin>
                         </Button>
-                        <Button fx:id="newAppointmentBtn" mnemonicParsing="false" prefHeight="300.0" prefWidth="300.0" text="New appointment" GridPane.rowIndex="1" />
+                        <Button onAction="#handleNewAppoinment" onKeyPressed="#handleNewAppoinment" mnemonicParsing="false" prefHeight="300.0" prefWidth="300.0" text="New appointment" GridPane.rowIndex="1" />
                         <Button mnemonicParsing="false" prefHeight="300.0" prefWidth="300.0" text="New group" GridPane.rowIndex="2" />
                         <Button mnemonicParsing="false" prefHeight="300.0" prefWidth="300.0" text="Persons" GridPane.rowIndex="4" />
                         <Button mnemonicParsing="false" prefHeight="300.0" prefWidth="300.0" text="Groups" GridPane.rowIndex="3" />
