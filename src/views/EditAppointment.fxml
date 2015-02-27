@@ -73,8 +73,8 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <Button fx:id="cancelButton" alignment="TOP_CENTER" cancelButton="true" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleCancel" onKeyPressed="#handleOk" prefHeight="20.0" prefWidth="69.0" text="Cancel" GridPane.rowIndex="1" />
-                        <Button fx:id="okButton" alignment="TOP_CENTER" cancelButton="true" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleOk" onKeyPressed="#handleCancel" prefHeight="20.0" prefWidth="69.0" text="OK" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Button fx:id="cancelButton" alignment="TOP_CENTER" cancelButton="true" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleCancel" onKeyPressed="#handleCancel" prefHeight="20.0" prefWidth="69.0" text="Cancel" GridPane.rowIndex="1" />
+                        <Button fx:id="okButton" alignment="TOP_CENTER" cancelButton="true" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleOk" onKeyPressed="#handleOk" prefHeight="20.0" prefWidth="69.0" text="OK" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                     </children>
                 </GridPane>
 
