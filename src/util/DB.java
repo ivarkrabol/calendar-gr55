@@ -4,7 +4,7 @@ import exceptions.DBConnectionException;
 import exceptions.DBDriverException;
 import exceptions.DBException;
 import exceptions.MissingPropertyException;
-
+import com.mysql.jdbc.ConnectionImpl;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
