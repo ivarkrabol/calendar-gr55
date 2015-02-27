@@ -1,6 +1,5 @@
 package util;
 
-import com.mysql.jdbc.ConnectionImpl;
 import exceptions.DBConnectionException;
 import exceptions.DBDriverException;
 import exceptions.DBException;
