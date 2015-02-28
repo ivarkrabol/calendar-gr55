@@ -24,7 +24,7 @@
         </top>
 
          <center>
-            <GridPane minHeight="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER">
+            <GridPane prefHeight="780.0" prefWidth="800.0" BorderPane.alignment="CENTER">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="530.0" minWidth="10.0" percentWidth="80.0" prefWidth="525.0" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="335.0" minWidth="10.0" prefWidth="155.0" />
@@ -70,15 +70,15 @@
                         <RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button mnemonicParsing="false" prefHeight="300.0" prefWidth="300.0" text="Messages" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
-                           <GridPane.margin>
-                              <Insets />
-                           </GridPane.margin>
-                        </Button>
                         <Button mnemonicParsing="false" onAction="#handleNewAppoinment" onKeyPressed="#handleNewAppoinment" prefHeight="300.0" prefWidth="300.0" text="New appointment" GridPane.rowIndex="1" />
                         <Button mnemonicParsing="false" onAction="#handleNewGroup" prefHeight="300.0" prefWidth="300.0" text="New group" GridPane.rowIndex="2" />
                          <Button mnemonicParsing="false" onAction="#handleGroups" prefHeight="300.0" prefWidth="300.0" text="Groups" GridPane.rowIndex="3" />
                         <Button mnemonicParsing="false" onAction="#handlePersons" prefHeight="300.0" prefWidth="300.0" text="Persons" GridPane.rowIndex="4" />
+                        <Button mnemonicParsing="false" prefHeight="300.0" prefWidth="300.0" text="Messages">
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin>
+                        </Button>
                      </children>
                   </GridPane>
                   <Label fx:id="titleField" alignment="CENTER_LEFT" prefHeight="117.0" prefWidth="687.0">
