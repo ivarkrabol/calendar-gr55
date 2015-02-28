@@ -39,14 +39,14 @@ public class Main extends Application {
         } catch (Exception ex) {
             System.out.println("Exception: " + ex);
         }
-    }
+        }
 
     private void loadConfig() {
         config = new Config();
         try {
             config.load("config.properties");
         } catch (IOException e) {
-            System.out.println("Exception " + e);
+             System.out.println("Exception " + e);
         }
     }
 
@@ -60,7 +60,8 @@ public class Main extends Application {
         }
     }
 
-    private void login(){
+
+    public void login(){
         try {
             LoginController login = (LoginController) replaceSceneContent("/views/Login.fxml");
             login.setApp(this);
@@ -72,9 +73,9 @@ public class Main extends Application {
     public Initializable replaceSceneContent(String fxml) throws Exception {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Main.class.getResource(fxml));
-        AnchorPane page = (AnchorPane) loader.load();
+        AnchorPane page =  loader.load();
         Scene pageScene = new Scene(page);
-        this.stage.setScene(pageScene);;
+        this.stage.setScene(pageScene);
         stage.sizeToScene();
         return (Initializable) loader.getController();
     }

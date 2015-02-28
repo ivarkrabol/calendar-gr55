@@ -35,7 +35,7 @@ public class EditAppointmentController extends Controller{
 
 
 
-    @FXML public void handleOk() {
+    @FXML public void handleSave() {
         if (inputValid()){
             appointmentModel = new Appointment();
             appointmentModel.setDate(date);
@@ -51,7 +51,7 @@ public class EditAppointmentController extends Controller{
     }
 
 
-    @FXML public void handleCancel() {
+    @FXML public void handleDelete() {
         this.getStage().close();
     }
 

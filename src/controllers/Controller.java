@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import application.Main;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.stage.Stage;
 
@@ -31,6 +32,14 @@ public class Controller implements Initializable{
     public void setStage(Stage stage) {
         this.stage = stage;
     }
+
+    @FXML
+    public void handleLogout(){
+        this.getApplication().login();
+        this.getApplication().setUser(null);
+
+    }
+
 
 }
 

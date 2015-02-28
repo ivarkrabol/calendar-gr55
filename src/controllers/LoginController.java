@@ -26,7 +26,7 @@ public class LoginController extends Controller{
         }else{
             Dialogs.create()
                     .title("Invalid Fields")
-                    .masthead("Wrong username or passwors, please try again")
+                    .masthead("Wrong username or password, please try again")
                     .showError();
         }
     }
