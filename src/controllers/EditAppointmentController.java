@@ -42,9 +42,7 @@ public class EditAppointmentController extends Controller{
             appointmentModel.setDescription(descriptionField.getText());
             appointmentModel.setStartTime(this.startTime);
             appointmentModel.setEndTime(this.endTime);
-            int generatedID = appointmentModel.generateID();
-            appointmentModel.setID(generatedID);
-            appointmentModel.setDate(this.date);
+
             //TODO: add the appointment to the users calendar
             this.getStage().close();
         }
