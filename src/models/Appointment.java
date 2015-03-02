@@ -1,5 +1,10 @@
 package models;
 
+import util.DB;
+import util.ModelCache;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -10,7 +15,6 @@ import java.time.LocalTime;
 
 public class Appointment extends Attendable{
 
-	private int ID;
 	private String title;
 	private String description;
 	private LocalDate date;
@@ -67,11 +71,7 @@ public class Appointment extends Attendable{
 		this.room = room;
 	}
 
-	public int getID() {
-		return ID;
-	}
-
-	public void setID(int iD) {
-		ID = iD;
-	}
+    public static Appointment getById(int id, DB db, ModelCache mc) throws Exception {
+        throw new Exception("Not Yet implemented");
+    }
 }
