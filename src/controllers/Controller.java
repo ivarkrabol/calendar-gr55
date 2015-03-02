@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import application.Main;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class Controller implements Initializable{
@@ -38,6 +39,14 @@ public class Controller implements Initializable{
         this.getApplication().login();
         this.getApplication().setUser(null);
 
+    }
+
+    protected void setStyle(TextField t, boolean b){
+        if(b){
+            t.setStyle("-fx-background-color: #CCFFCC;");
+        }else{
+            t.setStyle("-fx-background-color: #FFB2B2;");
+        }
     }
 
 

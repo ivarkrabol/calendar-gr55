@@ -198,13 +198,7 @@ public class EditAppointmentController extends Controller{
         return null;
 
     }
-    private void setStyle(TextField t, boolean b){
-        if(b){
-            t.setStyle("-fx-background-color: #CCFFCC;");
-        }else{
-            t.setStyle("-fx-background-color: #FFB2B2;");
-        }
-    }
+
 
 
 }

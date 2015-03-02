@@ -1,10 +1,15 @@
 package controllers;
 
+import exceptions.DBConnectionException;
 import org.controlsfx.dialog.Dialogs;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import util.DB;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 
 public class LoginController extends Controller{
@@ -14,6 +19,7 @@ public class LoginController extends Controller{
     @FXML
     private PasswordField password;
 
+    private String correctPassword;
 
     @FXML public void handleLogin() {
         if(inputValid()){
@@ -33,14 +39,32 @@ public class LoginController extends Controller{
 
 
     private boolean validUsername(){
-        // TODO: have the database connection, then check if there is a username like this in the system.
-        // get the user, and set the user in the Main application.
-        return true;
+        try{
+            DB db = this.getApplication().getDb();
+            ResultSet results = db.query("SELECT password FROM USER WHERE EMail = " + userName.getText() + "");
+            System.out.println("Hallo");
+            if(results.next()){
+                System.out.println("Hallo");
+                this.correctPassword = results.getString("password");
+                setStyle(userName, true);
+                return true;
+            }
+        } catch (SQLException e){
+
+        } catch (DBConnectionException e){}
+
+        setStyle(userName, false);
+        return false;
     }
 
     private boolean inputValid() {
-//		add check for validPassword and user things here, just now for testing
-        return true;
+        if(validUsername()){
+            if(this.correctPassword.equalsIgnoreCase(password.getText())){
+                return true;
+            }
+        }
+        setStyle(password, false);
+        return false;
     }
 
 
