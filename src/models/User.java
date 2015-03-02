@@ -63,4 +63,11 @@ public class User extends Model{
         mc.put(id, user);
         return user;
     }
+    public String getName() {
+        return getFirstName() + " " +getLastName();
+    }
+
+    public void setName(String name) {
+        // First name or last name?
+    }
 }

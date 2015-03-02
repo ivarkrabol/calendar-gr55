@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+
+<?import javafx.scene.text.Font?>
+<AnchorPane prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.UserController">
+    <children>
+    <BorderPane layoutX="0.5" prefHeight="524.0" prefWidth="680.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <top>
+            <MenuBar BorderPane.alignment="CENTER">
+                <menus>
+                    <Menu mnemonicParsing="false" text="Menu">
+                        <items>
+                            <MenuItem mnemonicParsing="false" text="User Profile" />
+                        </items>
+                        <items>
+                            <MenuItem mnemonicParsing="false" onAction="#handleBack" text="Back" />
+                        </items>
+                        <items>
+                            <MenuItem mnemonicParsing="false" onAction="#handleLogout" text="Logut" />
+                        </items>
+                    </Menu>
+                </menus>
+            </MenuBar>
+        </top>
+         <center>
+            <Label fx:id="userProfile" contentDisplay="CENTER" prefHeight="500.0" prefWidth="800.0" BorderPane.alignment="CENTER" text = "USER PROFILE">
+                <font>
+                    <Font size="52.0" />
+                </font>
+             </Label>
+         </center>
+
+    </BorderPane>
+
+    </children>
+</AnchorPane>

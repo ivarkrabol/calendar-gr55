@@ -1,52 +1,74 @@
 package controllers;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 
+import java.net.URL;
+import java.util.ResourceBundle;
 
 
 public class CalendarController extends Controller{
-
     @FXML
-    private Button newAppointmentBtn;
-	protected AnchorPane root;
-    
+    private Label titleField;
 
-	
     @Override
-	public void initialize(URL location, ResourceBundle resources) {
-		 
-		newAppointmentBtn.setOnAction(new EventHandler<ActionEvent>() {
-
-			   @Override
-               public void handle(ActionEvent event) {
-            	   try {
-            		   //TODO: make dialog, instead of using a new stage, have to add an external lib
-	           	        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views/EditAppointment.fxml"));
-	           	        Parent root = (Parent) fxmlLoader.load();
-	           	        Stage stage = new Stage();
-	           	        stage.setTitle("Appointment");
-	           	        stage.setScene(new Scene(root));  
-	           	        stage.show();
-            	   } catch(Exception e) {
-            		   e.printStackTrace();
-            	   }
-                   
-               	
-            }
-        });
+    public void initialize(URL location, ResourceBundle resources) {
+        //String title = "   "+ this.getApplication().getUser().getName()+ " calendar";
+        String title = "   Calendar";
+        this.titleField.setText(title);
     }
 
+    @FXML public void handleNewAppoinment() {
+        newStage("/views/EditAppointment.fxml", "New Appointment", new EditAppointmentController());
+    }
+
+    @FXML public void handleNewGroup() {
+        newStage("/views/EditGroup.fxml", "New Group", new EditGroupController());
+    }
+
+    @FXML public void handlePersons() {
+        newStage("/views/SearchUser.fxml", "Persons", new UserController());
+    }
+
+    @FXML public void handleGroups(){
+        newStage("/views/ViewUserGroups.fxml", "Groups", new Controller());
+    }
+
+
+    private void newStage(String location, String title, Controller Controller){
+        Stage currentStage = new Stage();
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(location));
+            AnchorPane root = fxmlLoader.load();
+            currentStage.setTitle(title);
+            currentStage.setScene(new Scene(root));
+            Controller controller = fxmlLoader.getController();
+            controller.setStage(currentStage);
+            currentStage.show();
+
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML public void handleViewUser(){
+        try {
+            UserController userController = (UserController) getApplication().replaceSceneContent("/views/ViewUser.fxml");
+            userController.setApp(getApplication());
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
 }
+
 
