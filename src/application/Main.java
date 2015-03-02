@@ -3,6 +3,9 @@ package application;
 
 
 import controllers.LoginController;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import models.Appointment;
 import models.User;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +18,7 @@ import util.DB;
 import util.ModelCache;
 
 import java.io.IOException;
+import java.util.Observable;
 
 
 public class Main extends Application {
@@ -25,6 +29,17 @@ public class Main extends Application {
     private ModelCache modelCache;
     private User user;
 
+    ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+
+    public Main(){
+        appointments.add(new Appointment("Møte"));
+        appointments.add(new Appointment("avtale"));
+
+    }
+
+    public ObservableList<Appointment> getAppointments() {
+        return appointments;
+    }
 
     @Override
     public void start(Stage primaryStage) {
@@ -99,6 +114,13 @@ public class Main extends Application {
     public void setUser(User user) {
         this.user = user;
     }
+
+
+
+
+
+
+
 
     public static void main(String[] args) {
         launch(args);
