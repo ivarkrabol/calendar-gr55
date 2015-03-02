@@ -41,7 +41,7 @@ public class LoginController extends Controller{
     private boolean validUsername(){
         try{
             DB db = this.getApplication().getDb();
-            ResultSet results = db.query("SELECT password FROM USER WHERE EMail = " + userName.getText() + "");
+            ResultSet results = db.query("SELECT password FROM USER WHERE EMail = '" + userName.getText() + "'");
             System.out.println("Hallo");
             if(results.next()){
                 System.out.println("Hallo");
