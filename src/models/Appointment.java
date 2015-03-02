@@ -2,82 +2,140 @@ package models;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import javafx.beans.property.ObjectPropertyBase;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
+public class Appointment {
 
-//Appointment class
-//TODO: all of the functionality!
+    private StringProperty titleProperty = new SimpleStringProperty();
+    private StringProperty descriptionProperty = new SimpleStringProperty();
+    private Property<Room> roomProperty =  new ObjectPropertyBase<Room>(null) {
 
+        @Override
+        public Object getBean() {
+            return this;
+        }
 
-public class Appointment extends Attendable{
+        @Override
+        public String getName() {
+            return "room";
+        }
+    };
 
-    private int ID;
-    private String title;
-    private String description;
-    private LocalDate date;
-    private LocalTime startTime;
-    private LocalTime endTime;
-    private Room room;
+    private Property<LocalDate> dateProperty = new ObjectPropertyBase<LocalDate>(null) {
 
+        @Override
+        public Object getBean() {
+            return this;
+        }
 
-    public String getTitle() {
-        return title;
+        @Override
+        public String getName() {
+            return "date";
+        }
+    };
+
+    private Property<LocalTime> startTimeProperty = new ObjectPropertyBase<LocalTime>(null) {
+
+        @Override
+        public Object getBean() {
+            return this;
+        }
+
+        @Override
+        public String getName() {
+            return "start time";
+        }
+    };
+    private Property<LocalTime> endTimeProperty = new ObjectPropertyBase<LocalTime>(null) {
+
+        @Override
+        public Object getBean() {
+            return this;
+        }
+
+        @Override
+        public String getName() {
+            return "end time";
+        }
+    };
+
+    public String getTitleProperty() {
+        return titleProperty.get();
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setTitleProperty(String titleProperty) {
+        this.titleProperty.set(titleProperty);
+    }
+
+    public StringProperty titlePropertyProperty() {
+        return titleProperty;
     }
 
     public String getDescription() {
-        return description;
+        return descriptionProperty.getValue();
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescription(String formal) {
+        descriptionProperty.setValue(formal);
+    }
+
+    public StringProperty descriptionProperty() {
+        return descriptionProperty;
+    }
+
+
+    public Room getRoom() {
+        return roomProperty.getValue();
+    }
+
+    public void setRom(Room room) {
+        roomProperty.setValue(room);
+    }
+
+    public Property<Room> romProperty() {
+        return roomProperty;
     }
 
     public LocalDate getDate() {
-        return date;
+        return dateProperty.getValue();
     }
 
     public void setDate(LocalDate date) {
-        this.date = date;
+        dateProperty.setValue(date);
+    }
+
+    public Property<LocalDate> DateProperty() {
+        return dateProperty;
     }
 
     public LocalTime getStartTime() {
-        return startTime;
+        return startTimeProperty.getValue();
     }
 
     public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
+        startTimeProperty.setValue(startTime);
+    }
+
+    public Property<LocalTime> startTimeProperty() {
+        return startTimeProperty;
     }
 
     public LocalTime getEndTime() {
-        return endTime;
+        return endTimeProperty.getValue();
     }
 
     public void setEndTime(LocalTime endTime) {
-        this.endTime = endTime;
+        endTimeProperty.setValue(endTime);
     }
 
-    public Room getRoom() {
-        return room;
+    public Property<LocalTime> getEndTimeProperty() {
+        return endTimeProperty;
     }
 
-    public void setRoom(Room room) {
-        this.room = room;
-    }
 
-    public int getID() {
-        return ID;
-    }
 
-    public void setID(int iD) {
-        ID = iD;
-    }
-
-    public int generateID() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
 }
 
