@@ -9,7 +9,7 @@ import java.time.LocalTime;
 
 
 public class Appointment extends Attendable{
-	
+
 	private int ID;
 	private String title;
 	private String description;
@@ -62,7 +62,7 @@ public class Appointment extends Attendable{
 	public Room getRoom() {
 		return room;
 	}
-	
+
 	public void setRoom(Room room) {
 		this.room = room;
 	}
