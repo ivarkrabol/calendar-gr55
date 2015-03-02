@@ -23,6 +23,7 @@ public class LoginController extends Controller{
 
     @FXML public void handleLogin() {
         if(inputValid()){
+
             try {
                 CalendarController calender = (CalendarController) getApplication().replaceSceneContent("/views/ViewCalendar.fxml");
                 calender.setApp(getApplication());
@@ -42,16 +43,17 @@ public class LoginController extends Controller{
         try{
             DB db = this.getApplication().getDb();
             ResultSet results = db.query("SELECT password FROM USER WHERE EMail = '" + userName.getText() + "'");
-            System.out.println("Hallo");
             if(results.next()){
-                System.out.println("Hallo");
                 this.correctPassword = results.getString("password");
                 setStyle(userName, true);
                 return true;
             }
         } catch (SQLException e){
+            e.printStackTrace();
 
-        } catch (DBConnectionException e){}
+        } catch (DBConnectionException e){
+            e.printStackTrace();
+        }
 
         setStyle(userName, false);
         return false;
@@ -66,8 +68,6 @@ public class LoginController extends Controller{
         setStyle(password, false);
         return false;
     }
-
-
 
 }
 
