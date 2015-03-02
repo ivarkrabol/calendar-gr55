@@ -1,5 +1,6 @@
 package models;
 
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import javafx.beans.property.ObjectPropertyBase;
@@ -7,8 +8,12 @@ import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+
 public class Appointment {
 
+    public Appointment(String title){
+        setTitle(title);
+    }
     private StringProperty titleProperty = new SimpleStringProperty();
     private StringProperty descriptionProperty = new SimpleStringProperty();
     private Property<Room> roomProperty =  new ObjectPropertyBase<Room>(null) {
@@ -62,15 +67,15 @@ public class Appointment {
         }
     };
 
-    public String getTitleProperty() {
+    public String getTitle() {
         return titleProperty.get();
     }
 
-    public void setTitleProperty(String titleProperty) {
+    public void setTitle(String titleProperty) {
         this.titleProperty.set(titleProperty);
     }
 
-    public StringProperty titlePropertyProperty() {
+    public StringProperty TitleProperty() {
         return titleProperty;
     }
 
@@ -82,7 +87,7 @@ public class Appointment {
         descriptionProperty.setValue(formal);
     }
 
-    public StringProperty descriptionProperty() {
+    public StringProperty DescriptionProperty() {
         return descriptionProperty;
     }
 
@@ -91,11 +96,11 @@ public class Appointment {
         return roomProperty.getValue();
     }
 
-    public void setRom(Room room) {
+    public void setRoom(Room room) {
         roomProperty.setValue(room);
     }
 
-    public Property<Room> romProperty() {
+    public Property<Room> RoomProperty() {
         return roomProperty;
     }
 
@@ -119,7 +124,7 @@ public class Appointment {
         startTimeProperty.setValue(startTime);
     }
 
-    public Property<LocalTime> startTimeProperty() {
+    public Property<LocalTime> StartTimeProperty() {
         return startTimeProperty;
     }
 
@@ -131,9 +136,14 @@ public class Appointment {
         endTimeProperty.setValue(endTime);
     }
 
-    public Property<LocalTime> getEndTimeProperty() {
+    public Property<LocalTime> EndTimeProperty() {
         return endTimeProperty;
     }
+
+
+
+
+
 
 
 
