@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -22,13 +23,13 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <TextField fx:id="userName" GridPane.columnIndex="1" />
+                <TextField fx:id="userName" onAction="#hitEnter" GridPane.columnIndex="1" />
                 <Label prefHeight="34.0" prefWidth="220.0" text="Username">
                     <font>
                         <Font size="31.0" />
                     </font>
                 </Label>
-                <PasswordField fx:id="password" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <PasswordField fx:id="password" onAction="#hitEnter" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                 <Label prefHeight="34.0" prefWidth="233.0" text="Password" GridPane.rowIndex="1">
                     <font>
                         <Font size="31.0" />
@@ -43,4 +44,3 @@
         </GridPane>
     </children>
 </AnchorPane>
-

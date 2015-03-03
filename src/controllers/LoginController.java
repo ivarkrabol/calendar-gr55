@@ -68,6 +68,9 @@ public class LoginController extends Controller{
         setStyle(password, false);
         return false;
     }
+    @FXML public void hitEnter() {
+    	handleLogin();
+    }
 
 }
 

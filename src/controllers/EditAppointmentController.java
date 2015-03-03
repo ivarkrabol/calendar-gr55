@@ -36,12 +36,13 @@ public class EditAppointmentController extends Controller{
 
     @FXML public void handleSave() {
         if (inputValid()){
-
+        	
             appointmentModel = new Appointment(titleField.getText());
             appointmentModel.setDescription(descriptionField.getText());
             appointmentModel.setDate(date);
             appointmentModel.setStartTime(this.startTime);
             appointmentModel.setEndTime(this.endTime);
+            
 
             //TODO: add the appointment to the users calendar, and add room
             this.getStage().close();
