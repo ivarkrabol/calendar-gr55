@@ -64,4 +64,14 @@ public class Calendar extends Model {
     public ObservableList<Appointment> getAppointments() {
         return appointments;
     }
+
+    @Override
+    public void refresh(DB db) throws SQLException, DBConnectionException {
+
+    }
+
+    @Override
+    public void save(DB db) throws SQLException, DBConnectionException {
+
+    }
 }

@@ -1,5 +1,10 @@
 package models;
 
+import exceptions.DBConnectionException;
+import util.DB;
+
+import java.sql.SQLException;
+
 public class Group extends Model{
 
     private int id;
@@ -10,5 +15,15 @@ public class Group extends Model{
 
     public int getId() {
         return id;
+    }
+
+    @Override
+    public void refresh(DB db) throws SQLException, DBConnectionException {
+
+    }
+
+    @Override
+    public void save(DB db) throws SQLException, DBConnectionException {
+
     }
 }

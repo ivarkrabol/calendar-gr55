@@ -15,12 +15,16 @@ public class User extends Model{
     private String firstName;
     private String phoneNr;
 
-    public int getId() {
-        return id;
+    public User() {
+
     }
 
-    public void setId(int id) {
+    private User(int id) {
         this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getEmail() {
@@ -58,26 +62,36 @@ public class User extends Model{
     public static User getByID(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         User user;
         if(mc.contains(User.class, id)) user = mc.get(User.class, id);
-        else user = new User();
-        ResultSet results = db.query("" +
-                "SELECT EMail, LastName, FirstName, PhoneNr\n" +
-                "FROM USER\n" +
-                "WHERE UserId = " + id);
-        if(!results.next()) throw new SQLException("No User with that id in database");
-        user.email = results.getString("EMail");
-        user.lastName = results.getString("LastName");
-        user.firstName = results.getString("FirstName");
-        user.phoneNr = results.getString("PhoneNr");
-        if(results.next()) throw new SQLException("Result not unique");
+        else user = new User(id);
         mc.put(id, user);
+        user.refresh(db);
         return user;
     }
 
-    public String getName() {
-        return getFirstName() + " " +getLastName();
+    @Override
+    public void refresh(DB db) throws SQLException, DBConnectionException {
+        String sql = "" +
+                "SELECT EMail, LastName, FirstName, PhoneNr\n" +
+                "FROM USER\n" +
+                "WHERE UserID = " + id;
+
+        ResultSet results = db.query(sql);
+        if (!results.next()) throw new SQLException("No User with that id in database");
+        setEmail(results.getString("EMail"));
+        setLastName(results.getString("LastName"));
+        setFirstName(results.getString("FirstName"));
+        setPhoneNr(results.getString("PhoneNr"));
+        if(results.next()) throw new SQLException("Result not unique");
     }
 
-    public void setName(String name) {
-        // First name or last name?
+    @Override
+    public void save(DB db) throws SQLException, DBConnectionException {
+        String sql = "UPDATE USER " +
+                "EMail = '" + getEmail() + "', " +
+                "LastName = '" + getLastName() + "', " +
+                "FirstName = '" + getFirstName() + "', " +
+                "PhoneNr = '" + getPhoneNr() + "' " +
+                "WHERE UserID = " + getId();
+        db.query(sql);
     }
 }

@@ -37,4 +37,13 @@ public class Message extends Model{
         return message;
     }
 
+    @Override
+    public void refresh(DB db) throws SQLException, DBConnectionException {
+
+    }
+
+    @Override
+    public void save(DB db) throws SQLException, DBConnectionException {
+
+    }
 }
