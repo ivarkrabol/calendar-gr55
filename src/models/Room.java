@@ -3,24 +3,41 @@ package models;
 import exceptions.DBConnectionException;
 import exceptions.DBDriverException;
 import exceptions.DBException;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import util.DB;
 import util.ModelCache;
 
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 public class Room extends Model{
+	
+	private int ID;
+//	private String name;
+//	private String description;
+//	private List<LocalTime> reserved; //Unsure if this is the best way to represent the reserved times
 
+	public int getID() {
+		return ID;
+	}
+//	public String getName() {
+//		return name;
+//	}
+//	public void setName(String name) {
+//		this.name = name;
+//	}
+//	public String getDescription() {
+//		return description;
+//	}
+//	public void setDescription(String description) {
+//		this.description = description;
+//	}
+//	public List<LocalTime> getReserved() {
+//		return reserved;
+//	}
     private StringProperty nameProperty = new SimpleStringProperty();
     public String getName() {
         return nameProperty.get();
@@ -89,6 +106,5 @@ public class Room extends Model{
                 "Size = '" + getSize() + "'\n" +
                 "WHERE RoomName ='" + getName()+"'";
 
-        db.query(sql);
     }
 }
