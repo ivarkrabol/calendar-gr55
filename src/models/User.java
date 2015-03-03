@@ -64,12 +64,12 @@ public class User extends Model{
         if(mc.contains(User.class, ID)) user = mc.get(User.class, ID);
         else user = new User(ID);
         mc.put(ID, user);
-        user.refresh(db, mc);
+        user.refreshFromDB(db, mc);
         return user;
     }
 
     @Override
-    public void refresh(DB db, ModelCache mc) throws SQLException, DBConnectionException {
+    public void refreshFromDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
         String sql = "" +
                 "SELECT EMail, LastName, FirstName, PhoneNr\n" +
                 "FROM USER\n" +
@@ -85,7 +85,7 @@ public class User extends Model{
     }
 
     @Override
-    public void save(DB db) throws SQLException, DBConnectionException {
+    public void saveToDB(DB db) throws SQLException, DBConnectionException {
         String sql = "UPDATE USER " +
                 "EMail = '" + getEmail() + "', " +
                 "LastName = '" + getLastName() + "', " +

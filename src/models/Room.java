@@ -44,12 +44,12 @@ public class Room extends Model{
     }
 
     @Override
-    public void refresh(DB db, ModelCache mc) throws SQLException, DBConnectionException {
+    public void refreshFromDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
 
     }
 
     @Override
-    public void save(DB db) throws SQLException, DBConnectionException {
+    public void saveToDB(DB db) throws SQLException, DBConnectionException {
 
     }
 }

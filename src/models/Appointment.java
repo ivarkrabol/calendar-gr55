@@ -3,9 +3,7 @@ package models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 import exceptions.DBConnectionException;
 import javafx.beans.property.ObjectPropertyBase;
@@ -146,13 +144,13 @@ public class Appointment extends Model {
         Appointment appointment;
         if(mc.contains(Appointment.class, ID)) appointment = mc.get(Appointment.class, ID);
         else appointment = new Appointment();
-        appointment.refresh(db, mc);
+        appointment.refreshFromDB(db, mc);
         mc.put(ID, appointment);
         return appointment;
     }
 
     @Override
-    public void refresh(DB db, ModelCache mc) throws SQLException, DBConnectionException {
+    public void refreshFromDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
         String sql = "" +
                 "SELECT StartTime, EndTime, AdministratorID, Description, RoomID\n" +
                 "FROM APPOINTMENT\n" +
@@ -169,7 +167,7 @@ public class Appointment extends Model {
     }
 
     @Override
-    public void save(DB db) throws SQLException, DBConnectionException {
+    public void saveToDB(DB db) throws SQLException, DBConnectionException {
         String sql = "UPDATE APPOINTMENT\n" +
                 "StartTime = '" + getStartTime() + "',\n" +
                 "EndTime = '" + getEndTime() + "',\n" +

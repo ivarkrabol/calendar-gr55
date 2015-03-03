@@ -74,13 +74,13 @@ public class Message extends Model{
         Message message;
         if(mc.contains(Message.class, ID)) message = mc.get(Message.class, ID);
         else message = new Message();
-        message.refresh(db, mc);
+        message.refreshFromDB(db, mc);
         mc.put(ID, message);
         return message;
     }
 
     @Override
-    public void refresh(DB db, ModelCache mc) throws SQLException, DBConnectionException {
+    public void refreshFromDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
         String sql = "" +
                 "SELECT RecipientID, SenderID, SentTime, Description, IsInvitation, HasBeenRead\n" +
                 "FROM MESSAGE\n" +
@@ -99,7 +99,7 @@ public class Message extends Model{
     }
 
     @Override
-    public void save(DB db) throws SQLException, DBConnectionException {
+    public void saveToDB(DB db) throws SQLException, DBConnectionException {
         String sql = "UPDATE MESSAGE\n" +
                 "RecipientID = " + getRecipient().getID() + ",\n" +
                 "SenderID = " + getSender().getID() + ",\n" +
