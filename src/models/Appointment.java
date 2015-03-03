@@ -131,28 +131,28 @@ public class Appointment extends Model {
         return endTimeProperty;
     }
 
-    public static Appointment getByID(int id, DB db, ModelCache modelCache) throws SQLException, DBConnectionException {
+    public static Appointment getByID(int ID, DB db, ModelCache modelCache) throws SQLException, DBConnectionException {
         Appointment appointment;
-        if(modelCache.contains(Appointment.class, id)) appointment = modelCache.get(Appointment.class, id);
+        if(modelCache.contains(Appointment.class, ID)) appointment = modelCache.get(Appointment.class, ID);
         else appointment = new Appointment("");
         ResultSet results = db.query("" +
                 "SELECT StartTime, EndTime, AdministratorID, Description, RoomID\n" +
                 "FROM APPOINTMENT\n" +
-                "WHERE AppointmentID = " + id);
-        if(!results.next()) throw new SQLException("No Appointment with id '" + id + "' found");
+                "WHERE AppointmentID = " + ID);
+        if(!results.next()) throw new SQLException("No Appointment with ID '" + ID + "' found");
         appointment.setStartTime(results.getTimestamp("StartTime").toLocalDateTime());
         appointment.setEndTime(results.getTimestamp("EndTime").toLocalDateTime());
         appointment.setAdministrator(User.getByID(results.getInt("AdministratorID"), db, modelCache));
         appointment.setDescription(results.getString("Description"));
         appointment.setRoom(Room.getByID(results.getInt("RoomID"), db, modelCache));
         if(results.next()) throw new SQLException("Result not unique");
-        modelCache.put(id, appointment);
+        modelCache.put(ID, appointment);
         return appointment;
     }
 
     @Override
-    public void refresh(DB db) throws SQLException, DBConnectionException {
-        
+    public void refresh(DB db, ModelCache mc) throws SQLException, DBConnectionException {
+
     }
 
     @Override

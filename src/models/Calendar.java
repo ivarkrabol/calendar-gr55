@@ -16,14 +16,14 @@ public class Calendar extends Model {
     private Group group;
 
 	private ObservableList<Appointment> appointments = FXCollections.observableArrayList();
-	
+
 	public Calendar() {
     }
 
-    private void setAppointments(int id, DB db, ModelCache modelCache, String owner){
+    private void setAppointments(int ID, DB db, ModelCache modelCache, String owner){
         ResultSet results;
         try {
-            results = db.query("SELECT `AppointmentID` FROM `PARTICIPANTS` WHERE `"+owner+"` = " + id);
+            results = db.query("SELECT `AppointmentID` FROM `PARTICIPANTS` WHERE `"+owner+"` = " + ID);
             if (results.next()) {
                 //TODO: add methods for adding the appointments to observable list
             }
@@ -40,7 +40,7 @@ public class Calendar extends Model {
 
     public void setUser(User user, DB db, ModelCache modelCache){
         this.user = user;
-        setAppointments(user.getId(), db, modelCache, "UserID");
+        setAppointments(user.getID(), db, modelCache, "UserID");
     }
 
 
@@ -50,13 +50,13 @@ public class Calendar extends Model {
 
     public void setGroup(Group group, DB db, ModelCache modelCache) {
         this.group = group;
-        setAppointments(group.getId(), db, modelCache, "GroupID");
+        setAppointments(group.getID(), db, modelCache, "GroupID");
     }
 
     public void addAppointment(Appointment appointment){
 		this.appointments.add(appointment);
 	}
-	
+
 	public void removeAppointment(Appointment appointment) {
 		this.appointments.remove(appointment);
 	}
@@ -66,12 +66,12 @@ public class Calendar extends Model {
     }
 
     @Override
-    public void refresh(DB db) throws SQLException, DBConnectionException {
+    public void refresh(DB db, ModelCache mc) throws SQLException, DBConnectionException {
 
     }
 
     @Override
     public void save(DB db) throws SQLException, DBConnectionException {
-
+        throw new SQLException("Calendar is not a DB object and should not be saved");
     }
 }

@@ -39,12 +39,12 @@ public class Room extends Model{
 //		return reserved;
 //	}
 
-    public static Room getByID(int id, DB db, ModelCache modelCache) throws SQLException, DBConnectionException {
+    public static Room getByID(int ID, DB db, ModelCache modelCache) throws SQLException, DBConnectionException {
         throw new DBConnectionException("Not yet implemented");
     }
 
     @Override
-    public void refresh(DB db) throws SQLException, DBConnectionException {
+    public void refresh(DB db, ModelCache mc) throws SQLException, DBConnectionException {
 
     }
 

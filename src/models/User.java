@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 public class User extends Model{
 
-    private int id;
+    private int ID;
     private String email;
     private String lastName;
     private String firstName;
@@ -19,12 +19,12 @@ public class User extends Model{
 
     }
 
-    private User(int id) {
-        this.id = id;
+    private User(int ID) {
+        this.ID = ID;
     }
 
-    public int getId() {
-        return id;
+    public int getID() {
+        return ID;
     }
 
     public String getEmail() {
@@ -59,24 +59,24 @@ public class User extends Model{
         this.phoneNr = phoneNr;
     }
 
-    public static User getByID(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {
+    public static User getByID(int ID, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         User user;
-        if(mc.contains(User.class, id)) user = mc.get(User.class, id);
-        else user = new User(id);
-        mc.put(id, user);
-        user.refresh(db);
+        if(mc.contains(User.class, ID)) user = mc.get(User.class, ID);
+        else user = new User(ID);
+        mc.put(ID, user);
+        user.refresh(db, mc);
         return user;
     }
 
     @Override
-    public void refresh(DB db) throws SQLException, DBConnectionException {
+    public void refresh(DB db, ModelCache mc) throws SQLException, DBConnectionException {
         String sql = "" +
                 "SELECT EMail, LastName, FirstName, PhoneNr\n" +
                 "FROM USER\n" +
-                "WHERE UserID = " + id;
+                "WHERE UserID = " + ID;
 
         ResultSet results = db.query(sql);
-        if (!results.next()) throw new SQLException("No User with that id in database");
+        if (!results.next()) throw new SQLException("No User with that ID in database");
         setEmail(results.getString("EMail"));
         setLastName(results.getString("LastName"));
         setFirstName(results.getString("FirstName"));
@@ -91,7 +91,7 @@ public class User extends Model{
                 "LastName = '" + getLastName() + "', " +
                 "FirstName = '" + getFirstName() + "', " +
                 "PhoneNr = '" + getPhoneNr() + "' " +
-                "WHERE UserID = " + getId();
+                "WHERE UserID = " + getID();
         db.query(sql);
     }
 }
