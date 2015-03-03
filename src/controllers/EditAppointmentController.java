@@ -39,9 +39,12 @@ public class EditAppointmentController extends Controller{
 
             appointmentModel = new Appointment(titleField.getText());
             appointmentModel.setDescription(descriptionField.getText());
-            appointmentModel.setDate(date);
-            appointmentModel.setStartTime(this.startTime);
-            appointmentModel.setEndTime(this.endTime);
+//            appointmentModel.setDate(date);
+//            appointmentModel.setStartTime(this.startTime);
+//            appointmentModel.setEndTime(this.endTime);
+            new Exception("Jeg(Ivar) og Sofia tenkte at det ga mest mening å " +
+                    "lagre appointment-tiden med en startTime: DateTime og en endTime: DateTime " +
+                    "(Slik at det også er mulig å ha en appointment som går i over 24 timer)").printStackTrace();
 
             //TODO: add the appointment to the users calendar, and add room
             this.getStage().close();
