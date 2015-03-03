@@ -9,10 +9,19 @@ import java.sql.SQLException;
 
 public class User extends Model{
 
+    private int id;
     private String email;
     private String lastName;
     private String firstName;
     private String phoneNr;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getEmail() {
         return email;
@@ -63,6 +72,7 @@ public class User extends Model{
         mc.put(id, user);
         return user;
     }
+
     public String getName() {
         return getFirstName() + " " +getLastName();
     }
