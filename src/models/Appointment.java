@@ -18,9 +18,7 @@ import util.ModelCache;
 
 public class Appointment extends Model {
 
-    public Appointment(String title){
-        setTitle(title);
-    }
+    private int ID;
     private User administrator;
     private StringProperty titleProperty = new SimpleStringProperty();
     private StringProperty descriptionProperty = new SimpleStringProperty();
@@ -49,6 +47,14 @@ public class Appointment extends Model {
             return "start time";
         }
     };
+
+
+    public Appointment(){ }
+    public Appointment(String title){
+        setTitle(title);
+    }
+
+
     private Property<LocalDateTime> endTimeProperty = new ObjectPropertyBase<LocalDateTime>(null) {
 
         @Override
@@ -61,6 +67,11 @@ public class Appointment extends Model {
             return "end time";
         }
     };
+
+
+    public int getID() {
+        return ID;
+    }
 
     public User getAdministrator() {
         return administrator;
@@ -131,33 +142,43 @@ public class Appointment extends Model {
         return endTimeProperty;
     }
 
-    public static Appointment getByID(int ID, DB db, ModelCache modelCache) throws SQLException, DBConnectionException {
+    public static Appointment getByID(int ID, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         Appointment appointment;
-        if(modelCache.contains(Appointment.class, ID)) appointment = modelCache.get(Appointment.class, ID);
-        else appointment = new Appointment("");
-        ResultSet results = db.query("" +
-                "SELECT StartTime, EndTime, AdministratorID, Description, RoomID\n" +
-                "FROM APPOINTMENT\n" +
-                "WHERE AppointmentID = " + ID);
-        if(!results.next()) throw new SQLException("No Appointment with ID '" + ID + "' found");
-        appointment.setStartTime(results.getTimestamp("StartTime").toLocalDateTime());
-        appointment.setEndTime(results.getTimestamp("EndTime").toLocalDateTime());
-        appointment.setAdministrator(User.getByID(results.getInt("AdministratorID"), db, modelCache));
-        appointment.setDescription(results.getString("Description"));
-        appointment.setRoom(Room.getByID(results.getInt("RoomID"), db, modelCache));
-        if(results.next()) throw new SQLException("Result not unique");
-        modelCache.put(ID, appointment);
+        if(mc.contains(Appointment.class, ID)) appointment = mc.get(Appointment.class, ID);
+        else appointment = new Appointment();
+        appointment.refresh(db, mc);
+        mc.put(ID, appointment);
         return appointment;
     }
 
     @Override
     public void refresh(DB db, ModelCache mc) throws SQLException, DBConnectionException {
+        String sql = "" +
+                "SELECT StartTime, EndTime, AdministratorID, Description, RoomID\n" +
+                "FROM APPOINTMENT\n" +
+                "WHERE AppointmentID = " + getID();
 
+        ResultSet results = db.query(sql);
+        if(!results.next()) throw new SQLException("No Appointment with ID '" + ID + "' found");
+        setStartTime(results.getTimestamp("StartTime").toLocalDateTime());
+        setEndTime(results.getTimestamp("EndTime").toLocalDateTime());
+        setAdministrator(User.getByID(results.getInt("AdministratorID"), db, mc));
+        setDescription(results.getString("Description"));
+        setRoom(Room.getByID(results.getInt("RoomID"), db, mc));
+        if(results.next()) throw new SQLException("Result not unique");
     }
 
     @Override
     public void save(DB db) throws SQLException, DBConnectionException {
+        String sql = "UPDATE APPOINTMENT\n" +
+                "StartTime = '" + getStartTime() + "',\n" +
+                "EndTime = '" + getEndTime() + "',\n" +
+                "AdministratorID = " + getAdministrator().getID() + ",\n" +
+                "Description = '" + getDescription() + "',\n" +
+                "RoomID = " + getRoom().getID() + "\n" +
+                "WHERE AppointmentID = " + getID();
 
+        db.query(sql);
     }
 }
 

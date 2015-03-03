@@ -101,11 +101,11 @@ public class Message extends Model{
     @Override
     public void save(DB db) throws SQLException, DBConnectionException {
         String sql = "UPDATE MESSAGE\n" +
-                "RecipientID = " + getRecipient().getID() + "\n" +
-                "SenderID = " + getSender().getID() + "\n" +
-                "SentTime = '" + getSentTime() + "'\n" +
-                "Description = '" + getDescription() + "'\n" +
-                "IsInvitation = '" + isInvitation() + "'\n" +
+                "RecipientID = " + getRecipient().getID() + ",\n" +
+                "SenderID = " + getSender().getID() + ",\n" +
+                "SentTime = '" + getSentTime() + "',\n" +
+                "Description = '" + getDescription() + "',\n" +
+                "IsInvitation = '" + isInvitation() + "',\n" +
                 "HasBeenRead = '" + isRead() + "'\n" +
                 "WHERE MessageID = " + getID();
 
