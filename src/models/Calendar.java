@@ -5,7 +5,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import util.DB;
 import util.ModelCache;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -14,18 +13,14 @@ public class Calendar extends Model {
 
     private User user;
     private Group group;
-
 	private ObservableList<Appointment> appointments = FXCollections.observableArrayList();
-
-	public Calendar() {
-    }
 
     private void setAppointments(int id, DB db, ModelCache modelCache, String owner){
         ResultSet results;
         try {
             results = db.query("SELECT `AppointmentID` FROM `PARTICIPANTS` WHERE `"+owner+"` = " + id);
-            if (results.next()) {
-                //TODO: add methods for adding the appointments to observable list
+            while(results.next()) {
+                appointments.add(Appointment.getById(results.getInt(owner), db, modelCache));
             }
         }catch (SQLException e){
             System.out.println("Exception:" + e);
@@ -74,4 +69,9 @@ public class Calendar extends Model {
     public void saveToDB(DB db) throws SQLException, DBConnectionException {
         throw new SQLException("Calendar is not a DB object and should not be saved");
     }
+
+    public static void main(String[] args){
+
+    }
+
 }
