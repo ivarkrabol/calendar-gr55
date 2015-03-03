@@ -1,19 +1,27 @@
 package models;
 
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+
+import exceptions.DBConnectionException;
 import javafx.beans.property.ObjectPropertyBase;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import util.DB;
+import util.ModelCache;
 
 
-public class Appointment {
+public class Appointment extends Model {
 
     public Appointment(String title){
         setTitle(title);
     }
+    private User administrator;
     private StringProperty titleProperty = new SimpleStringProperty();
     private StringProperty descriptionProperty = new SimpleStringProperty();
     private Property<Room> roomProperty =  new ObjectPropertyBase<Room>(null) {
@@ -29,20 +37,7 @@ public class Appointment {
         }
     };
 
-    private Property<LocalDate> dateProperty = new ObjectPropertyBase<LocalDate>(null) {
-
-        @Override
-        public Object getBean() {
-            return this;
-        }
-
-        @Override
-        public String getName() {
-            return "date";
-        }
-    };
-
-    private Property<LocalTime> startTimeProperty = new ObjectPropertyBase<LocalTime>(null) {
+    private Property<LocalDateTime> startTimeProperty = new ObjectPropertyBase<LocalDateTime>(null) {
 
         @Override
         public Object getBean() {
@@ -54,7 +49,7 @@ public class Appointment {
             return "start time";
         }
     };
-    private Property<LocalTime> endTimeProperty = new ObjectPropertyBase<LocalTime>(null) {
+    private Property<LocalDateTime> endTimeProperty = new ObjectPropertyBase<LocalDateTime>(null) {
 
         @Override
         public Object getBean() {
@@ -66,6 +61,14 @@ public class Appointment {
             return "end time";
         }
     };
+
+    public User getAdministrator() {
+        return administrator;
+    }
+
+    private void setAdministrator(User administrator) {
+        this.administrator = administrator;
+    }
 
     public String getTitle() {
         return titleProperty.get();
@@ -104,47 +107,48 @@ public class Appointment {
         return roomProperty;
     }
 
-    public LocalDate getDate() {
-        return dateProperty.getValue();
-    }
-
-    public void setDate(LocalDate date) {
-        dateProperty.setValue(date);
-    }
-
-    public Property<LocalDate> DateProperty() {
-        return dateProperty;
-    }
-
-    public LocalTime getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTimeProperty.getValue();
     }
 
-    public void setStartTime(LocalTime startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         startTimeProperty.setValue(startTime);
     }
 
-    public Property<LocalTime> StartTimeProperty() {
+    public Property<LocalDateTime> StartTimeProperty() {
         return startTimeProperty;
     }
 
-    public LocalTime getEndTime() {
+    public LocalDateTime getEndTime() {
         return endTimeProperty.getValue();
     }
 
-    public void setEndTime(LocalTime endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         endTimeProperty.setValue(endTime);
     }
 
-    public Property<LocalTime> EndTimeProperty() {
+    public Property<LocalDateTime> EndTimeProperty() {
         return endTimeProperty;
     }
 
-
-
-
-
-
+    public static Appointment getByID(int id, DB db, ModelCache modelCache) throws SQLException, DBConnectionException {
+        Appointment appointment;
+        if(modelCache.contains(Appointment.class, id)) appointment = modelCache.get(Appointment.class, id);
+        else appointment = new Appointment("");
+        ResultSet results = db.query("" +
+                "SELECT StartTime, EndTime, AdministratorID, Description, RoomID\n" +
+                "FROM APPOINTMENT\n" +
+                "WHERE AppointmentID = " + id);
+        if(!results.next()) throw new SQLException("No Appointment with id '" + id + "' found");
+        appointment.setStartTime(results.getTimestamp("StartTime").toLocalDateTime());
+        appointment.setEndTime(results.getTimestamp("EndTime").toLocalDateTime());
+        appointment.setAdministrator(User.getByID(results.getInt("AdministratorID"), db, modelCache));
+        appointment.setDescription(results.getString("Description"));
+        appointment.setRoom(Room.getByID(results.getInt("RoomID"), db, modelCache));
+        if(results.next()) throw new SQLException("Result not unique");
+        modelCache.put(id, appointment);
+        return appointment;
+    }
 
 
 }

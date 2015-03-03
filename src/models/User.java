@@ -46,7 +46,7 @@ public class User extends Model{
         this.phoneNr = phoneNr;
     }
 
-    public static User getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {
+    public static User getByID(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         User user;
         if(mc.contains(User.class, id)) user = mc.get(User.class, id);
         else user = new User();

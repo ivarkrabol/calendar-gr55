@@ -17,7 +17,7 @@ public class Message extends Model{
     private boolean isInvitation;
     private boolean hasBeenRead;
 
-    public static Message getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {
+    public static Message getByID(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         Message message;
         if(mc.contains(Message.class, id)) message = mc.get(Message.class, id);
         else message = new Message();
@@ -26,8 +26,8 @@ public class Message extends Model{
                 "FROM MESSAGE\n" +
                 "WHERE MessageID = " + id);
         if(!results.next()) throw new SQLException("No Message with that id");
-        message.recipient = User.getById(results.getInt("RecipientID"), db, mc);
-        message.sender = User.getById(results.getInt("SenderID"), db, mc);
+        message.recipient = User.getByID(results.getInt("RecipientID"), db, mc);
+        message.sender = User.getByID(results.getInt("SenderID"), db, mc);
         message.sentTime = results.getTimestamp("SentTime");
         message.description = results.getString("Description");
         message.isInvitation = results.getBoolean("IsInvitation");
