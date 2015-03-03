@@ -8,14 +8,14 @@ import java.sql.SQLException;
 
 public class Group extends Model{
 
-    private int ID;
+    private int id;
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public int getID() {
-        return ID;
+    public int getId() {
+        return id;
     }
 
     @Override

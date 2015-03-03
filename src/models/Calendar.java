@@ -20,10 +20,10 @@ public class Calendar extends Model {
 	public Calendar() {
     }
 
-    private void setAppointments(int ID, DB db, ModelCache modelCache, String owner){
+    private void setAppointments(int id, DB db, ModelCache modelCache, String owner){
         ResultSet results;
         try {
-            results = db.query("SELECT `AppointmentID` FROM `PARTICIPANTS` WHERE `"+owner+"` = " + ID);
+            results = db.query("SELECT `AppointmentID` FROM `PARTICIPANTS` WHERE `"+owner+"` = " + id);
             if (results.next()) {
                 //TODO: add methods for adding the appointments to observable list
             }
@@ -40,7 +40,7 @@ public class Calendar extends Model {
 
     public void setUser(User user, DB db, ModelCache modelCache){
         this.user = user;
-        setAppointments(user.getID(), db, modelCache, "UserID");
+        setAppointments(user.getId(), db, modelCache, "UserID");
     }
 
 
@@ -50,7 +50,7 @@ public class Calendar extends Model {
 
     public void setGroup(Group group, DB db, ModelCache modelCache) {
         this.group = group;
-        setAppointments(group.getID(), db, modelCache, "GroupID");
+        setAppointments(group.getId(), db, modelCache, "GroupID");
     }
 
     public void addAppointment(Appointment appointment){

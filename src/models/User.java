@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 public class User extends Model{
 
-    private int ID;
+    private int id;
     private String email;
     private String lastName;
     private String firstName;
@@ -19,12 +19,12 @@ public class User extends Model{
 
     }
 
-    private User(int ID) {
-        this.ID = ID;
+    private User(int id) {
+        this.id = id;
     }
 
-    public int getID() {
-        return ID;
+    public int getId() {
+        return id;
     }
 
     public String getEmail() {
@@ -59,11 +59,11 @@ public class User extends Model{
         this.phoneNr = phoneNr;
     }
 
-    public static User getByID(int ID, DB db, ModelCache mc) throws SQLException, DBConnectionException {
+    public static User getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         User user;
-        if(mc.contains(User.class, ID)) user = mc.get(User.class, ID);
-        else user = new User(ID);
-        mc.put(ID, user);
+        if(mc.contains(User.class, id)) user = mc.get(User.class, id);
+        else user = new User(id);
+        mc.put(id, user);
         user.refreshFromDB(db, mc);
         return user;
     }
@@ -73,7 +73,7 @@ public class User extends Model{
         String sql = "" +
                 "SELECT EMail, LastName, FirstName, PhoneNr\n" +
                 "FROM USER\n" +
-                "WHERE UserID = " + ID;
+                "WHERE UserID = " + id;
 
         ResultSet results = db.query(sql);
         if (!results.next()) throw new SQLException("No User with that ID in database");
@@ -91,7 +91,7 @@ public class User extends Model{
                 "LastName = '" + getLastName() + "', " +
                 "FirstName = '" + getFirstName() + "', " +
                 "PhoneNr = '" + getPhoneNr() + "' " +
-                "WHERE UserID = " + getID();
+                "WHERE UserID = " + getId();
         db.query(sql);
     }
 }

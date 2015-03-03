@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 
 public class Message extends Model{
 
-    private int ID;
+    private int id;
     private User recipient;
     private User sender;
     private Timestamp sentTime;
@@ -18,8 +18,8 @@ public class Message extends Model{
     private boolean invitation;
     private boolean read;
 
-    public int getID() {
-        return ID;
+    public int getId() {
+        return id;
     }
 
     public User getRecipient() {
@@ -70,12 +70,12 @@ public class Message extends Model{
         this.read = read;
     }
 
-    public static Message getByID(int ID, DB db, ModelCache mc) throws SQLException, DBConnectionException {
+    public static Message getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         Message message;
-        if(mc.contains(Message.class, ID)) message = mc.get(Message.class, ID);
+        if(mc.contains(Message.class, id)) message = mc.get(Message.class, id);
         else message = new Message();
         message.refreshFromDB(db, mc);
-        mc.put(ID, message);
+        mc.put(id, message);
         return message;
     }
 
@@ -84,12 +84,12 @@ public class Message extends Model{
         String sql = "" +
                 "SELECT RecipientID, SenderID, SentTime, Description, IsInvitation, HasBeenRead\n" +
                 "FROM MESSAGE\n" +
-                "WHERE MessageID = " + ID;
+                "WHERE MessageID = " + id;
 
         ResultSet results = db.query(sql);
         if(!results.next()) throw new SQLException("No Message with that ID");
-        setRecipient(User.getByID(results.getInt("RecipientID"), db, mc));
-        setSender(User.getByID(results.getInt("SenderID"), db, mc));
+        setRecipient(User.getById(results.getInt("RecipientID"), db, mc));
+        setSender(User.getById(results.getInt("SenderID"), db, mc));
         setSentTime(results.getTimestamp("SentTime"));
         setDescription(results.getString("Description"));
         setInvitation(results.getBoolean("IsInvitation"));
@@ -101,13 +101,13 @@ public class Message extends Model{
     @Override
     public void saveToDB(DB db) throws SQLException, DBConnectionException {
         String sql = "UPDATE MESSAGE\n" +
-                "RecipientID = " + getRecipient().getID() + ",\n" +
-                "SenderID = " + getSender().getID() + ",\n" +
+                "RecipientID = " + getRecipient().getId() + ",\n" +
+                "SenderID = " + getSender().getId() + ",\n" +
                 "SentTime = '" + getSentTime() + "',\n" +
                 "Description = '" + getDescription() + "',\n" +
                 "IsInvitation = '" + isInvitation() + "',\n" +
                 "HasBeenRead = '" + isRead() + "'\n" +
-                "WHERE MessageID = " + getID();
+                "WHERE MessageID = " + getId();
 
         db.query(sql);
     }

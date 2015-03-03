@@ -15,13 +15,13 @@ import java.util.NoSuchElementException;
 
 public class Room extends Model{
 	
-	private int ID;
+	private int id;
 //	private String name;
 //	private String description;
 //	private List<LocalTime> reserved; //Unsure if this is the best way to represent the reserved times
 
-	public int getID() {
-		return ID;
+	public int getId() {
+		return id;
 	}
 //	public String getName() {
 //		return name;
@@ -39,7 +39,7 @@ public class Room extends Model{
 //		return reserved;
 //	}
 
-    public static Room getByID(int ID, DB db, ModelCache modelCache) throws SQLException, DBConnectionException {
+    public static Room getById(int id, DB db, ModelCache modelCache) throws SQLException, DBConnectionException {
         throw new DBConnectionException("Not yet implemented");
     }
 

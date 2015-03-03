@@ -16,7 +16,7 @@ import util.ModelCache;
 
 public class Appointment extends Model {
 
-    private int ID;
+    private int id;
     private User administrator;
     private StringProperty titleProperty = new SimpleStringProperty();
     private StringProperty descriptionProperty = new SimpleStringProperty();
@@ -67,8 +67,8 @@ public class Appointment extends Model {
     };
 
 
-    public int getID() {
-        return ID;
+    public int getId() {
+        return id;
     }
 
     public User getAdministrator() {
@@ -140,12 +140,12 @@ public class Appointment extends Model {
         return endTimeProperty;
     }
 
-    public static Appointment getByID(int ID, DB db, ModelCache mc) throws SQLException, DBConnectionException {
+    public static Appointment getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         Appointment appointment;
-        if(mc.contains(Appointment.class, ID)) appointment = mc.get(Appointment.class, ID);
+        if(mc.contains(Appointment.class, id)) appointment = mc.get(Appointment.class, id);
         else appointment = new Appointment();
         appointment.refreshFromDB(db, mc);
-        mc.put(ID, appointment);
+        mc.put(id, appointment);
         return appointment;
     }
 
@@ -154,15 +154,15 @@ public class Appointment extends Model {
         String sql = "" +
                 "SELECT StartTime, EndTime, AdministratorID, Description, RoomID\n" +
                 "FROM APPOINTMENT\n" +
-                "WHERE AppointmentID = " + getID();
+                "WHERE AppointmentID = " + getId();
 
         ResultSet results = db.query(sql);
-        if(!results.next()) throw new SQLException("No Appointment with ID '" + ID + "' found");
+        if(!results.next()) throw new SQLException("No Appointment with ID '" + id + "' found");
         setStartTime(results.getTimestamp("StartTime").toLocalDateTime());
         setEndTime(results.getTimestamp("EndTime").toLocalDateTime());
-        setAdministrator(User.getByID(results.getInt("AdministratorID"), db, mc));
+        setAdministrator(User.getById(results.getInt("AdministratorID"), db, mc));
         setDescription(results.getString("Description"));
-        setRoom(Room.getByID(results.getInt("RoomID"), db, mc));
+        setRoom(Room.getById(results.getInt("RoomID"), db, mc));
         if(results.next()) throw new SQLException("Result not unique");
     }
 
@@ -171,10 +171,10 @@ public class Appointment extends Model {
         String sql = "UPDATE APPOINTMENT\n" +
                 "StartTime = '" + getStartTime() + "',\n" +
                 "EndTime = '" + getEndTime() + "',\n" +
-                "AdministratorID = " + getAdministrator().getID() + ",\n" +
+                "AdministratorID = " + getAdministrator().getId() + ",\n" +
                 "Description = '" + getDescription() + "',\n" +
-                "RoomID = " + getRoom().getID() + "\n" +
-                "WHERE AppointmentID = " + getID();
+                "RoomID = " + getRoom().getId() + "\n" +
+                "WHERE AppointmentID = " + getId();
 
         db.query(sql);
     }
