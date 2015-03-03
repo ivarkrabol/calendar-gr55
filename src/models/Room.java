@@ -16,40 +16,51 @@ import java.util.NoSuchElementException;
 public class Room extends Model{
 	
 	private int id;
-//	private String name;
-//	private String description;
-//	private List<LocalTime> reserved; //Unsure if this is the best way to represent the reserved times
+    private int size;
 
-	public int getId() {
+    public Room(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
 		return id;
 	}
-//	public String getName() {
-//		return name;
-//	}
-//	public void setName(String name) {
-//		this.name = name;
-//	}
-//	public String getDescription() {
-//		return description;
-//	}
-//	public void setDescription(String description) {
-//		this.description = description;
-//	}
-//	public List<LocalTime> getReserved() {
-//		return reserved;
-//	}
 
-    public static Room getById(int id, DB db, ModelCache modelCache) throws SQLException, DBConnectionException {
-        throw new DBConnectionException("Not yet implemented");
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public static Room getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {
+        Room room;
+        if(mc.contains(Room.class, id)) room = mc.get(Room.class, id);
+        else room = new Room(id);
+        mc.put(id, room);
+        room.refreshFromDB(db, mc);
+        return room;
     }
 
     @Override
     public void refreshFromDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
-
+        String sql = "" +
+                "SELECT Size\n" +
+                "FROM ROOM\n" +
+                "WHERE RoomID = " + getId();
+        ResultSet results = db.query(sql);
+        if (!results.next()) throw new SQLException("No Room with that ID in database");
+        setSize(results.getInt("Size"));
+        if(results.next()) throw new SQLException("Result not unique");
     }
 
     @Override
     public void saveToDB(DB db) throws SQLException, DBConnectionException {
+        String sql = "UPDATE ROOM\n" +
+                "Size = '" + getSize() + "'\n" +
+                "WHERE RoomID = " + getId();
 
+        db.query(sql);
     }
 }

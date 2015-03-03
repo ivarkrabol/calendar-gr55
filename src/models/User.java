@@ -86,11 +86,11 @@ public class User extends Model{
 
     @Override
     public void saveToDB(DB db) throws SQLException, DBConnectionException {
-        String sql = "UPDATE USER " +
-                "EMail = '" + getEmail() + "', " +
-                "LastName = '" + getLastName() + "', " +
-                "FirstName = '" + getFirstName() + "', " +
-                "PhoneNr = '" + getPhoneNr() + "' " +
+        String sql = "UPDATE USER\n" +
+                "EMail = '" + getEmail() + "',\n" +
+                "LastName = '" + getLastName() + "',\n" +
+                "FirstName = '" + getFirstName() + "',\n" +
+                "PhoneNr = '" + getPhoneNr() + "'\n" +
                 "WHERE UserID = " + getId();
         db.query(sql);
     }
