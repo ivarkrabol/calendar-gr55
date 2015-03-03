@@ -29,17 +29,10 @@ public class Main extends Application {
     private ModelCache modelCache;
     private User user;
 
-    ObservableList<Appointment> appointments = FXCollections.observableArrayList();
-
     public Main(){
-        appointments.add(new Appointment("Møte"));
-        appointments.add(new Appointment("avtale"));
-
     }
 
-    public ObservableList<Appointment> getAppointments() {
-        return appointments;
-    }
+
 
     @Override
     public void start(Stage primaryStage) {
@@ -114,12 +107,6 @@ public class Main extends Application {
     public void setUser(User user) {
         this.user = user;
     }
-
-
-
-
-
-
 
 
     public static void main(String[] args) {

@@ -87,10 +87,7 @@ public class Appointment {
         descriptionProperty.setValue(formal);
     }
 
-    public StringProperty DescriptionProperty() {
-        return descriptionProperty;
-    }
-
+    public StringProperty DescriptionProperty() {return descriptionProperty;}
 
     public Room getRoom() {
         return roomProperty.getValue();
@@ -139,13 +136,6 @@ public class Appointment {
     public Property<LocalTime> EndTimeProperty() {
         return endTimeProperty;
     }
-
-
-
-
-
-
-
 
 }
 
