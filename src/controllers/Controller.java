@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 public class Controller implements Initializable{
 
     private Main application;
-
+    private boolean admin;
     private Stage stage;
 
     public Main getApplication() {
@@ -32,6 +32,12 @@ public class Controller implements Initializable{
     }
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+    public boolean getAdmin() {
+        return admin;
+    }
+    public void setAdmin(Boolean admin) {
+        this.admin = admin;
     }
 
     @FXML

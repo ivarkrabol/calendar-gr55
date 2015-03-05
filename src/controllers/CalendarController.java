@@ -6,11 +6,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import models.Appointment;
+
 
 
 import java.net.URL;
@@ -36,7 +38,8 @@ public class CalendarController extends Controller{
 
     @FXML
     private TableView<Appointment> weekTable;
-
+    @FXML
+    private Menu adminButton;
     @FXML
     private Label titleField;
 
@@ -45,7 +48,7 @@ public class CalendarController extends Controller{
         // why does not this work? monCol.setCellValueFactory(cellData -> cellData.getValue().TitleProperty());
     }
 
-
+    
 
 
 
@@ -72,18 +75,24 @@ public class CalendarController extends Controller{
     private void newStage(String location, String title, Controller Controller){
         Stage currentStage = new Stage();
         try {
+        	
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(location));
             AnchorPane root = fxmlLoader.load();
             currentStage.setTitle(title);
             currentStage.setScene(new Scene(root));
+            
             Controller controller = fxmlLoader.getController();
             controller.setStage(currentStage);
+            
             currentStage.show();
+            
+            
 
         } catch(Exception e) {
             e.printStackTrace();
         }
     }
+    
 
     @FXML public void handleViewUser(){
         try {

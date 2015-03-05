@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
+<?import java.lang.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -27,6 +27,11 @@
                                 <MenuItem mnemonicParsing="false" text="About" />
                             </items>
                         </Menu>
+                  <Menu fx:id="adminButton" mnemonicParsing="false" text="Admin" visible="false">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Add user" />
+                    </items>
+                  </Menu>
                     </menus>
                 </MenuBar>
             </top>

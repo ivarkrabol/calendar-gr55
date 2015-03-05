@@ -20,7 +20,8 @@ public class LoginController extends Controller{
     private PasswordField password;
 
     private String correctPassword;
-
+    private String adminUser = "admin@mail.no";
+    
     @FXML public void handleLogin() {
         if(inputValid()){
 
@@ -45,6 +46,7 @@ public class LoginController extends Controller{
             ResultSet results = db.query("SELECT password FROM USER WHERE EMail = '" + userName.getText() + "'");
             if(results.next()){
                 this.correctPassword = results.getString("password");
+                
                 setStyle(userName, true);
                 return true;
             }
@@ -62,7 +64,14 @@ public class LoginController extends Controller{
     private boolean inputValid() {
         if(validUsername()){
             if(this.correctPassword.equalsIgnoreCase(password.getText())){
-                return true;
+                if(userName.getText().equals(adminUser)){
+                	setAdmin(true);
+                	System.out.println("admin");
+                }
+                else{
+                	System.out.println("bruker");
+                }
+            	return true;
             }
         }
         setStyle(password, false);
