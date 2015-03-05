@@ -54,7 +54,6 @@ public class Calendar extends Model {
 
     @Override
     public void refreshFromDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
-
     }
 
     @Override

@@ -9,7 +9,6 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
-//TODO: have to get a list of available rooms, and have to change style when focus changes on fields
 
 public class EditAppointmentController extends Controller{
 
@@ -46,8 +45,6 @@ public class EditAppointmentController extends Controller{
                     "lagre appointment-tiden med en startTime: DateTime og en endTime: DateTime " +
                     "(Slik at det også er mulig å ha en appointment som går i over 24 timer). " +
                     "Åpent for diskusjon!").printStackTrace();
-
-            //TODO: add the appointment to the users calendar, and add room
             this.getStage().close();
         }
     }
@@ -89,18 +86,10 @@ public class EditAppointmentController extends Controller{
     @FXML public void titleTextFieldFocusChange() {
         textFieldValid(titleField);
     }
-
-
     @FXML public void roomTextFieldFocusChange() {
         roomValid();
     }
-
-    @FXML public void dateDateFieldFocusChange() {
-        this.date=dateValid(dateField);
-
-    }
-
-
+    @FXML public void dateDateFieldFocusChange() {this.date=dateValid(dateField);}
     @FXML public void startTimeTextFieldFocusChange() {
         startTimeValid();
     }

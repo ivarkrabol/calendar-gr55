@@ -14,6 +14,7 @@ public class User extends Model{
     private String lastName;
     private String firstName;
     private String phoneNr;
+    private Calendar calendar;
 
     public User() {
 
@@ -58,6 +59,16 @@ public class User extends Model{
     public void setPhoneNr(String phoneNr) {
         this.phoneNr = phoneNr;
     }
+
+    public Calendar getCalendar() {
+        return calendar;
+    }
+
+    public final void setCalendar(DB db, ModelCache modelCache){
+        calendar = new Calendar();
+        calendar.setUser(this.getId(), db, modelCache);
+    }
+
 
     public static User getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         User user;

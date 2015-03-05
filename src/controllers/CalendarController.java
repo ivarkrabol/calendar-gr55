@@ -4,6 +4,7 @@ package controllers;
 import application.Main;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -14,6 +15,8 @@ import models.Appointment;
 
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 
@@ -41,14 +44,15 @@ public class CalendarController extends Controller{
     private Label titleField;
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        // why does not this work? monCol.setCellValueFactory(cellData -> cellData.getValue().TitleProperty());
+    public void setApp(Main app){
+        super.setApp(app);
+        weekTable.setItems(this.getApplication().getUser().getCalendar().getAppointments());
     }
 
-
-
-
-
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+       monCol.setCellValueFactory(cellData -> cellData.getValue().DescriptionProperty());
+    }
 
     @FXML public void handleNewAppoinment() {newStage("/views/EditAppointment.fxml", "New Appointment", new EditAppointmentController());}
 
@@ -63,11 +67,7 @@ public class CalendarController extends Controller{
     @FXML public void handleGroups(){
         newStage("/views/ViewUserGroups.fxml", "Groups", new Controller());
     }
-    /**@Override
-    public void setApp(Main app){
-        this.setApp(app);
-        weekTable.setItems(this.getApplication().getAppointments());
-    }*/
+
 
     private void newStage(String location, String title, Controller Controller){
         Stage currentStage = new Stage();

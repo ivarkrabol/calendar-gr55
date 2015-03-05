@@ -19,12 +19,8 @@ public class Group extends Model{
     }
 
     @Override
-    public void refreshFromDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
-
-    }
+    public void refreshFromDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {}
 
     @Override
-    public void saveToDB(DB db) throws SQLException, DBConnectionException {
-
-    }
+    public void saveToDB(DB db) throws SQLException, DBConnectionException {}
 }

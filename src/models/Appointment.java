@@ -90,9 +90,7 @@ public class Appointment extends Model {
         this.titleProperty.set(titleProperty);
     }
 
-    public StringProperty TitleProperty() {
-        return titleProperty;
-    }
+    public StringProperty TitleProperty() {return titleProperty;}
 
     public String getDescription() {
         return descriptionProperty.getValue();
