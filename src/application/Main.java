@@ -6,6 +6,7 @@ import controllers.LoginController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.Appointment;
+import models.Calendar;
 import models.User;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -29,10 +30,6 @@ public class Main extends Application {
     private ModelCache modelCache;
     private User user;
 
-    public Main(){
-    }
-
-
 
     @Override
     public void start(Stage primaryStage) {
@@ -47,7 +44,15 @@ public class Main extends Application {
         } catch (Exception ex) {
             System.out.println("Exception: " + ex);
         }
-        }
+    }
+
+    /**
+     * Load calendar, to check get appointments
+     * private void loadCalendear(){
+        Calendar calendar = new Calendar();
+        calendar.setUser(2, db, modelCache);
+        System.out.println(calendar.getAppointments());
+    }*/
 
     private void loadConfig() {
         config = new Config();

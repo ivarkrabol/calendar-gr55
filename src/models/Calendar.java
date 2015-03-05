@@ -11,16 +11,18 @@ import java.sql.SQLException;
 
 public class Calendar extends Model {
 
-    private User user;
-    private Group group;
 	private ObservableList<Appointment> appointments = FXCollections.observableArrayList();
 
-    private void setAppointments(int id, DB db, ModelCache modelCache, String owner){
+    public void setAppointments(int id, DB db, ModelCache modelCache, String owner){
         ResultSet results;
         try {
-            results = db.query("SELECT `AppointmentID` FROM `PARTICIPANTS` WHERE `"+owner+"` = " + id);
+            String query = "SELECT  AppointmentID \n" +
+                    "FROM  PARTICIPANTS AS P\n" +
+                    "WHERE "+owner+" ="+id;
+            results = db.query(query);
             while(results.next()) {
-                appointments.add(Appointment.getById(results.getInt(owner), db, modelCache));
+                Appointment a = Appointment.getById(results.getInt("AppointmentID"), db, modelCache);
+                appointments.add(a);
             }
         }catch (SQLException e){
             System.out.println("Exception:" + e);
@@ -29,22 +31,12 @@ public class Calendar extends Model {
         }
     }
 
-    public User getUser() {
-        return user;
+    public void setUser(int user, DB db, ModelCache modelCache){
+        setAppointments(user, db, modelCache, "UserID");
     }
 
-    public void setUser(User user, DB db, ModelCache modelCache){
-        this.user = user;
-        setAppointments(user.getId(), db, modelCache, "UserID");
-    }
-
-
-    public Group getGroup() {
-        return group;
-    }
 
     public void setGroup(Group group, DB db, ModelCache modelCache) {
-        this.group = group;
         setAppointments(group.getId(), db, modelCache, "GroupID");
     }
 
@@ -68,10 +60,6 @@ public class Calendar extends Model {
     @Override
     public void saveToDB(DB db) throws SQLException, DBConnectionException {
         throw new SQLException("Calendar is not a DB object and should not be saved");
-    }
-
-    public static void main(String[] args){
-
     }
 
 }
