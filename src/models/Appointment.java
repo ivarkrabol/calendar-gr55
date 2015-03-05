@@ -70,6 +70,9 @@ public class Appointment extends Model {
     public int getId() {
         return id;
     }
+    public void setId(int id){
+        this.id = id;
+    }
 
     public User getAdministrator() {
         return administrator;
@@ -143,7 +146,9 @@ public class Appointment extends Model {
     public static Appointment getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         Appointment appointment;
         if(mc.contains(Appointment.class, id)) appointment = mc.get(Appointment.class, id);
+
         else appointment = new Appointment();
+        appointment.setId(id);
         appointment.refreshFromDB(db, mc);
         mc.put(id, appointment);
         return appointment;
@@ -152,17 +157,21 @@ public class Appointment extends Model {
     @Override
     public void refreshFromDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
         String sql = "" +
-                "SELECT StartTime, EndTime, AdministratorID, Description, RoomID\n" +
+                "SELECT StartTime, EndTime, AdministratorID, Description, RoomName\n" +
                 "FROM APPOINTMENT\n" +
                 "WHERE AppointmentID = " + getId();
-
         ResultSet results = db.query(sql);
         if(!results.next()) throw new SQLException("No Appointment with ID '" + id + "' found");
         setStartTime(results.getTimestamp("StartTime").toLocalDateTime());
         setEndTime(results.getTimestamp("EndTime").toLocalDateTime());
         setAdministrator(User.getById(results.getInt("AdministratorID"), db, mc));
         setDescription(results.getString("Description"));
-        setRoom(Room.getByName(results.getString("RoomName"), db, mc));
+        String room=results.getString("RoomName");
+        if(room == null){
+            setRoom(null);
+        }else{
+            setRoom(Room.getByName(room, db, mc));
+        }
         if(results.next()) throw new SQLException("Result not unique");
     }
 
@@ -173,7 +182,7 @@ public class Appointment extends Model {
                 "EndTime = '" + getEndTime() + "',\n" +
                 "AdministratorID = " + getAdministrator().getId() + ",\n" +
                 "Description = '" + getDescription() + "',\n" +
-                "RoomID = " + getRoom().getName() + "\n" +
+                "RoomName = " + getRoom().getName() + "\n" +
                 "WHERE AppointmentID = " + getId();
 
         db.query(sql);

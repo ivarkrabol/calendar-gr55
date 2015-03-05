@@ -46,14 +46,6 @@ public class Main extends Application {
         }
     }
 
-    /**
-     * Load calendar, to check get appointments
-     * private void loadCalendear(){
-        Calendar calendar = new Calendar();
-        calendar.setUser(2, db, modelCache);
-        System.out.println(calendar.getAppointments());
-    }*/
-
     private void loadConfig() {
         config = new Config();
         try {

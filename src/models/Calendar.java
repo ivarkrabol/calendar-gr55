@@ -17,8 +17,8 @@ public class Calendar extends Model {
         ResultSet results;
         try {
             String query = "SELECT  AppointmentID \n" +
-                    "FROM  PARTICIPANTS AS P\n" +
-                    "WHERE "+owner+" ="+id;
+                    "FROM  PARTICIPANTS \n" +
+                    "WHERE "+owner+" ='"+id+"'";
             results = db.query(query);
             while(results.next()) {
                 Appointment a = Appointment.getById(results.getInt("AppointmentID"), db, modelCache);
