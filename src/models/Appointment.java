@@ -162,7 +162,7 @@ public class Appointment extends Model {
         setEndTime(results.getTimestamp("EndTime").toLocalDateTime());
         setAdministrator(User.getById(results.getInt("AdministratorID"), db, mc));
         setDescription(results.getString("Description"));
-        setRoom(Room.getById(results.getInt("RoomName"), db, mc));
+        setRoom(Room.getByName(results.getString("RoomName"), db, mc));
         if(results.next()) throw new SQLException("Result not unique");
     }
 
@@ -173,7 +173,7 @@ public class Appointment extends Model {
                 "EndTime = '" + getEndTime() + "',\n" +
                 "AdministratorID = " + getAdministrator().getId() + ",\n" +
                 "Description = '" + getDescription() + "',\n" +
-                "RoomName = " + getRoom().getId() + "\n" +
+                "RoomID = " + getRoom().getName() + "\n" +
                 "WHERE AppointmentID = " + getId();
 
         db.query(sql);

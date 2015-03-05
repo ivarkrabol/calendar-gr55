@@ -64,6 +64,7 @@ public class LoginController extends Controller{
             if(this.correctPassword.equalsIgnoreCase(password.getText())){
                 return true;
             }
+            
         }
         setStyle(password, false);
         return false;
