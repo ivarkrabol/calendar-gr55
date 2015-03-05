@@ -15,15 +15,15 @@ import java.util.NoSuchElementException;
 
 public class Room extends Model{
 	
-	private int id;
+	private String name;
     private int size;
 
-    public Room(int id) {
-        this.id = id;
+    public Room(String name) {
+        this.name = name;
     }
 
-    public int getId() {
-		return id;
+    public String getName() {
+		return name;
 	}
 
     public int getSize() {
@@ -34,11 +34,11 @@ public class Room extends Model{
         this.size = size;
     }
 
-    public static Room getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {
+    public static Room getByName(String name, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         Room room;
-        if(mc.contains(Room.class, id)) room = mc.get(Room.class, id);
-        else room = new Room(id);
-        mc.put(id, room);
+        if(mc.contains(Room.class, name)) room = mc.get(Room.class, name);
+        else room = new Room(name);
+        mc.put(name, room);
         room.refreshFromDB(db, mc);
         return room;
     }
@@ -48,9 +48,9 @@ public class Room extends Model{
         String sql = "" +
                 "SELECT Size\n" +
                 "FROM ROOM\n" +
-                "WHERE RoomID = " + getId();
+                "WHERE RoomName = " + getName();
         ResultSet results = db.query(sql);
-        if (!results.next()) throw new SQLException("No Room with that ID in database");
+        if (!results.next()) throw new SQLException("No Room with that Name in database");
         setSize(results.getInt("Size"));
         if(results.next()) throw new SQLException("Result not unique");
     }
@@ -59,7 +59,7 @@ public class Room extends Model{
     public void saveToDB(DB db) throws SQLException, DBConnectionException {
         String sql = "UPDATE ROOM\n" +
                 "Size = '" + getSize() + "'\n" +
-                "WHERE RoomID = " + getId();
+                "WHERE RoomName = " + getName();
 
         db.query(sql);
     }
