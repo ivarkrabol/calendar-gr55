@@ -1,6 +1,7 @@
 package controllers;
 
 import exceptions.DBConnectionException;
+import models.User;
 import org.controlsfx.dialog.Dialogs;
 
 import javafx.fxml.FXML;
@@ -18,7 +19,7 @@ public class LoginController extends Controller{
     private TextField userName;
     @FXML
     private PasswordField password;
-
+    private int id;
     private String correctPassword;
 
     @FXML public void handleLogin() {
@@ -42,9 +43,10 @@ public class LoginController extends Controller{
     private boolean validUsername(){
         try{
             DB db = this.getApplication().getDb();
-            ResultSet results = db.query("SELECT password FROM USER WHERE EMail = '" + userName.getText() + "'");
+            ResultSet results = db.query("SELECT password, userid FROM USER WHERE EMail = '" + userName.getText() + "'");
             if(results.next()){
                 this.correctPassword = results.getString("password");
+                this.id = results.getInt("userid");
                 setStyle(userName, true);
                 return true;
             }
@@ -60,11 +62,16 @@ public class LoginController extends Controller{
     }
 
     private boolean inputValid() {
-        if(validUsername()){
+        try{if(validUsername()){
             if(this.correctPassword.equalsIgnoreCase(password.getText())){
+                this.getApplication().setUser(User.getById(id, this.getApplication().getDb(), this.getApplication().getModelCache()));
                 return true;
             }
-            
+        }} catch (SQLException e){
+            e.printStackTrace();
+
+        } catch (DBConnectionException e){
+            e.printStackTrace();
         }
         setStyle(password, false);
         return false;
