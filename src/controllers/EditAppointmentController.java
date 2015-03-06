@@ -21,6 +21,8 @@ public class EditAppointmentController extends Controller{
     @FXML
     private DatePicker dateField;
     @FXML
+    private DatePicker endDateField;
+    @FXML
     private TextField startTimeField;
     @FXML
     private TextField endTimeField;
@@ -28,6 +30,7 @@ public class EditAppointmentController extends Controller{
     private LocalTime startTime;
     private LocalTime endTime;
     private LocalDate date;
+    private LocalDate endDate;
     private Appointment appointmentModel;
 
 
@@ -89,7 +92,12 @@ public class EditAppointmentController extends Controller{
     @FXML public void roomTextFieldFocusChange() {
         roomValid();
     }
-    @FXML public void dateDateFieldFocusChange() {this.date=dateValid(dateField);}
+    @FXML public void dateDateFieldFocusChange() {
+        this.date=dateValid(dateField, LocalDate.now());
+        endDateField.setValue(date);
+    }
+
+    @FXML public void endDateFieldFocusChange() {this.endDate=dateValid(endDateField, date);}
     @FXML public void startTimeTextFieldFocusChange() {
         startTimeValid();
     }
@@ -174,9 +182,9 @@ public class EditAppointmentController extends Controller{
         else{ return false; }
     }
 
-    private LocalDate dateValid(DatePicker date) {
+    private LocalDate dateValid(DatePicker date, LocalDate compare) {
         try {
-            if((date!=null) && (date.getValue().compareTo(LocalDate.now())>0)){
+            if((date!=null) && (date.getValue().compareTo(compare)>=0)){
                 date.setStyle("-fx-background-color: #CCFFCC;");
                 return date.getValue();
             }else{
@@ -187,10 +195,7 @@ public class EditAppointmentController extends Controller{
             date.setStyle("-fx-background-color: #FFB2B2;");
         }
         return null;
-
     }
-
-
 
 }
 
