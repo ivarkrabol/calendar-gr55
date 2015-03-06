@@ -2,8 +2,10 @@ package controllers;
 
 import exceptions.DBConnectionException;
 import models.User;
+
 import org.controlsfx.dialog.Dialogs;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -15,12 +17,20 @@ import java.sql.SQLException;
 
 public class LoginController extends Controller{
 
+
+	
     @FXML
     private TextField userName;
     @FXML
     private PasswordField password;
     private int id;
     private String correctPassword;
+    
+
+    @FXML
+    void enterIsPressed(ActionEvent event) {
+    	handleLogin();
+    }
 
     @FXML public void handleLogin() {
         if(inputValid()){
