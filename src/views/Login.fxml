@@ -23,13 +23,13 @@
                 <RowConstraints maxHeight="100.0" minHeight="100.0" prefHeight="100.0" valignment="CENTER" vgrow="ALWAYS" />
             </rowConstraints>
             <children>
-                <TextField fx:id="userName" GridPane.columnIndex="1" />
+                <TextField fx:id="userName" onAction="#enterIsPressed" GridPane.columnIndex="1" />
                 <Label prefHeight="34.0" prefWidth="220.0" text="Username">
                     <font>
                         <Font size="31.0" />
                     </font>
                 </Label>
-                <PasswordField fx:id="password" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <PasswordField fx:id="password" onAction="#enterIsPressed" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                 <Label prefHeight="34.0" prefWidth="233.0" text="Password" GridPane.rowIndex="1">
                     <font>
                         <Font size="31.0" />
