@@ -27,11 +27,6 @@
                                 <MenuItem mnemonicParsing="false" text="About" />
                             </items>
                         </Menu>
-                  <Menu fx:id="adminButton" mnemonicParsing="false" text="Admin" visible="false">
-                     <items>
-                        <MenuItem mnemonicParsing="false" text="Add user" />
-                     </items>
-                  </Menu>
                     </menus>
                 </MenuBar>
             </top>
