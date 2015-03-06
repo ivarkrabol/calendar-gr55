@@ -28,7 +28,7 @@ public class Main extends Application {
     private Config config;
     private DB db;
     private ModelCache modelCache;
-    private User user;
+    private User user; 
 
 
     @Override
