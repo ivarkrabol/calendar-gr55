@@ -52,6 +52,15 @@ public class Calendar extends Model {
         return appointments;
     }
 
+    /**public ObservableList<Appointment> getAppointmentsForDay(LocalDate localdate){
+     ObservableList<Appointment> dayAppointments = FXCollections.observableArrayList();
+     for(Appointment a:appointments){
+        if(){
+
+            }
+        }
+     }*/
+
     @Override
     public void refreshFromDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
     }
