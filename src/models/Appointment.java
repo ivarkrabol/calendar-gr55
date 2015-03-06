@@ -3,6 +3,7 @@ package models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -75,7 +76,7 @@ public class Appointment extends Model {
         }
     };
 
-    private Property<LocalDateTime> endTimeProperty = new ObjectPropertyBase<LocalDateTime>(null) {
+    private Property<LocalTime> endTimeProperty = new ObjectPropertyBase<LocalTime>(null) {
 
         @Override
         public Object getBean() {
@@ -188,15 +189,15 @@ public class Appointment extends Model {
         this.endDateProperty.setValue(endDateProperty);
     }
 
-    public LocalDateTime getEndTimeProperty() {
+    public LocalTime getEndTimeProperty() {
         return endTimeProperty.getValue();
     }
 
-    public Property<LocalDateTime> endTimeProperty() {
+    public Property<LocalTime> endTimeProperty() {
         return endTimeProperty;
     }
 
-    public void setEndTimeProperty(LocalDateTime endTimeProperty) {
+    public void setEndTimeProperty(LocalTime endTimeProperty) {
         this.endTimeProperty.setValue(endTimeProperty);
     }
 
@@ -220,6 +221,10 @@ public class Appointment extends Model {
         ResultSet results = db.query(sql);
         if(!results.next()) throw new SQLException("No Appointment with ID '" + id + "' found");
         setTitle(results.getString("Title"));
+        setStartDateProperty(results.getTimestamp("StartTime").toLocalDateTime().toLocalDate());
+        setStartTimeProperty(results.getTimestamp("StartTime").toLocalDateTime().toLocalTime());
+        setEndDateProperty(results.getTimestamp("EndTime").toLocalDateTime().toLocalDate());
+        setEndTimeProperty(results.getTimestamp("EndTime").toLocalDateTime().toLocalTime());
         setAdministrator(User.getById(results.getInt("AdministratorID"), db, mc));
         setDescription(results.getString("Description"));
         String room=results.getString("RoomName");
@@ -234,6 +239,8 @@ public class Appointment extends Model {
     @Override
     public void saveToDB(DB db) throws SQLException, DBConnectionException {
         String sql = "UPDATE APPOINTMENT\n" +
+                "StartTime = " + LocalDateTime.from(getStartDateProperty()).with(getStartTimeProperty()) + ",\n" +
+                "EndTime = " + LocalDateTime.from(getEndDateProperty()).with(getEndTimeProperty()) + ",\n" +
                 "AdministratorID = " + getAdministrator().getId() + ",\n" +
                 "Description = '" + getDescription() + "',\n" +
                 "RoomName = " + getRoom().getName() + "\n" +

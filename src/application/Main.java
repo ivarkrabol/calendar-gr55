@@ -103,7 +103,9 @@ public class Main extends Application {
 
     public void setUser(User user) {
         this.user = user;
-        user.setCalendar(getDb(), getModelCache());
+        if(user!=null){
+            user.setCalendar(getDb(), getModelCache());
+        }
     }
 
 
