@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+
 import exceptions.DBConnectionException;
 import javafx.beans.property.ObjectPropertyBase;
 import javafx.beans.property.Property;
