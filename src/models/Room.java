@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -17,6 +18,7 @@ public class Room extends Model{
 	
 	private String name;
     private int size;
+    private Collection<Room> rooms;
 
     public Room(String name) {
         this.name = name;
@@ -32,6 +34,15 @@ public class Room extends Model{
 
     public void setSize(int size) {
         this.size = size;
+    }
+    
+    public Collection<Room> getAvailableRooms(DB db) throws DBConnectionException, SQLException {
+    	ResultSet results = null;
+    	if (results.next()) {
+    		results = db.query("SELECT RoomName\nFROM ROOM\nWHERE Availability= True");
+    		rooms.add((Room) results);
+    	}
+    	return rooms;
     }
 
     public static Room getByName(String name, DB db, ModelCache mc) throws SQLException, DBConnectionException {

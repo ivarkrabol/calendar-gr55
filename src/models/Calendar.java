@@ -34,6 +34,7 @@ public class Calendar extends Model {
                 "WHERE AppointmentID = " + results);
             		appointments.add((Appointment) results2);
             		System.out.println(results2);
+            		// kunne vi brukt getByID fra Appoinment klasssen her?
             	}
             }
         }catch (SQLException e){
