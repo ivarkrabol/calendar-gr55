@@ -37,13 +37,16 @@ public class Room extends Model{
     }
     
     public Collection<Room> getAvailableRooms(DB db) throws DBConnectionException, SQLException {
-    	ResultSet results = null;
-    	if (results.next()) {
-    		results = db.query("SELECT RoomName\nFROM ROOM\nWHERE Availability= True");
-    		rooms.add((Room) results);
+    	ResultSet results;
+    	results = db.query("SELECT RoomName\nFROM ROOM\nWHERE Availability= True");
+    	while (results.next()) {
+    		Room room =  new Room(results.getString("RoomName"));
+    		rooms.add(room);
     	}
     	return rooms;
     }
+    
+    // How do I initialize results?
 
     public static Room getByName(String name, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         Room room;
