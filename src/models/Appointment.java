@@ -4,7 +4,7 @@ package models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-
+import java.time.LocalTime;
 import exceptions.DBConnectionException;
 import javafx.beans.property.ObjectPropertyBase;
 import javafx.beans.property.Property;
@@ -20,6 +20,7 @@ public class Appointment extends Model {
     private User administrator;
     private StringProperty titleProperty = new SimpleStringProperty();
     private StringProperty descriptionProperty = new SimpleStringProperty();
+    private StringProperty calendarProperty = new SimpleStringProperty();
     private Property<Room> roomProperty =  new ObjectPropertyBase<Room>(null) {
 
         @Override
@@ -67,6 +68,14 @@ public class Appointment extends Model {
     };
 
 
+    public String getCalendarProperty() {return calendarProperty.get();}
+
+    public void setCalendarProperty(String calendarProperty) {this.calendarProperty.set(calendarProperty);}
+
+    public StringProperty CalendarProperty() {
+        return calendarProperty;
+    }
+
     public int getId() {
         return id;
     }
@@ -103,7 +112,6 @@ public class Appointment extends Model {
     public StringProperty DescriptionProperty() {
         return descriptionProperty;
     }
-
 
     public Room getRoom() {
         return roomProperty.getValue();
@@ -155,15 +163,17 @@ public class Appointment extends Model {
     @Override
     public void refreshFromDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
         String sql = "" +
-                "SELECT StartTime, EndTime, AdministratorID, Description, RoomName\n" +
+                "SELECT Title, StartTime, EndTime, AdministratorID, Description, RoomName\n" +
                 "FROM APPOINTMENT\n" +
                 "WHERE AppointmentID = " + getId();
         ResultSet results = db.query(sql);
         if(!results.next()) throw new SQLException("No Appointment with ID '" + id + "' found");
+        setTitle(results.getString("Title"));
         setStartTime(results.getTimestamp("StartTime").toLocalDateTime());
         setEndTime(results.getTimestamp("EndTime").toLocalDateTime());
         setAdministrator(User.getById(results.getInt("AdministratorID"), db, mc));
         setDescription(results.getString("Description"));
+        setCalendarProperty(localTimeFormat(getStartTime())+ "-" + localTimeFormat(getEndTime()) + "\n" + getTitle());
         String room=results.getString("RoomName");
         if(room == null){
             setRoom(null);
@@ -182,8 +192,22 @@ public class Appointment extends Model {
                 "Description = '" + getDescription() + "',\n" +
                 "RoomName = " + getRoom().getName() + "\n" +
                 "WHERE AppointmentID = " + getId();
-
         db.query(sql);
     }
+
+    public String localTimeFormat(LocalDateTime time){
+        String res = "";
+        if(time.getHour()<10){
+            res += "0"+time.getHour()+":";
+        }else{
+            res += time.getHour()+":";
+        }  if(time.getMinute()<10){
+            res += "0"+time.getMinute();
+        }else{
+            res += time.getMinute();
+        }
+        return res;
+    }
+
 }
 

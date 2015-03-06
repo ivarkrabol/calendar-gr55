@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import models.Appointment;
@@ -36,22 +37,35 @@ public class CalendarController extends Controller{
     private TableColumn<Appointment, String> satCol;
     @FXML
     private TableColumn<Appointment, String> sunCol;
-
     @FXML
-    private TableView<Appointment> weekTable;
-
+    private TextField week;
+    @FXML
+    private TableView<Appointment> mon;
+    @FXML
+    private TableView<Appointment> tue;
+    @FXML
+    private TableView<Appointment> wed;
+    @FXML
+    private TableView<Appointment> thu;
+    @FXML
+    private TableView<Appointment> fri;
+    @FXML
+    private TableView<Appointment> sat;
+    @FXML
+    private TableView<Appointment> sun;
     @FXML
     private Label titleField;
+
 
     @Override
     public void setApp(Main app){
         super.setApp(app);
-        weekTable.setItems(this.getApplication().getUser().getCalendar().getAppointments());
+        mon.setItems(this.getApplication().getUser().getCalendar().getAppointments());
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-       monCol.setCellValueFactory(cellData -> cellData.getValue().DescriptionProperty());
+       monCol.setCellValueFactory(cellData -> cellData.getValue().CalendarProperty());
     }
 
     @FXML public void handleNewAppoinment() {newStage("/views/EditAppointment.fxml", "New Appointment", new EditAppointmentController());}
@@ -93,10 +107,6 @@ public class CalendarController extends Controller{
             e.printStackTrace();
         }
     }
-
-
-
-
 }
 
 
