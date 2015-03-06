@@ -22,10 +22,19 @@ public class Calendar extends Model {
 
     private void setAppointments(int id, DB db, ModelCache modelCache, String owner){
         ResultSet results;
+        ResultSet results2 = null;
         try {
             results = db.query("SELECT `AppointmentID` FROM `PARTICIPANTS` WHERE `"+owner+"` = " + id);
             if (results.next()) {
                 //TODO: add methods for adding the appointments to observable list
+            	while (results2.next()) {
+            		results2 = db.query(
+                "SELECT StartTime, EndTime, Description, RoomName\n" +
+                "FROM APPOINTMENT\n" +
+                "WHERE AppointmentID = " + results);
+            		appointments.add((Appointment) results2);
+            		System.out.println(results2);
+            	}
             }
         }catch (SQLException e){
             System.out.println("Exception:" + e);
