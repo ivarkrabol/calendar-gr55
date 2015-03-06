@@ -26,6 +26,7 @@ public class LoginController extends Controller{
     private int id;
     private String correctPassword;
     
+    
 
     @FXML
     void enterIsPressed(ActionEvent event) {
@@ -75,6 +76,12 @@ public class LoginController extends Controller{
         try{if(validUsername()){
             if(this.correctPassword.equalsIgnoreCase(password.getText())){
                 this.getApplication().setUser(User.getById(id, this.getApplication().getDb(), this.getApplication().getModelCache()));
+				if(id == 5){
+					setAdminUser(true);
+                }
+				else{
+					setAdminUser(false);
+				}
                 return true;
             }
         }} catch (SQLException e){

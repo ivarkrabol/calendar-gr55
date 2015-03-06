@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 public class Controller implements Initializable{
 
     private Main application;
-
+    private static boolean adminUser = false;
     private Stage stage;
 
     public Main getApplication() {
@@ -22,7 +22,7 @@ public class Controller implements Initializable{
         this.application = application;
     }
 
-
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {}
 
@@ -47,7 +47,12 @@ public class Controller implements Initializable{
             t.setStyle("-fx-background-color: #FFB2B2;");
         }
     }
-
+    public void setAdminUser(boolean b){
+    	this.adminUser = b;
+    }
+    public boolean getAdminUser(){
+		return adminUser;
+    }
 
 }
 
