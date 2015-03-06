@@ -225,6 +225,7 @@ public class Appointment extends Model {
         setEndDateProperty(results.getTimestamp("EndTime").toLocalDateTime().toLocalDate());
         setEndTimeProperty(results.getTimestamp("EndTime").toLocalDateTime().toLocalTime());
         setAdministrator(User.getById(results.getInt("AdministratorID"), db, mc));
+        setCalendarProperty("" + localTimeFormat(getStartTimeProperty()) + "-" + localTimeFormat(getEndTimeProperty())+"\n"+getTitle());
         setDescription(results.getString("Description"));
         String room=results.getString("RoomName");
         if(room == null){
@@ -247,7 +248,7 @@ public class Appointment extends Model {
         db.query(sql);
     }
 
-    public String localTimeFormat(LocalDateTime time){
+    public String localTimeFormat(LocalTime time){
         String res = "";
         if(time.getHour()<10){
             res += "0"+time.getHour()+":";
