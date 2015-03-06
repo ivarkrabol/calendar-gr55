@@ -9,7 +9,9 @@ import util.ModelCache;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -32,6 +34,25 @@ public class Room extends Model{
 
     public void setSize(int size) {
         this.size = size;
+    }
+
+    public static ArrayList<Room> getAvailable(LocalDateTime start, LocalDateTime end, DB db, ModelCache mc) throws SQLException, DBConnectionException {
+        String sql = "" +
+                "SELECT R.RoomName as RoomName\n" +
+                "FROM ROOM R, APPOINTMENT A\n" +
+                "WHERE R.RoomName = A.RoomName\n" +
+                "  AND (\n" +
+                "    A.StartTime > " + end + " OR\n" +
+                "    A.EndTime < " + start + "\n" +
+                "  )\n" +
+                "GROUP BY RoomName";
+
+        ArrayList<Room> rooms = new ArrayList<>();
+        ResultSet results = db.query(sql);
+        while(results.next()) {
+            rooms.add(getByName(results.getString("RoomName"), db, mc));
+        }
+        return rooms;
     }
 
     public static Room getByName(String name, DB db, ModelCache mc) throws SQLException, DBConnectionException {
