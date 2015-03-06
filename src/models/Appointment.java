@@ -3,6 +3,7 @@ package models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import exceptions.DBConnectionException;
@@ -34,7 +35,20 @@ public class Appointment extends Model {
         }
     };
 
-    private Property<LocalDateTime> startTimeProperty = new ObjectPropertyBase<LocalDateTime>(null) {
+    private Property<LocalDate> startDateProperty = new ObjectPropertyBase<LocalDate>(null) {
+
+        @Override
+        public Object getBean() {
+            return this;
+        }
+
+        @Override
+        public String getName() {
+            return "start date";
+        }
+    };
+
+    private Property<LocalTime> startTimeProperty = new ObjectPropertyBase<LocalTime>(null) {
 
         @Override
         public Object getBean() {
@@ -47,12 +61,18 @@ public class Appointment extends Model {
         }
     };
 
+    private Property<LocalDate> endDateProperty = new ObjectPropertyBase<LocalDate>(null) {
 
-    public Appointment(){ }
-    public Appointment(String title){
-        setTitle(title);
-    }
+        @Override
+        public Object getBean() {
+            return this;
+        }
 
+        @Override
+        public String getName() {
+            return "end date";
+        }
+    };
 
     private Property<LocalDateTime> endTimeProperty = new ObjectPropertyBase<LocalDateTime>(null) {
 
@@ -66,6 +86,12 @@ public class Appointment extends Model {
             return "end time";
         }
     };
+
+
+    public Appointment(){ }
+    public Appointment(String title){
+        setTitle(title);
+    }
 
 
     public String getCalendarProperty() {return calendarProperty.get();}
@@ -125,30 +151,6 @@ public class Appointment extends Model {
         return roomProperty;
     }
 
-    public LocalDateTime getStartTime() {
-        return startTimeProperty.getValue();
-    }
-
-    public void setStartTime(LocalDateTime startTime) {
-        startTimeProperty.setValue(startTime);
-    }
-
-    public Property<LocalDateTime> StartTimeProperty() {
-        return startTimeProperty;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTimeProperty.getValue();
-    }
-
-    public void setEndTime(LocalDateTime endTime) {
-        endTimeProperty.setValue(endTime);
-    }
-
-    public Property<LocalDateTime> EndTimeProperty() {
-        return endTimeProperty;
-    }
-
     public static Appointment getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         Appointment appointment;
         if(mc.contains(Appointment.class, id)) appointment = mc.get(Appointment.class, id);
@@ -169,11 +171,8 @@ public class Appointment extends Model {
         ResultSet results = db.query(sql);
         if(!results.next()) throw new SQLException("No Appointment with ID '" + id + "' found");
         setTitle(results.getString("Title"));
-        setStartTime(results.getTimestamp("StartTime").toLocalDateTime());
-        setEndTime(results.getTimestamp("EndTime").toLocalDateTime());
         setAdministrator(User.getById(results.getInt("AdministratorID"), db, mc));
         setDescription(results.getString("Description"));
-        setCalendarProperty(localTimeFormat(getStartTime())+ "-" + localTimeFormat(getEndTime()) + "\n" + getTitle());
         String room=results.getString("RoomName");
         if(room == null){
             setRoom(null);
@@ -186,8 +185,6 @@ public class Appointment extends Model {
     @Override
     public void saveToDB(DB db) throws SQLException, DBConnectionException {
         String sql = "UPDATE APPOINTMENT\n" +
-                "StartTime = '" + getStartTime() + "',\n" +
-                "EndTime = '" + getEndTime() + "',\n" +
                 "AdministratorID = " + getAdministrator().getId() + ",\n" +
                 "Description = '" + getDescription() + "',\n" +
                 "RoomName = " + getRoom().getName() + "\n" +
