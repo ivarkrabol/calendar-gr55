@@ -92,18 +92,12 @@ public class EditAppointmentController extends Controller{
     @FXML public void roomTextFieldFocusChange() {
         roomValid();
     }
-    @FXML public void dateDateFieldFocusChange() {
-        this.date=dateValid(dateField, LocalDate.now());
-        endDateField.setValue(date);
-    }
-
+    @FXML public void dateDateFieldFocusChange() {this.date=dateValid(dateField, LocalDate.now());endDateField.setValue(date);}
     @FXML public void endDateFieldFocusChange() {this.endDate=dateValid(endDateField, date);}
     @FXML public void startTimeTextFieldFocusChange() {
         startTimeValid();
     }
-    @FXML public void endTimeTextFieldFocusChange() {
-        endTimeValid();
-    }
+    @FXML public void endTimeTextFieldFocusChange() {endTimeValid();}
 
 
     private boolean textFieldValid(TextField text){

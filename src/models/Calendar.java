@@ -7,6 +7,7 @@ import util.DB;
 import util.ModelCache;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 
 public class Calendar extends Model {
@@ -56,7 +57,6 @@ public class Calendar extends Model {
      ObservableList<Appointment> dayAppointments = FXCollections.observableArrayList();
      for(Appointment a:appointments){
         if(){
-
             }
         }
      }*/
