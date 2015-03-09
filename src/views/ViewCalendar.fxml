@@ -82,39 +82,39 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TableView fx:id="mon" prefHeight="200.0" prefWidth="200.0">
+                         <TableView fx:id="sun" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="0">
+                             <columns>
+                                 <TableColumn fx:id="sunCol" minWidth="120.0" prefWidth="120.0"  />
+                             </columns>
+                         </TableView>
+                        <TableView fx:id="mon" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
                           <columns>
-                            <TableColumn fx:id="monCol" minWidth="120.0" prefWidth="120.0" text="Monday" />
+                            <TableColumn fx:id="monCol" minWidth="120.0" prefWidth="120.0"  />
                           </columns>
                         </TableView>
-                        <TableView fx:id="tue" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+                        <TableView fx:id="tue" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
                            <columns>
-                              <TableColumn fx:id="tueCol" minWidth="120.0" prefWidth="120.0" text="Tuesday" />
+                              <TableColumn fx:id="tueCol" minWidth="120.0" prefWidth="120.0"  />
                            </columns>
                         </TableView>
-                        <TableView fx:id="wed" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
+                        <TableView fx:id="wed" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3">
                            <columns>
-                              <TableColumn fx:id="wedCol" minWidth="120.0" prefWidth="120.0" text="Wednesday" />
+                              <TableColumn fx:id="wedCol" minWidth="120.0" prefWidth="120.0" />
                            </columns>
                         </TableView>
-                        <TableView fx:id="thu" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3">
+                        <TableView fx:id="thu" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4">
                            <columns>
-                              <TableColumn fx:id="thuCol" minWidth="120.0" prefWidth="120.0" text="Thursday" />
+                              <TableColumn fx:id="thuCol" minWidth="120.0" prefWidth="120.0" />
                            </columns>
                         </TableView>
-                        <TableView fx:id="fri" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4">
+                        <TableView fx:id="fri" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5">
                            <columns>
-                              <TableColumn fx:id="friCol" minWidth="120.0" prefWidth="120.0" text="Friday" />
+                              <TableColumn fx:id="friCol" minWidth="120.0" prefWidth="120.0"  />
                            </columns>
                         </TableView>
-                        <TableView fx:id="sat" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5">
+                        <TableView fx:id="sat" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="6">
                            <columns>
-                              <TableColumn fx:id="satCol" minWidth="120.0" prefWidth="120.0" text="Saturday" />
-                           </columns>
-                        </TableView>
-                        <TableView fx:id="sun" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="6">
-                           <columns>
-                              <TableColumn fx:id="sunCol" minWidth="120.0" prefWidth="120.0" text="Sunday" />
+                              <TableColumn fx:id="satCol" minWidth="120.0" prefWidth="120.0" />
                            </columns>
                         </TableView>
                      </children>

@@ -8,18 +8,81 @@ import util.ModelCache;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.WeekFields;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 
 
 public class Calendar extends Model {
 
-	private ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+    private LocalDate today;
+    private int weekNumber;
+    private int yearNumber;
+    private int id;
+    private LocalDate startWeekDate;
+    private LocalDate endWeekDate;
+    private java.util.Calendar calendar = java.util.Calendar.getInstance();
+    private DB db;
+    private String owner;
+    private ModelCache modelCache;
 
-    public void setAppointments(int id, DB db, ModelCache modelCache, String owner){
+
+    public Calendar(int id, DB db, ModelCache modelCache, String owner){
+        this.id=id;
+        this.today = LocalDate.now();
+        this.yearNumber = today.getYear();
+        this.weekNumber = getWeekNumber(today);
+        this.db=db;
+        this.modelCache=modelCache;
+        this.owner=owner;
+        setCalendar();
+        setAppointments(startWeekDate, endWeekDate);
+        this.appointments = getAppointments();
+    }
+
+     public int getId() {
+         return id;
+     }
+
+    public int getWeekNumber() {
+        return weekNumber;
+    }
+
+    public void setWeekNumber(int weekNumber) {
+        this.weekNumber = weekNumber; setCalendar();
+        setAppointments(startWeekDate, endWeekDate);
+    }
+
+    public int getYearNumber() {
+        return yearNumber;
+    }
+
+    public void setYearNumber(int yearNumber) {
+        this.yearNumber=yearNumber;
+    }
+
+    private ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+
+    public void setAppointments(LocalDate startdate, LocalDate enddate){
+        appointments.removeAll(appointments);
         ResultSet results;
         try {
-            String query = "SELECT  AppointmentID \n" +
-                    "FROM  PARTICIPANTS \n" +
-                    "WHERE "+owner+" ='"+id+"'";
+            String query = "SELECT AppointmentID\n" +
+                            "FROM PARTICIPANTS\n" +
+                            "WHERE "+owner+" ='"+id+"'"+
+                            "AND response ='HasAccepted' AND AppointmentID\n" +
+                            "IN (\n" +
+                            "\n" +
+                            "SELECT Appointmentid\n" +
+                            "FROM APPOINTMENT\n" +
+                            "WHERE starttime >=  '"+localTimeFormat(startdate)+"'\n" +
+                            "AND starttime <  '"+localTimeFormat(enddate)+"'\n" +
+                            ")\n" +
+                            "LIMIT 0 , 30";
+
             results = db.query(query);
             while(results.next()) {
                 Appointment a = Appointment.getById(results.getInt("AppointmentID"), db, modelCache);
@@ -32,13 +95,40 @@ public class Calendar extends Model {
         }
     }
 
-    public void setUser(int user, DB db, ModelCache modelCache){
-        setAppointments(user, db, modelCache, "UserID");
+    public ObservableList<Appointment> getAppointmentsForDay(LocalDate localdate){
+     ObservableList<Appointment> dayAppointments = FXCollections.observableArrayList();
+     setAppointments(getDate(1), getDate(7));
+        for(Appointment a:this.appointments){
+            if(a.getStartDateProperty().isEqual(localdate)){
+                dayAppointments.add(a);
+            }
+        }
+        Collections.sort(dayAppointments);
+        return dayAppointments;
     }
 
+    public void setCalendar(){
+        startWeekDate = getDate(1);
+        endWeekDate = getDate(7);
+    }
 
-    public void setGroup(Group group, DB db, ModelCache modelCache) {
-        setAppointments(group.getId(), db, modelCache, "GroupID");
+    public List<ObservableList<Appointment>> appointmentsForWeek(){
+        List<ObservableList<Appointment>> appointmentsForWeek = new ArrayList<ObservableList<Appointment>>();
+        for (int i = 1; i<8; i++){
+            ObservableList<Appointment> appointmentsForDay = FXCollections.observableArrayList();
+            LocalDate date = getDate(i);
+            appointmentsForDay = getAppointmentsForDay(date);
+            appointmentsForWeek.add(appointmentsForDay);
+        }
+        return appointmentsForWeek;
+    }
+
+    public LocalDate getDate(int day) {
+        calendar.set(java.util.Calendar.YEAR, yearNumber);
+        calendar.set(java.util.Calendar.WEEK_OF_YEAR, weekNumber);
+        calendar.set(java.util.Calendar.DAY_OF_WEEK, day);
+        LocalDate date = calendar.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return date;
     }
 
     public void addAppointment(Appointment appointment){
@@ -53,14 +143,6 @@ public class Calendar extends Model {
         return appointments;
     }
 
-    /**public ObservableList<Appointment> getAppointmentsForDay(LocalDate localdate){
-     ObservableList<Appointment> dayAppointments = FXCollections.observableArrayList();
-     for(Appointment a:appointments){
-        if(){
-            }
-        }
-     }*/
-
     @Override
     public void refreshFromDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
     }
@@ -69,5 +151,26 @@ public class Calendar extends Model {
     public void saveToDB(DB db) throws SQLException, DBConnectionException {
         throw new SQLException("Calendar is not a DB object and should not be saved");
     }
+
+    public int getWeekNumber(LocalDate today){
+        WeekFields fields = WeekFields.of(Locale.getDefault());
+        return today.get(fields.weekOfWeekBasedYear());
+    }
+
+    public String localTimeFormat(LocalDate time){
+        String res = "" + time.getYear();
+        if(time.getMonthValue()<10){
+            res += "0"+time.getMonthValue();
+        }else{
+            res += time.getMonthValue();
+        }
+        if(time.getDayOfMonth()<10){
+            res += "0"+time.getDayOfMonth();
+        }else{
+            res += time.getDayOfMonth();
+        }
+        return res;
+    }
+
 
 }
