@@ -22,6 +22,8 @@ public class Appointment extends Model {
     private StringProperty titleProperty = new SimpleStringProperty();
     private StringProperty descriptionProperty = new SimpleStringProperty();
     private StringProperty calendarProperty = new SimpleStringProperty();
+    public final StringProperty emptyProperty = new SimpleStringProperty("empty", " ");
+
     private Property<Room> roomProperty =  new ObjectPropertyBase<Room>(null) {
 
         @Override
@@ -93,6 +95,9 @@ public class Appointment extends Model {
         setTitle(title);
     }
 
+    public StringProperty EmptyProperty() {
+        return emptyProperty;
+    }
 
     public String getCalendarProperty() {return calendarProperty.get();}
 
@@ -267,5 +272,7 @@ public class Appointment extends Model {
             return 1;
         }else{ return 0;}
     }
+
+
 
 }
