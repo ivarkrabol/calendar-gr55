@@ -173,7 +173,6 @@ public class CalendarController extends Controller{
             Controller controller = fxmlLoader.getController();
             controller.setStage(currentStage);
             currentStage.show();
-
         } catch(Exception e) {
             e.printStackTrace();
         }
