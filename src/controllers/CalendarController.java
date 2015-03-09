@@ -7,12 +7,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import models.Appointment;
+
 
 
 import java.net.URL;
@@ -59,6 +61,9 @@ public class CalendarController extends Controller{
     private TableView<Appointment> sun;
     @FXML
     private Label titleField;
+    @FXML
+    private Menu adminButton;
+    
     private LocalDate today = LocalDate.now();
     private int weekNumber;
     private int yearNumber;
@@ -74,6 +79,9 @@ public class CalendarController extends Controller{
     public void initialize(URL location, ResourceBundle resources) {
        weekNumber = getWeekNumber(this.today); week.setText(""+weekNumber); year.setText(""+today.getYear()); setStyle(week, true); setStyle(year, true);
        monCol.setCellValueFactory(cellData -> cellData.getValue().CalendarProperty());
+       if(getAdminUser()==true){
+    	   adminButton.setVisible(true);
+    	   }
     }
 
     @FXML public void handleNewAppoinment() {newStage("/views/EditAppointment.fxml", "New Appointment", new EditAppointmentController());}
