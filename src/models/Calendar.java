@@ -25,6 +25,9 @@ public class Calendar extends Model {
     private LocalDate startWeekDate;
     private LocalDate endWeekDate;
     private java.util.Calendar calendar = java.util.Calendar.getInstance();
+    private DB db;
+    private String owner;
+    private ModelCache modelCache;
 
 
     public Calendar(int id, DB db, ModelCache modelCache, String owner){
@@ -32,8 +35,11 @@ public class Calendar extends Model {
         this.today = LocalDate.now();
         this.yearNumber = today.getYear();
         this.weekNumber = getWeekNumber(today);
+        this.db=db;
+        this.modelCache=modelCache;
+        this.owner=owner;
         setCalendar();
-        setAppointments(id, db, modelCache, owner, startWeekDate, endWeekDate);
+        setAppointments(startWeekDate, endWeekDate);
         this.appointments = getAppointments();
     }
 
@@ -46,7 +52,8 @@ public class Calendar extends Model {
     }
 
     public void setWeekNumber(int weekNumber) {
-        this.weekNumber = weekNumber;
+        this.weekNumber = weekNumber; setCalendar();
+        setAppointments(startWeekDate, endWeekDate);
     }
 
     public int getYearNumber() {
@@ -59,9 +66,8 @@ public class Calendar extends Model {
 
     private ObservableList<Appointment> appointments = FXCollections.observableArrayList();
 
-
-
-    public void setAppointments(int id, DB db, ModelCache modelCache, String owner, LocalDate startdate, LocalDate enddate){
+    public void setAppointments(LocalDate startdate, LocalDate enddate){
+        appointments.removeAll(appointments);
         ResultSet results;
         try {
             String query = "SELECT AppointmentID\n" +
@@ -91,6 +97,7 @@ public class Calendar extends Model {
 
     public ObservableList<Appointment> getAppointmentsForDay(LocalDate localdate){
      ObservableList<Appointment> dayAppointments = FXCollections.observableArrayList();
+     setAppointments(getDate(1), getDate(7));
         for(Appointment a:this.appointments){
             if(a.getStartDateProperty().isEqual(localdate)){
                 dayAppointments.add(a);
@@ -109,7 +116,6 @@ public class Calendar extends Model {
         List<ObservableList<Appointment>> appointmentsForWeek = new ArrayList<ObservableList<Appointment>>();
         for (int i = 1; i<8; i++){
             ObservableList<Appointment> appointmentsForDay = FXCollections.observableArrayList();
-            System.out.println("appointmentsForDay = " + appointmentsForDay);
             LocalDate date = getDate(i);
             appointmentsForDay = getAppointmentsForDay(date);
             appointmentsForWeek.add(appointmentsForDay);

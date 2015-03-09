@@ -109,6 +109,8 @@ public class CalendarController extends Controller{
             int w = Integer.parseInt(week.getText());
             if((w>0) && (w<53)){
                 getApplication().getUser().getCalendar().setWeekNumber(w);
+                emptyWeekDays();
+                setWeekDays();
                 setStyle(week, true);
             }else{
                 setStyle(week, false);
@@ -130,6 +132,12 @@ public class CalendarController extends Controller{
         catch (Exception e){setStyle(week, false);}
     }
 
+    public void emptyWeekDays(){
+        for(TableView table : weekDaysTable){
+            table.setItems(null);
+        }
+    }
+
     public void setWeekDays() {
         List<ObservableList<Appointment>> appointmentsForWeek = getApplication().getUser().getCalendar().appointmentsForWeek();
         int i = 0;
@@ -138,7 +146,7 @@ public class CalendarController extends Controller{
                 table.setPlaceholder(new Text(""));
                 LocalDate day = getApplication().getUser().getCalendar().getDate(i + 1);
                 weekDaysCol.get(i).setText(""+day.getDayOfWeek()+" "+day.getDayOfMonth());
-                if (appointmentsForWeek.get(0).size()>0){
+                if (appointmentsForWeek.size()>0){
                     table.setItems(appointmentsForWeek.get(i));
                     weekDaysCol.get(i).setCellValueFactory((cellData -> cellData.getValue().CalendarProperty()));
                 }
