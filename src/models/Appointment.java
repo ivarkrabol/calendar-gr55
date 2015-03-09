@@ -7,11 +7,14 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
+
 import exceptions.DBConnectionException;
 import javafx.beans.property.ObjectPropertyBase;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
 import util.DB;
 import util.ModelCache;
 
@@ -20,6 +23,7 @@ public class Appointment extends Model {
 
     private int id;
     private User administrator;
+    private ObservableList<User> participants;
     private StringProperty titleProperty = new SimpleStringProperty();
     private StringProperty descriptionProperty = new SimpleStringProperty();
     private StringProperty calendarProperty = new SimpleStringProperty();
@@ -199,6 +203,28 @@ public class Appointment extends Model {
     public void setEndTimeProperty(LocalTime endTimeProperty) {
         this.endTimeProperty.setValue(endTimeProperty);
     }
+
+    public boolean canEditApp(User user, DB db) throws DBConnectionException, SQLException {
+        int UserID = user.getId();
+        List<Object> admin = null;
+        ResultSet rs;
+        rs = db.query("SELECT AppointmentID FROM APPOINTMENT WHERE AdministratorID = " + UserID + " AND AppointmentID = " + getId());
+        while (rs.next()) {
+            admin.add(rs.getInt("AppointmentID"));
+        }
+        return admin.isEmpty();
+    }
+
+    public ObservableList<User> isInvitedToApp(DB db, int id, ModelCache mc) throws DBConnectionException, SQLException  {
+        ResultSet rs;
+        rs = db.query("SELECT UserID FROM PARTICIPANTS WHERE AppointmentID = " + id );
+        while (rs.next()) {
+            User user = User.getById(rs.getInt("UserID"), db, mc);
+            participants.add(user);
+        }
+        return participants;
+    }
+
 
     public static Appointment getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         Appointment appointment;
