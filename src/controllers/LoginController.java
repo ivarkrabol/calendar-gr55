@@ -39,6 +39,7 @@ public class LoginController extends Controller{
             try {
                 CalendarController calender = (CalendarController) getApplication().replaceSceneContent("/views/ViewCalendar.fxml");
                 calender.setApp(getApplication());
+                calender.setWeekDays();
             }catch(Exception e) {
                 e.printStackTrace();
             }

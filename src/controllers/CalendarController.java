@@ -2,25 +2,20 @@ package controllers;
 
 
 import application.Main;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import models.Appointment;
+import models.*;
 
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.WeekFields;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 public class CalendarController extends Controller{
@@ -59,21 +54,40 @@ public class CalendarController extends Controller{
     private TableView<Appointment> sun;
     @FXML
     private Label titleField;
-    private LocalDate today = LocalDate.now();
-    private int weekNumber;
-    private int yearNumber;
+
+    private List<TableView<Appointment>> weekDaysTable;
+    private List<TableColumn<Appointment, String>> weekDaysCol;
 
 
     @Override
     public void setApp(Main app){
         super.setApp(app);
-        mon.setItems(this.getApplication().getUser().getCalendar().getAppointments());
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-       weekNumber = getWeekNumber(this.today); week.setText(""+weekNumber); year.setText(""+today.getYear()); setStyle(week, true); setStyle(year, true);
-       monCol.setCellValueFactory(cellData -> cellData.getValue().CalendarProperty());
+        year.setText(""+LocalDate.now().getYear());
+        setStyle(week, true);setStyle(year, true);
+        setList();
+    }
+
+    public final void setList(){
+        weekDaysTable = new ArrayList<TableView<Appointment>>();
+            weekDaysTable.add(sun);
+            weekDaysTable.add(mon);
+            weekDaysTable.add(tue);
+            weekDaysTable.add(wed);
+            weekDaysTable.add(thu);
+            weekDaysTable.add(fri);
+            weekDaysTable.add(sat);
+        weekDaysCol = new ArrayList<TableColumn<Appointment, String>>();
+            weekDaysCol.add(sunCol);
+            weekDaysCol.add(monCol);
+            weekDaysCol.add(tueCol);
+            weekDaysCol.add(wedCol);
+            weekDaysCol.add(thuCol);
+            weekDaysCol.add(friCol);
+            weekDaysCol.add(satCol);
     }
 
     @FXML public void handleNewAppoinment() {newStage("/views/EditAppointment.fxml", "New Appointment", new EditAppointmentController());}
@@ -94,7 +108,7 @@ public class CalendarController extends Controller{
         try{
             int w = Integer.parseInt(week.getText());
             if((w>0) && (w<53)){
-                this.weekNumber=w;
+                getApplication().getUser().getCalendar().setWeekNumber(w);
                 setStyle(week, true);
             }else{
                 setStyle(week, false);
@@ -107,13 +121,30 @@ public class CalendarController extends Controller{
         try{
             int y = Integer.parseInt(year.getText());
             if((y>2014) && (y<2025)){
-                this.yearNumber=y;
+                getApplication().getUser().getCalendar().setYearNumber(y);
                 setStyle(year, true);
             }else{
                 setStyle(year, false);
             }
         }
         catch (Exception e){setStyle(week, false);}
+    }
+
+    public void setWeekDays() {
+        List<ObservableList<Appointment>> appointmentsForWeek = getApplication().getUser().getCalendar().appointmentsForWeek();
+        int i = 0;
+        while(i<7){
+            for(TableView<Appointment> table : weekDaysTable){
+                table.setPlaceholder(new Text(""));
+                LocalDate day = getApplication().getUser().getCalendar().getDate(i + 1);
+                weekDaysCol.get(i).setText(""+day.getDayOfWeek()+" "+day.getDayOfMonth());
+                if (appointmentsForWeek.get(0).size()>0){
+                    table.setItems(appointmentsForWeek.get(i));
+                    weekDaysCol.get(i).setCellValueFactory((cellData -> cellData.getValue().CalendarProperty()));
+                }
+                i++;
+            }
+        }
     }
 
     private void newStage(String location, String title, Controller Controller){
@@ -141,10 +172,8 @@ public class CalendarController extends Controller{
         }
     }
 
-    public int getWeekNumber(LocalDate today){
-        WeekFields fields = WeekFields.of(Locale.getDefault());
-        return today.get(fields.weekOfWeekBasedYear());
-    }
+
+
 }
 
 

@@ -3,7 +3,6 @@ package models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -23,6 +22,8 @@ public class Appointment extends Model {
     private StringProperty titleProperty = new SimpleStringProperty();
     private StringProperty descriptionProperty = new SimpleStringProperty();
     private StringProperty calendarProperty = new SimpleStringProperty();
+    public final StringProperty emptyProperty = new SimpleStringProperty("empty", " ");
+
     private Property<Room> roomProperty =  new ObjectPropertyBase<Room>(null) {
 
         @Override
@@ -94,6 +95,9 @@ public class Appointment extends Model {
         setTitle(title);
     }
 
+    public StringProperty EmptyProperty() {
+        return emptyProperty;
+    }
 
     public String getCalendarProperty() {return calendarProperty.get();}
 
@@ -172,9 +176,7 @@ public class Appointment extends Model {
         return startTimeProperty;
     }
 
-    public void setStartTimeProperty(LocalTime startTimeProperty) {
-        this.startTimeProperty.setValue(startTimeProperty);
-    }
+    public void setStartTimeProperty(LocalTime startTimeProperty) {this.startTimeProperty.setValue(startTimeProperty);}
 
     public LocalDate getEndDateProperty() {
         return endDateProperty.getValue();
@@ -225,6 +227,7 @@ public class Appointment extends Model {
         setEndDateProperty(results.getTimestamp("EndTime").toLocalDateTime().toLocalDate());
         setEndTimeProperty(results.getTimestamp("EndTime").toLocalDateTime().toLocalTime());
         setAdministrator(User.getById(results.getInt("AdministratorID"), db, mc));
+        setCalendarProperty("" + localTimeFormat(getStartTimeProperty()) + "-" + localTimeFormat(getEndTimeProperty()) + "\n" + getTitle());
         setDescription(results.getString("Description"));
         String room=results.getString("RoomName");
         if(room == null){
@@ -247,7 +250,7 @@ public class Appointment extends Model {
         db.query(sql);
     }
 
-    public String localTimeFormat(LocalDateTime time){
+    public String localTimeFormat(LocalTime time){
         String res = "";
         if(time.getHour()<10){
             res += "0"+time.getHour()+":";
@@ -261,5 +264,15 @@ public class Appointment extends Model {
         return res;
     }
 
-}
+    @Override
+    public int compareTo(Appointment appointment) {
+        if(this.getStartTimeProperty().isBefore(appointment.getStartTimeProperty())){
+            return -1;
+        }if(this.getStartTimeProperty().isAfter(appointment.getStartTimeProperty())){
+            return 1;
+        }else{ return 0;}
+    }
 
+
+
+}

@@ -65,8 +65,8 @@ public class User extends Model{
     }
 
     public final void setCalendar(DB db, ModelCache modelCache){
-        calendar = new Calendar();
-        calendar.setUser(this.getId(), db, modelCache);
+        calendar = new Calendar(this.getId(), db, modelCache, "UserID");
+
     }
 
 
