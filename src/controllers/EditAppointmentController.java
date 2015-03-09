@@ -191,5 +191,12 @@ public class EditAppointmentController extends Controller{
         return null;
     }
 
+    public void updateFields(Appointment appointment){
+        titleField.setText(appointment.getTitle());
+        descriptionField.setText(appointment.getDescription());
+        dateField.setValue(appointment.getStartDateProperty());
+        endDateField.setValue(appointment.getEndDateProperty());
+    }
+
 }
 
