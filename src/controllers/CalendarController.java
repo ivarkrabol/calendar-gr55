@@ -145,7 +145,8 @@ public class CalendarController extends Controller{
             for(TableView<Appointment> table : weekDaysTable){
                 table.setPlaceholder(new Text(""));
                 LocalDate day = getApplication().getUser().getCalendar().getDate(i + 1);
-                weekDaysCol.get(i).setText(""+day.getDayOfWeek()+" "+day.getDayOfMonth());
+                String dayDescription = getDayDescription(day);
+                weekDaysCol.get(i).setText(""+dayDescription);
                 if (appointmentsForWeek.size()>0){
                     table.setItems(appointmentsForWeek.get(i));
                     weekDaysCol.get(i).setCellValueFactory((cellData -> cellData.getValue().CalendarProperty()));
@@ -154,6 +155,13 @@ public class CalendarController extends Controller{
             }
         }
     }
+
+    private String getDayDescription(LocalDate day){
+        String name = ""+day.getDayOfWeek();
+        return name.substring(0, 3)+" " + day.getDayOfMonth() + "." + day.getMonthValue();
+    }
+
+
 
     private void newStage(String location, String title, Controller Controller){
         Stage currentStage = new Stage();
