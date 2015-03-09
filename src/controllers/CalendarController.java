@@ -6,11 +6,20 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+<<<<<<< HEAD
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+=======
 import javafx.scene.control.*;
+>>>>>>> master
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import models.*;
+
 
 
 import java.net.URL;
@@ -54,9 +63,18 @@ public class CalendarController extends Controller{
     private TableView<Appointment> sun;
     @FXML
     private Label titleField;
+<<<<<<< HEAD
+    @FXML
+    private Menu adminButton;
+    
+    private LocalDate today = LocalDate.now();
+    private int weekNumber;
+    private int yearNumber;
+=======
 
     private List<TableView<Appointment>> weekDaysTable;
     private List<TableColumn<Appointment, String>> weekDaysCol;
+>>>>>>> master
 
 
     @Override
@@ -66,6 +84,13 @@ public class CalendarController extends Controller{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+<<<<<<< HEAD
+       weekNumber = getWeekNumber(this.today); week.setText(""+weekNumber); year.setText(""+today.getYear()); setStyle(week, true); setStyle(year, true);
+       monCol.setCellValueFactory(cellData -> cellData.getValue().CalendarProperty());
+       if(getAdminUser()==true){
+    	   adminButton.setVisible(true);
+    	   }
+=======
         year.setText(""+LocalDate.now().getYear());
         setStyle(week, true);setStyle(year, true);
         setList();
@@ -88,6 +113,7 @@ public class CalendarController extends Controller{
             weekDaysCol.add(thuCol);
             weekDaysCol.add(friCol);
             weekDaysCol.add(satCol);
+>>>>>>> master
     }
 
     @FXML public void handleNewAppoinment() {newStage("/views/EditAppointment.fxml", "New Appointment", new EditAppointmentController());}

@@ -27,6 +27,11 @@
                                 <MenuItem mnemonicParsing="false" text="About" />
                             </items>
                         </Menu>
+                  <Menu fx:id="adminButton" mnemonicParsing="false" text="Admin" visible="false">
+                     <items>
+                        <MenuItem fx:id="addUser" mnemonicParsing="false" text="Add user" />
+                     </items>
+                  </Menu>
                     </menus>
                 </MenuBar>
             </top>
@@ -132,13 +137,13 @@
                               <Font size="16.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="week" onAction="#weekTextFieldFocusChange" alignment="TOP_CENTER" prefHeight="25.0" prefWidth="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="week" alignment="TOP_CENTER" onAction="#weekTextFieldFocusChange" prefHeight="25.0" prefWidth="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label alignment="BASELINE_LEFT" prefHeight="84.0" prefWidth="184.0" text="Year" GridPane.rowIndex="2">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="year" onAction="#yearTextFieldFocusChange" alignment="TOP_CENTER" prefHeight="25.0" prefWidth="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField fx:id="year" alignment="TOP_CENTER" onAction="#yearTextFieldFocusChange" prefHeight="25.0" prefWidth="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                      </children>
                   </GridPane>
                     </children>
