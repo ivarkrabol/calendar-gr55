@@ -63,8 +63,6 @@ public class CalendarController extends Controller{
     @FXML
     private Menu adminButton;
     
-    
-
     private List<TableView<Appointment>> weekDaysTable;
     private List<TableColumn<Appointment, String>> weekDaysCol;
 
@@ -115,6 +113,9 @@ public class CalendarController extends Controller{
 
     @FXML public void handleGroups(){
         newStage("/views/ViewUserGroups.fxml", "Groups", new Controller());
+    }
+    @FXML public void handleAddUser() {
+        newStage("/views/AddUser.fxml", "Add user", new AddUserController());
     }
 
     @FXML public void weekTextFieldFocusChange() {
@@ -199,9 +200,6 @@ public class CalendarController extends Controller{
             e.printStackTrace();
         }
     }
-
-
-
 }
 
 

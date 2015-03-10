@@ -1,9 +1,10 @@
 package controllers;
+import application.Main;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
-public class AddUserController {
+public class AddUserController extends Controller {
 	@FXML
     private TextField fname;
 
@@ -17,11 +18,16 @@ public class AddUserController {
     private TextField password;
 
     @FXML
-    private TextField phone;
+    private TextField phonenumber;
 
     @FXML
     private Button saveButton;
 
     @FXML
     private TextField email;
+    
+    @Override
+	public void setApp(Main app) {
+		super.setApp(app);
+	}
 }
