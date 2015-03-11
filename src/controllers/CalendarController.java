@@ -101,7 +101,9 @@ public class CalendarController extends Controller{
             weekDaysCol.add(satCol);
     }
 
-    @FXML public void handleNewAppoinment() {newStage("/views/EditAppointment.fxml", "New Appointment", new EditAppointmentController());}
+    @FXML public void handleNewAppoinment() {
+    	newStage("/views/EditAppointment.fxml", "New Appointment", new EditAppointmentController());
+    	}
 
     @FXML public void handleNewGroup() {
         newStage("/views/EditGroup.fxml", "New Group", new EditGroupController());
@@ -185,6 +187,7 @@ public class CalendarController extends Controller{
             currentStage.setTitle(title);
             currentStage.setScene(new Scene(root));
             Controller controller = fxmlLoader.getController();
+            controller.setApp(getApplication());
             controller.setStage(currentStage);
             currentStage.show();
         } catch(Exception e) {

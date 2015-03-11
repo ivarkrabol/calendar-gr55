@@ -76,8 +76,8 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button fx:id="cancelButton" mnemonicParsing="false" prefHeight="20.0" prefWidth="69.0" text="Cancel" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                        <Button fx:id="saveButton" mnemonicParsing="false" prefHeight="20.0" prefWidth="69.0" text="Save" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                        <Button mnemonicParsing="false" onAction="#handleCancel" prefHeight="20.0" prefWidth="69.0" text="Cancel" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                        <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSave" prefHeight="20.0" prefWidth="69.0" text="Save" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                   <TextField fx:id="fname" GridPane.columnIndex="1">
