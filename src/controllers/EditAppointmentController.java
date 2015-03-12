@@ -47,58 +47,33 @@ public class EditAppointmentController extends Controller{
     private Appointment appointmentModel;
     private boolean edit;
 
-
-
-    public void setAppointmentModel(Appointment appointmentModel) {
-        this.appointmentModel = appointmentModel;
-        titleField.setText(appointmentModel.getTitle());
-        descriptionField.setText(appointmentModel.getDescription());
-        startTimeField.setText(appointmentModel.localTimeFormat(appointmentModel.getStartTimeProperty()));
-        endTimeField.setText(appointmentModel.localTimeFormat(appointmentModel.getEndTimeProperty()));
-        dateField.setValue(appointmentModel.getStartDateProperty());
-        dateField.setValue(appointmentModel.getEndDateProperty());
-        startTimeTextFieldFocusChange();
-        endTimeTextFieldFocusChange();
-        disableFields(true);
+    //FXML functions
+    @FXML public void titleTextFieldFocusChange() {
+        textFieldValid(titleField);
     }
-
-    public void setEdit(boolean edit) {
-        this.edit = edit;
-        if(edit == true){
-            editButton.setVisible(true);
-            cancelButton.setVisible(true);
-            deleteButton.setVisible(false);
-            saveButton.setVisible(false);
-        }if(appointmentModel.getStartDateProperty().isBefore(LocalDate.now())){
-            editButton.setVisible(false);
-        }
-
+    @FXML public void dateDateFieldFocusChange() {this.date=dateValid(dateField, LocalDate.now());endDateField.setValue(date);}
+    @FXML public void endDateFieldFocusChange() {this.endDate=dateValid(endDateField, date);}
+    @FXML public void startTimeTextFieldFocusChange() {
+        startTimeValid();
     }
-
-    public void handleEdit() {
+    @FXML public void endTimeTextFieldFocusChange() {endTimeValid();}
+    @FXML public void handleEdit() {
         disableFields(false);
         editButton.setVisible(false);
         cancelButton.setVisible(true);
         deleteButton.setVisible(true);
-        saveButton.setVisible(true);
-    }
-    public void handleCancel(){
+        saveButton.setVisible(true);}
+    @FXML public void handleCancel(){
         getStage().close();
     }
-    public boolean getEdit(){
-        return edit;
-    }
-    public void disableFields(boolean b){
+    @FXML public void disableFields(boolean b){
         titleField.setDisable(b);
         descriptionField.setDisable(b);
         dateField.setDisable(b);
         endDateField.setDisable(b);
         startTimeField.setDisable(b);
         endTimeField.setDisable(b);
-        roomBox.setDisable(b);
-    }
-
-
+        roomBox.setDisable(b);}
     @FXML public void handleSave() {
         if (inputValid()){
             if(this.appointmentModel==null){
@@ -116,8 +91,6 @@ public class EditAppointmentController extends Controller{
             this.getStage().close();
         }
     }
-
-
     @FXML public void handleDelete() {
         if(appointmentModel != null){
             //TODO: remove appointment from DB
@@ -125,6 +98,34 @@ public class EditAppointmentController extends Controller{
         this.getStage().close();
     }
 
+    //set the fields to the appointment
+    public void setAppointmentModel(Appointment appointmentModel) {
+        this.appointmentModel = appointmentModel;
+        titleField.setText(appointmentModel.getTitle());
+        descriptionField.setText(appointmentModel.getDescription());
+        startTimeField.setText(appointmentModel.localTimeFormat(appointmentModel.getStartTimeProperty()));
+        endTimeField.setText(appointmentModel.localTimeFormat(appointmentModel.getEndTimeProperty()));
+        dateField.setValue(appointmentModel.getStartDateProperty());
+        dateField.setValue(appointmentModel.getEndDateProperty());
+        startTimeTextFieldFocusChange();
+        endTimeTextFieldFocusChange();
+        disableFields(true);
+    }
+
+    //set the buttons visibilty
+    public void setEdit(boolean edit) {
+        this.edit = edit;
+        if(edit == true){
+            editButton.setVisible(true);
+            cancelButton.setVisible(true);
+            deleteButton.setVisible(false);
+            saveButton.setVisible(false);
+        }if(appointmentModel.getStartDateProperty().isBefore(LocalDate.now())){
+            editButton.setVisible(false);
+        }
+    }
+
+    //validation for the input from the user
     public boolean inputValid(){
         String error = "";
         if (!textFieldValid(titleField)){error += "The appointment must have a title\n";}
@@ -151,17 +152,7 @@ public class EditAppointmentController extends Controller{
             return false;}
     }
 
-    @FXML public void titleTextFieldFocusChange() {
-        textFieldValid(titleField);
-    }
-    @FXML public void dateDateFieldFocusChange() {this.date=dateValid(dateField, LocalDate.now());endDateField.setValue(date);}
-    @FXML public void endDateFieldFocusChange() {this.endDate=dateValid(endDateField, date);}
-    @FXML public void startTimeTextFieldFocusChange() {
-        startTimeValid();
-    }
-    @FXML public void endTimeTextFieldFocusChange() {endTimeValid();}
-
-
+    //validate textfields
     private boolean textFieldValid(TextField text){
         if(text.getText().length()==0){
             setStyle(text, false);
@@ -172,6 +163,7 @@ public class EditAppointmentController extends Controller{
         }
     }
 
+    //validate starttime
     private boolean startTimeValid(){
         String time = startTimeField.getText();
         try {
@@ -192,6 +184,7 @@ public class EditAppointmentController extends Controller{
         return false;
     }
 
+    //validate endtime
     private boolean endTimeValid() {
         String time = endTimeField.getText();
         try {
@@ -214,7 +207,23 @@ public class EditAppointmentController extends Controller{
         return false;
     }
 
+    //validate startdate
+    private LocalDate dateValid(DatePicker date, LocalDate compare) {
+        try {
+            if((date!=null) && (date.getValue().compareTo(compare)>=0)){
+                date.setStyle("-fx-background-color: #CCFFCC;");
+                return date.getValue();
+            }else{
+                date.setStyle("-fx-background-color: #FFB2B2;");
+                return null;
+            }
+        } catch (Exception e) {
+            date.setStyle("-fx-background-color: #FFB2B2;");
+        }
+        return null;
+    }
 
+    //fills the combobox with available rooms
     public void setRooms() {
         LocalDateTime start = LocalDateTime.of(date, startTime);
         LocalDateTime end = LocalDateTime.of(endDate, endTime);
@@ -256,6 +265,10 @@ public class EditAppointmentController extends Controller{
         );
     }
 
+
+
+    //private helpmethods
+
     private int getMin(String time){
         return Integer.parseInt(time.substring(3, 5));
     }
@@ -267,21 +280,6 @@ public class EditAppointmentController extends Controller{
             return true;
         }
         else{ return false; }
-    }
-
-    private LocalDate dateValid(DatePicker date, LocalDate compare) {
-        try {
-            if((date!=null) && (date.getValue().compareTo(compare)>=0)){
-                date.setStyle("-fx-background-color: #CCFFCC;");
-                return date.getValue();
-            }else{
-                date.setStyle("-fx-background-color: #FFB2B2;");
-                return null;
-            }
-        } catch (Exception e) {
-            date.setStyle("-fx-background-color: #FFB2B2;");
-        }
-        return null;
     }
 
 
