@@ -1,14 +1,10 @@
 package controllers;
 
-import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ResourceBundle;
-
 import exceptions.DBConnectionException;
-import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.util.StringConverter;
 import models.Room;
@@ -73,7 +69,10 @@ public class EditAppointmentController extends Controller{
             cancelButton.setVisible(true);
             deleteButton.setVisible(false);
             saveButton.setVisible(false);
+        }if(appointmentModel.getStartDateProperty().isBefore(LocalDate.now())){
+            editButton.setVisible(false);
         }
+
     }
 
     public void handleEdit() {

@@ -187,11 +187,7 @@ public class CalendarController extends Controller{
                             if (click.getClickCount() == 2) {
                                 Appointment a = table.getSelectionModel()
                                         .getSelectedItem();
-                                if(a.getStartDateProperty().isBefore(LocalDate.now())){
-                                    return;
-                                }else{
-                                    handleEditAppoinment(a);
-                                }
+                                handleEditAppoinment(a);
                             }
                         }
 
