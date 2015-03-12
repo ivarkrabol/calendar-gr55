@@ -1,6 +1,7 @@
 package models;
 
 import exceptions.DBConnectionException;
+import javafx.collections.ObservableList;
 import util.DB;
 import util.ModelCache;
 
@@ -17,7 +18,7 @@ public class Message extends Model{
     private String description;
     private boolean invitation;
     private boolean read;
-
+    private ObservableList<Message> inbox;
     public int getId() {
         return id;
     }
@@ -68,6 +69,17 @@ public class Message extends Model{
 
     public void setRead(boolean read) {
         this.read = read;
+    }
+
+    //should move this method into User?
+    public ObservableList<Message> getInbox(int UserID, DB db, ModelCache mc) throws SQLException, DBConnectionException  {
+        ResultSet rs;
+        rs = db.query("SELECT MessageID FROM MESSAGE WHERE RecipientID = " + UserID);
+        while (rs.next()) {
+            int temp = rs.getInt("MessageID");
+            inbox.add(getById(temp, db, mc));
+        }
+        return inbox;
     }
 
     public static Message getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {
