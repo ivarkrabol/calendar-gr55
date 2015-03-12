@@ -1,7 +1,11 @@
 package controllers;
 
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ResourceBundle;
+
+import javafx.fxml.Initializable;
 import org.controlsfx.dialog.Dialogs;
 import models.Appointment;
 import javafx.fxml.FXML;
@@ -27,6 +31,7 @@ public class EditAppointmentController extends Controller{
     @FXML
     private TextField endTimeField;
 
+
     private LocalTime startTime;
     private LocalTime endTime;
     private LocalDate date;
@@ -34,6 +39,11 @@ public class EditAppointmentController extends Controller{
     private Appointment appointmentModel;
 
 
+    public EditAppointmentController(){}
+
+    public void setAppointmentModel(Appointment appointmentModel) {
+        this.appointmentModel = appointmentModel;
+    }
 
 
     @FXML public void handleSave() {
@@ -191,12 +201,6 @@ public class EditAppointmentController extends Controller{
         return null;
     }
 
-    public void updateFields(Appointment appointment){
-        titleField.setText(appointment.getTitle());
-        descriptionField.setText(appointment.getDescription());
-        dateField.setValue(appointment.getStartDateProperty());
-        endDateField.setValue(appointment.getEndDateProperty());
-    }
 
 }
 
