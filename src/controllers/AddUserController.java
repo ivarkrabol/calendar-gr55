@@ -48,7 +48,8 @@ public class AddUserController extends Controller {
     @FXML
     void handleSave(ActionEvent event) throws DBConnectionException, SQLException {
     	if (inputValid()){
-    		DB db = getApplication().getDb();
+            // Dette bør være en metode i User-modellen
+            DB db = getApplication().getDb();
         	String sql = "INSERT INTO USER (Email, LastName, FirstName, PhoneNr, Password)\n" +
                     "VALUES ('" +
         			email.getText() + "',\n'" +

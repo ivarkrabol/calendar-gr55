@@ -1,7 +1,6 @@
 package models;
 
 import exceptions.DBConnectionException;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import util.DB;
 import util.ModelCache;
@@ -11,7 +10,7 @@ import java.sql.SQLException;
 
 public class User extends Model{
 
-    private int id;
+    private int id = 0;
     private String email;
     private String lastName;
     private String firstName;
@@ -24,12 +23,12 @@ public class User extends Model{
 
     }
 
-    private User(int id) {
-        this.id = id;
-    }
-
     public int getId() {
         return id;
+    }
+
+    private void setId(int id) {
+        this.id = id;
     }
 
     public String getEmail() {
@@ -38,6 +37,10 @@ public class User extends Model{
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isSuperUser() {
+        return email.equals("admin");
     }
 
     public String getLastName() {
@@ -89,7 +92,8 @@ public class User extends Model{
     public static User getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         User user;
         if(mc.contains(User.class, id)) user = mc.get(User.class, id);
-        else user = new User(id);
+        else user = new User();
+        user.setId(id);
         mc.put(id, user);
         user.refreshFromDB(db, mc);
         return user;
@@ -113,6 +117,8 @@ public class User extends Model{
 
     @Override
     public void saveToDB(DB db) throws SQLException, DBConnectionException {
+
+
         String sql = "UPDATE USER\n" +
                 "EMail = '" + getEmail() + "',\n" +
                 "LastName = '" + getLastName() + "',\n" +
@@ -120,5 +126,21 @@ public class User extends Model{
                 "PhoneNr = '" + getPhoneNr() + "'\n" +
                 "WHERE UserID = " + getId();
         db.query(sql);
+    }
+
+    @Override
+    public void createInDB(DB db) throws SQLException, DBConnectionException {
+        String sql = "INSERT INTO USER\n" +
+                "(EMail, LastName, FirstName, PhoneNr)\n" +
+                "VALUES\n" +
+                "'" + getEmail() + "',\n" +
+                "'" + getLastName() + "',\n" +
+                "'" + getFirstName() + "',\n" +
+                "'" + getPhoneNr() + "';\n" +
+                "SELECT LAST_INSERT_ID() AS ID";
+
+        ResultSet results = db.query(sql);
+        if (!results.next()) throw new SQLException("This shouldn't happen. Sooo...");
+        setId(results.getInt("ID"));
     }
 }
