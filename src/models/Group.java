@@ -8,7 +8,7 @@ import util.ModelCache;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Group extends Model{
+public class Group extends Model {
 
     private int id;
     private ObservableList<Group> groups;
@@ -21,7 +21,16 @@ public class Group extends Model{
         return id;
     }
 
-    public ObservableList<Group> displayGroupsThatUserIsPartOf(int UserID, DB db, ModelCache mc) throws SQLException, DBConnectionException {
+    public void addMember(User user, DB db, ModelCache mc) throws SQLException, DBConnectionException { //should this also include an Appointment ID function
+        String sql = "UPDATE PARTICIPANTS\n" +
+                "UserID = '" + user.getId() + "',\n" +
+                "GroupID = '" + getId() + "',\n" +
+                "WHERE GroupID = " + getId();
+        db.query(sql);
+    }
+
+
+    public ObservableList<Group> getGroupsUserIsPartOf(int UserID, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         ResultSet rs;
         rs = db.query("SELECT GroupID FROM PARTICIPANTS WHERE UserID = " + UserID);
         while (rs.next()) {
@@ -32,9 +41,11 @@ public class Group extends Model{
 
     }
 
-    public static Group getById(int id, DB db, ModelCache mc ) throws SQLException, DBConnectionException { // this isn't done
+    //public void getMemberGroups
+
+    public static Group getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException { // this isn't done
         Group group;
-        if(mc.contains(Group.class, id)) group = mc.get(Group.class, id);
+        if (mc.contains(Group.class, id)) group = mc.get(Group.class, id);
         else {
             group = new Group();
         }
@@ -45,20 +56,16 @@ public class Group extends Model{
 
 
     @Override
-<<<<<<< Updated upstream
-    public void refreshFromDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
-
-=======
     public void refreshFromDB(DB db, ModelCache mc) throws SQLException, DBConnectionException { // ikke ferdig
         String sql = "" +
-                "SELECT Description, Administrator\n" +
+                "SELECT Description, AdministratorID\n" +
                 "FROM GROUP\n" +
                 "WHERE GroupID = " + id;
 
         ResultSet results = db.query(sql);
         if (!results.next()) throw new SQLException("No Group with that ID in database");
-        if(results.next()) throw new SQLException("Result not unique");
->>>>>>> Stashed changes
+        if (results.next()) throw new SQLException("Result not unique");
+
     }
 
     @Override
@@ -66,3 +73,4 @@ public class Group extends Model{
 
     }
 }
+

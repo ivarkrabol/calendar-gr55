@@ -16,11 +16,9 @@ public class User extends Model{
     private String lastName;
     private String firstName;
     private String phoneNr;
-<<<<<<< Updated upstream
-=======
     private Calendar calendar;
     private ObservableList<User> searchResults;
->>>>>>> Stashed changes
+
 
     public User() {
 
@@ -66,16 +64,15 @@ public class User extends Model{
         this.phoneNr = phoneNr;
     }
 
-<<<<<<< Updated upstream
-=======
+
     public Calendar getCalendar() {
         return calendar;
     }
 
-    public final void setCalendar(DB db, ModelCache modelCache){
-        calendar = new Calendar(this.getId(), db, modelCache, "UserID");
+    //public final void setCalendar(DB db, ModelCache modelCache){
+     //   calendar = new Calendar(this.getId(), db, modelCache, "UserID");
 
-    }
+    //}
 
     public ObservableList<User> searchForUser(String UserName, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         ResultSet rs;
@@ -89,7 +86,6 @@ public class User extends Model{
 
 
 
->>>>>>> Stashed changes
     public static User getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         User user;
         if(mc.contains(User.class, id)) user = mc.get(User.class, id);
