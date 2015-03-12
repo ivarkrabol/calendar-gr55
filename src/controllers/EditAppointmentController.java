@@ -1,15 +1,19 @@
 package controllers;
 
+import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ResourceBundle;
+
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.util.StringConverter;
+import models.Room;
 import org.controlsfx.dialog.Dialogs;
 import models.Appointment;
 import javafx.fxml.FXML;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 
-//TODO: have to get a list of available rooms, and have to change style when focus changes on fields
 
 public class EditAppointmentController extends Controller{
 
@@ -18,20 +22,30 @@ public class EditAppointmentController extends Controller{
     @FXML
     private TextArea descriptionField;
     @FXML
-    private TextField roomField;
-    @FXML
     private DatePicker dateField;
+    @FXML
+    private DatePicker endDateField;
     @FXML
     private TextField startTimeField;
     @FXML
     private TextField endTimeField;
+    @FXML
+    private ComboBox<Room> roomBox;
+
 
     private LocalTime startTime;
     private LocalTime endTime;
     private LocalDate date;
+    private LocalDate endDate;
+    private Room room = null;
     private Appointment appointmentModel;
 
 
+    public EditAppointmentController(){}
+
+    public void setAppointmentModel(Appointment appointmentModel) {
+        this.appointmentModel = appointmentModel;
+    }
 
 
     @FXML public void handleSave() {
@@ -39,11 +53,11 @@ public class EditAppointmentController extends Controller{
 
             appointmentModel = new Appointment(titleField.getText());
             appointmentModel.setDescription(descriptionField.getText());
-            appointmentModel.setDate(date);
-            appointmentModel.setStartTime(this.startTime);
-            appointmentModel.setEndTime(this.endTime);
+            appointmentModel.setRoom(room);
+//          appointmentModel.setDate(date);
+//          appointmentModel.setStartTime(this.startTime);
+//          appointmentModel.setEndTime(this.endTime);
 
-            //TODO: add the appointment to the users calendar, and add room
             this.getStage().close();
         }
     }
@@ -102,7 +116,7 @@ public class EditAppointmentController extends Controller{
             return true;
         }
     }
-    
+
     private boolean startTimeValid(){
         String time = startTimeField.getText();
         try {
@@ -207,9 +221,7 @@ public class EditAppointmentController extends Controller{
             date.setStyle("-fx-background-color: #FFB2B2;");
         }
         return null;
-
     }
-
 
 
 }

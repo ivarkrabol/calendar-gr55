@@ -27,11 +27,11 @@
                                 <MenuItem mnemonicParsing="false" text="About" />
                             </items>
                         </Menu>
-                  <Menu fx:id="adminButton" mnemonicParsing="false" text="Admin" visible="false">
-                     <items>
-                        <MenuItem fx:id="addUser" mnemonicParsing="false" text="Add user" />
-                     </items>
-                  </Menu>
+                        <Menu fx:id="adminButton" mnemonicParsing="false" text="Admin" visible="false">
+                            <items>
+                                <MenuItem fx:id="addUser" mnemonicParsing="false" text="Add user" />
+                            </items>
+                        </Menu>
                     </menus>
                 </MenuBar>
             </top>
@@ -68,64 +68,64 @@
                                 <Font size="50.0" />
                             </font>
                         </Label>
-                  <GridPane gridLinesVisible="true" GridPane.rowIndex="1">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints maxHeight="308.0" minHeight="10.0" prefHeight="26.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="622.0" minHeight="10.0" prefHeight="607.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <ListView fx:id="sun" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
-                        <ListView fx:id="mon" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <ListView fx:id="tue" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <ListView fx:id="wed" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                        <ListView fx:id="thu" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                        <ListView fx:id="fri" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                        <ListView fx:id="sat" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="6" GridPane.rowIndex="1" />
-                        <Label fx:id="sunText" prefHeight="15.0" prefWidth="152.0" />
-                        <Label fx:id="monText" prefHeight="15.0" prefWidth="137.0" GridPane.columnIndex="1" />
-                        <Label fx:id="tueText" prefHeight="15.0" prefWidth="138.0" GridPane.columnIndex="2" />
-                        <Label fx:id="wedText" prefHeight="15.0" prefWidth="141.0" GridPane.columnIndex="3" />
-                        <Label fx:id="thuText" prefHeight="15.0" prefWidth="143.0" GridPane.columnIndex="4" />
-                        <Label fx:id="friText" prefHeight="15.0" prefWidth="133.0" GridPane.columnIndex="5" />
-                        <Label fx:id="satText" prefHeight="15.0" prefWidth="138.0" GridPane.columnIndex="6" />
-                     </children>
-                  </GridPane>
-                  <GridPane GridPane.columnIndex="1">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="80.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="80.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="80.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <Label alignment="BASELINE_LEFT" prefHeight="84.0" prefWidth="184.0" text="Week" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                        </Label>
-                        <TextField fx:id="week" alignment="TOP_CENTER" onAction="#weekTextFieldFocusChange" prefHeight="25.0" prefWidth="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label alignment="BASELINE_LEFT" prefHeight="84.0" prefWidth="184.0" text="Year" GridPane.rowIndex="2">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                        </Label>
-                        <TextField fx:id="year" alignment="TOP_CENTER" onAction="#yearTextFieldFocusChange" prefHeight="25.0" prefWidth="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                     </children>
-                  </GridPane>
+                        <GridPane gridLinesVisible="true" GridPane.rowIndex="1">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints maxHeight="308.0" minHeight="10.0" prefHeight="26.0" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="622.0" minHeight="10.0" prefHeight="607.0" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                            <children>
+                                <ListView fx:id="sun" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
+                                <ListView fx:id="mon" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                <ListView fx:id="tue" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                <ListView fx:id="wed" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                <ListView fx:id="thu" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                <ListView fx:id="fri" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                <ListView fx:id="sat" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                                <Label fx:id="sunText" prefHeight="15.0" prefWidth="152.0" />
+                                <Label fx:id="monText" prefHeight="15.0" prefWidth="137.0" GridPane.columnIndex="1" />
+                                <Label fx:id="tueText" prefHeight="15.0" prefWidth="138.0" GridPane.columnIndex="2" />
+                                <Label fx:id="wedText" prefHeight="15.0" prefWidth="141.0" GridPane.columnIndex="3" />
+                                <Label fx:id="thuText" prefHeight="15.0" prefWidth="143.0" GridPane.columnIndex="4" />
+                                <Label fx:id="friText" prefHeight="15.0" prefWidth="133.0" GridPane.columnIndex="5" />
+                                <Label fx:id="satText" prefHeight="15.0" prefWidth="138.0" GridPane.columnIndex="6" />
+                            </children>
+                        </GridPane>
+                        <GridPane GridPane.columnIndex="1">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="80.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="80.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="80.0" prefWidth="100.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                            <children>
+                                <Label alignment="BASELINE_LEFT" prefHeight="84.0" prefWidth="184.0" text="Week" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                                    <font>
+                                        <Font size="16.0" />
+                                    </font>
+                                </Label>
+                                <TextField fx:id="week" alignment="TOP_CENTER" onAction="#weekTextFieldFocusChange" prefHeight="25.0" prefWidth="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                <Label alignment="BASELINE_LEFT" prefHeight="84.0" prefWidth="184.0" text="Year" GridPane.rowIndex="2">
+                                    <font>
+                                        <Font size="16.0" />
+                                    </font>
+                                </Label>
+                                <TextField fx:id="year" alignment="TOP_CENTER" onAction="#yearTextFieldFocusChange" prefHeight="25.0" prefWidth="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                            </children>
+                        </GridPane>
                     </children>
                 </GridPane>
             </center>
