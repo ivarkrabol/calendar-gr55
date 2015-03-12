@@ -69,10 +69,10 @@ public class User extends Model{
         return calendar;
     }
 
-    //public final void setCalendar(DB db, ModelCache modelCache){
-     //   calendar = new Calendar(this.getId(), db, modelCache, "UserID");
+    public final void setCalendar(DB db, ModelCache modelCache){
+         calendar = new Calendar(this.getId(), db, modelCache, "UserID");
 
-    //}
+    }
 
     public ObservableList<User> searchForUser(String UserName, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         ResultSet rs;
