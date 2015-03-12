@@ -2,16 +2,17 @@ package controllers;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ResourceBundle;
 
 import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.util.StringConverter;
+import models.Room;
 import org.controlsfx.dialog.Dialogs;
 import models.Appointment;
 import javafx.fxml.FXML;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 
 
 public class EditAppointmentController extends Controller{
@@ -21,8 +22,6 @@ public class EditAppointmentController extends Controller{
     @FXML
     private TextArea descriptionField;
     @FXML
-    private TextField roomField;
-    @FXML
     private DatePicker dateField;
     @FXML
     private DatePicker endDateField;
@@ -30,12 +29,15 @@ public class EditAppointmentController extends Controller{
     private TextField startTimeField;
     @FXML
     private TextField endTimeField;
+    @FXML
+    private ComboBox<Room> roomBox;
 
 
     private LocalTime startTime;
     private LocalTime endTime;
     private LocalDate date;
     private LocalDate endDate;
+    private Room room = null;
     private Appointment appointmentModel;
 
 
@@ -51,13 +53,11 @@ public class EditAppointmentController extends Controller{
 
             appointmentModel = new Appointment(titleField.getText());
             appointmentModel.setDescription(descriptionField.getText());
-//            appointmentModel.setDate(date);
-//            appointmentModel.setStartTime(this.startTime);
-//            appointmentModel.setEndTime(this.endTime);
-            new Exception("Jeg(Ivar) og Sofia tenkte at det ga mest mening å " +
-                    "lagre appointment-tiden med en startTime: DateTime og en endTime: DateTime " +
-                    "(Slik at det også er mulig å ha en appointment som går i over 24 timer). " +
-                    "Åpent for diskusjon!").printStackTrace();
+            appointmentModel.setRoom(room);
+//          appointmentModel.setDate(date);
+//          appointmentModel.setStartTime(this.startTime);
+//          appointmentModel.setEndTime(this.endTime);
+
             this.getStage().close();
         }
     }
@@ -99,9 +99,6 @@ public class EditAppointmentController extends Controller{
     @FXML public void titleTextFieldFocusChange() {
         textFieldValid(titleField);
     }
-    @FXML public void roomTextFieldFocusChange() {
-        roomValid();
-    }
     @FXML public void dateDateFieldFocusChange() {this.date=dateValid(dateField, LocalDate.now());endDateField.setValue(date);}
     @FXML public void endDateFieldFocusChange() {this.endDate=dateValid(endDateField, date);}
     @FXML public void startTimeTextFieldFocusChange() {
@@ -117,18 +114,6 @@ public class EditAppointmentController extends Controller{
         }else{
             setStyle(text, true);
             return true;
-        }
-    }
-
-    //	TODO: fix room!!
-    private boolean roomValid(){
-        String s = "[a-zA-Z]+-[a-zA-Z]+ [0-9]+";
-        if(roomField.getText().matches(s)){
-            setStyle(roomField, true);
-            return true;
-        }else{
-            setStyle(roomField, false);
-            return false;
         }
     }
 
@@ -158,8 +143,45 @@ public class EditAppointmentController extends Controller{
             int hours = getHour(time);
             int mins = getMin(time);
             this.endTime = LocalTime.of(hours, mins);
+
             if(checkTime(hours, mins, time) && (this.startTime.isBefore(this.endTime))){
                 setStyle(endTimeField, true);
+                LocalDateTime start = LocalDateTime.of(date, startTime);
+                LocalDateTime end = LocalDateTime.of(endDate, endTime);
+                roomBox.setItems(Room.getAvailable(start, end, getApplication().getDb(), getApplication().getModelCache()));
+                roomBox.setCellFactory((combobox) -> {
+                    return new ListCell<Room>() {
+                        @Override
+                        protected void updateItem(Room item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (item == null || empty) {
+                                setText(null);
+                            } else {
+                                setText(item.getName());
+                            }
+                        }
+                    };
+                });
+                roomBox.setConverter(new StringConverter<Room>() {
+                    @Override
+                    public String toString(Room room) {
+                        if(room == null){
+                            return null;
+                        }else{
+                            return room.getName();
+                        }
+                    }
+
+                    @Override
+                    public Room fromString(String string) {
+                        return null;
+                    }
+                });
+                roomBox.setOnAction((event)->{
+                            Room selectedRoom = roomBox.getSelectionModel().getSelectedItem();
+                            this.room = selectedRoom;
+                        }
+                );
                 return true;
             }else{
                 setStyle(endTimeField, false);

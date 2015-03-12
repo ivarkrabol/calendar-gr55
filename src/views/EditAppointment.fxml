@@ -26,33 +26,22 @@
 
                 <TextField fx:id="titleField" onAction="#titleTextFieldFocusChange" onKeyPressed="#titleTextFieldFocusChange" promptText="Cool kids meeting" GridPane.columnIndex="1" />
                 <TextArea fx:id="descriptionField" prefHeight="35.0" prefWidth="158.0" promptText="Meeting for the really cool ones, who are working with PU!" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                <TextField fx:id="roomField" onAction="#roomTextFieldFocusChange" onKeyPressed="#roomTextFieldFocusChange" promptText="IT-vest 214" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                <DatePicker fx:id="dateField" onAction="#dateDateFieldFocusChange" onKeyPressed="#dateDateFieldFocusChange" promptText="MM/DD/YYYY" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                <DatePicker fx:id="endDateField" onAction="#endDateFieldFocusChange" onKeyPressed="#endDateFieldFocusChange" promptText="MM/DD/YYYY" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                <TextField fx:id="startTimeField" onAction="#startTimeTextFieldFocusChange" onKeyPressed="#startTimeTextFieldFocusChange" promptText="10:00" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                <TextField fx:id="endTimeField" onAction="#endTimeTextFieldFocusChange" onKeyPressed="#endTimeTextFieldFocusChange" promptText="12:00" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                <DatePicker fx:id="dateField" onAction="#dateDateFieldFocusChange" onKeyPressed="#dateDateFieldFocusChange" promptText="MM/DD/YYYY" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <DatePicker fx:id="endDateField" onAction="#endDateFieldFocusChange" onKeyPressed="#endDateFieldFocusChange" promptText="MM/DD/YYYY" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <TextField fx:id="startTimeField" onAction="#startTimeTextFieldFocusChange" onKeyPressed="#startTimeTextFieldFocusChange" promptText="10:00" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                <TextField fx:id="endTimeField" onAction="#endTimeTextFieldFocusChange" onKeyPressed="#endTimeTextFieldFocusChange" promptText="12:00" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
                 <Label prefHeight="57.0" prefWidth="171.0" text="   Description" GridPane.rowIndex="1">
                     <font>
                         <Font size="18.0" />
                     </font>
                 </Label>
-                <Label prefHeight="57.0" prefWidth="171.0" text="   Room" GridPane.rowIndex="2">
+                <Label prefHeight="57.0" prefWidth="171.0" text="   Start time" GridPane.rowIndex="4">
                     <font>
                         <Font size="18.0" />
                     </font>
                 </Label>
-                <Label prefHeight="57.0" prefWidth="171.0" text="   Start date" GridPane.rowIndex="3">
-                    <font>
-                        <Font size="18.0" />
-                    </font>
-                </Label>
-                <Label prefHeight="57.0" prefWidth="171.0" text="   Start time" GridPane.rowIndex="5">
-                    <font>
-                        <Font size="18.0" />
-                    </font>
-                </Label>
-                <Label prefHeight="57.0" prefWidth="171.0" text="   End time" GridPane.rowIndex="6">
+                <Label prefHeight="57.0" prefWidth="171.0" text="   End time" GridPane.rowIndex="5">
                     <font>
                         <Font size="18.0" />
                     </font>
@@ -78,11 +67,22 @@
                         <Button alignment="TOP_CENTER" cancelButton="true" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleSave" prefHeight="20.0" prefWidth="69.0" text="Save" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                     </children>
                 </GridPane>
-            <Label prefHeight="57.0" prefWidth="171.0" text="   End date" GridPane.rowIndex="4">
+            <Label prefHeight="57.0" prefWidth="171.0" text="   End date" GridPane.rowIndex="3">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
+            <Label prefHeight="57.0" prefWidth="171.0" text="   Start date" GridPane.rowIndex="2">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label prefHeight="57.0" prefWidth="171.0" text="   Room" GridPane.rowIndex="6">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="roomBox" prefHeight="29.0" prefWidth="196.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
             </children>
         </GridPane>
     </children>

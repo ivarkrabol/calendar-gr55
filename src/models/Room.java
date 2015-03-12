@@ -3,6 +3,10 @@ package models;
 import exceptions.DBConnectionException;
 import exceptions.DBDriverException;
 import exceptions.DBException;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import util.DB;
 import util.ModelCache;
 
@@ -16,17 +20,20 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class Room extends Model{
-	
-	private String name;
+
+    private StringProperty nameProperty = new SimpleStringProperty();
+    public String getName() {
+        return nameProperty.get();
+    }
+    public StringProperty namePropertyProperty() {return nameProperty;}
+
+    public void setNameProperty(String nameProperty) {this.nameProperty.set(nameProperty);}
     private int size;
 
     public Room(String name) {
-        this.name = name;
+        setNameProperty(name);
     }
 
-    public String getName() {
-		return name;
-	}
 
     public int getSize() {
         return size;
@@ -36,18 +43,14 @@ public class Room extends Model{
         this.size = size;
     }
 
-    public static ArrayList<Room> getAvailable(LocalDateTime start, LocalDateTime end, DB db, ModelCache mc) throws SQLException, DBConnectionException {
-        String sql = "" +
-                "SELECT R.RoomName as RoomName\n" +
-                "FROM ROOM R, APPOINTMENT A\n" +
-                "WHERE R.RoomName = A.RoomName\n" +
-                "  AND (\n" +
-                "    A.StartTime > " + end + " OR\n" +
-                "    A.EndTime < " + start + "\n" +
-                "  )\n" +
-                "GROUP BY RoomName";
-
-        ArrayList<Room> rooms = new ArrayList<>();
+    public static ObservableList<Room> getAvailable(LocalDateTime start, LocalDateTime end, DB db, ModelCache mc) throws SQLException, DBConnectionException {
+        ObservableList<Room> rooms = FXCollections.observableArrayList();
+        String sql = "SELECT r.RoomName\n" +
+                "FROM ROOM as r \n" +
+                "WHERE r.Availability = 1  and r.roomname not in\n" +
+                "(select a.roomname from APPOINTMENT as a where \n" +
+                "a.StartTime = '" +start+"'\n" +
+                "AND a.EndTime = '" +end+"')";
         ResultSet results = db.query(sql);
         while(results.next()) {
             rooms.add(getByName(results.getString("RoomName"), db, mc));
@@ -63,6 +66,10 @@ public class Room extends Model{
         room.refreshFromDB(db, mc);
         return room;
     }
+
+
+
+
 
     @Override
     public void refreshFromDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
