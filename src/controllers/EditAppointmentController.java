@@ -33,6 +33,15 @@ public class EditAppointmentController extends Controller{
     private TextField endTimeField;
     @FXML
     private ComboBox<Room> roomBox;
+    @FXML
+    private Button deleteButton;
+    @FXML
+    private Button saveButton;
+    @FXML
+    private Button editButton;
+    @FXML
+    private Button cancelButton;
+
 
     private LocalTime startTime;
     private LocalTime endTime;
@@ -40,8 +49,9 @@ public class EditAppointmentController extends Controller{
     private LocalDate endDate;
     private Room room = null;
     private Appointment appointmentModel;
+    private boolean edit;
 
-    public EditAppointmentController(){}
+
 
     public void setAppointmentModel(Appointment appointmentModel) {
         this.appointmentModel = appointmentModel;
@@ -53,27 +63,68 @@ public class EditAppointmentController extends Controller{
         dateField.setValue(appointmentModel.getEndDateProperty());
         startTimeTextFieldFocusChange();
         endTimeTextFieldFocusChange();
+        disableFields(true);
+    }
+
+    public void setEdit(boolean edit) {
+        this.edit = edit;
+        if(edit == true){
+            editButton.setVisible(true);
+            cancelButton.setVisible(true);
+            deleteButton.setVisible(false);
+            saveButton.setVisible(false);
+        }
+    }
+
+    public void handleEdit() {
+        disableFields(false);
+        editButton.setVisible(false);
+        cancelButton.setVisible(true);
+        deleteButton.setVisible(true);
+        saveButton.setVisible(true);
+    }
+    public void handleCancel(){
+        getStage().close();
+    }
+    public boolean getEdit(){
+        return edit;
+    }
+    public void disableFields(boolean b){
+        titleField.setDisable(b);
+        descriptionField.setDisable(b);
+        dateField.setDisable(b);
+        endDateField.setDisable(b);
+        startTimeField.setDisable(b);
+        endTimeField.setDisable(b);
+        roomBox.setDisable(b);
     }
 
 
     @FXML public void handleSave() {
         if (inputValid()){
-            appointmentModel = new Appointment(titleField.getText());
-            appointmentModel.setDescription(descriptionField.getText());
-            appointmentModel.setRoom(room);
-
-
+            if(this.appointmentModel==null){
+                appointmentModel = new Appointment(titleField.getText());
+                //TODO: Insert new appointment
+            }else{
+                //TODO: Save new thing to DB
+                try{appointmentModel.saveToDB(getApplication().getDb());}
+                catch (SQLException e){
+                    e.printStackTrace();
+                }catch (DBConnectionException e){
+                    e.printStackTrace();
+                }
+            }
             this.getStage().close();
         }
     }
 
 
     @FXML public void handleDelete() {
+        if(appointmentModel != null){
+            //TODO: remove appointment from DB
+        }
         this.getStage().close();
     }
-
-
-
 
     public boolean inputValid(){
         String error = "";

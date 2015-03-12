@@ -163,7 +163,7 @@ public class CalendarController extends Controller{
                 table.setEditable(false);
                 LocalDate day = getApplication().getUser().getCalendar().getDate(i + 1);
                 String dayDescription = getDayDescription(day);
-                weekDays.get(i).setText(" " + dayDescription);
+                weekDays.get(i).setText("   " + dayDescription);
                 if (appointmentsForWeek.size() > 0) {
                     table.setItems(appointmentsForWeek.get(i));
                     table.setCellFactory((list) -> {
@@ -187,7 +187,11 @@ public class CalendarController extends Controller{
                             if (click.getClickCount() == 2) {
                                 Appointment a = table.getSelectionModel()
                                         .getSelectedItem();
-                                handleEditAppoinment(a);
+                                if(a.getStartDateProperty().isBefore(LocalDate.now())){
+                                    return;
+                                }else{
+                                    handleEditAppoinment(a);
+                                }
                             }
                         }
 
@@ -216,6 +220,7 @@ public class CalendarController extends Controller{
             controller.setApp(getApplication());
             controller.setStage(currentStage);
             controller.setAppointmentModel(a);
+            controller.setEdit(true);
             currentStage.show();
         } catch(Exception e) {
             e.printStackTrace();
