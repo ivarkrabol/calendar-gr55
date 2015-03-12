@@ -2,71 +2,75 @@ package controllers;
 
 
 import application.Main;
+import exceptions.DBConnectionException;
+import javafx.beans.binding.SetBinding;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import models.*;
 
 
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 
 
 public class CalendarController extends Controller{
 
-    @FXML
-    private TableColumn<Appointment, String> monCol;
-    @FXML
-    private TableColumn<Appointment, String> tueCol;
-    @FXML
-    private TableColumn<Appointment, String> wedCol;
-    @FXML
-    private TableColumn<Appointment, String> thuCol;
-    @FXML
-    private TableColumn<Appointment, String> friCol;
-    @FXML
-    private TableColumn<Appointment, String> satCol;
-    @FXML
-    private TableColumn<Appointment, String> sunCol;
+
     @FXML
     private TextField week;
     @FXML
     private TextField year;
     @FXML
-    private TableView<Appointment> mon;
+    private Label monText;
     @FXML
-    private TableView<Appointment> tue;
+    private Label tueText;
     @FXML
-    private TableView<Appointment> wed;
+    private Label wedText;
     @FXML
-    private TableView<Appointment> thu;
+    private Label thuText;
     @FXML
-    private TableView<Appointment> fri;
+    private Label friText;
     @FXML
-    private TableView<Appointment> sat;
+    private Label satText;
     @FXML
-    private TableView<Appointment> sun;
+    private Label sunText;
+
+    @FXML
+    private ListView<Appointment> mon;
+    @FXML
+    private ListView<Appointment> tue;
+    @FXML
+    private ListView<Appointment> wed;
+    @FXML
+    private ListView<Appointment> thu;
+    @FXML
+    private ListView<Appointment> fri;
+    @FXML
+    private ListView<Appointment> sat;
+    @FXML
+    private ListView<Appointment> sun;
     @FXML
     private Label titleField;
     @FXML
     private Menu adminButton;
     
-    
 
-    private List<TableView<Appointment>> weekDaysTable;
-    private List<TableColumn<Appointment, String>> weekDaysCol;
+    private List<ListView<Appointment>> weekDaysTable;
+    private List<Label> weekDays;
 
 
     @Override
@@ -85,7 +89,7 @@ public class CalendarController extends Controller{
     }
 
     public final void setList(){
-        weekDaysTable = new ArrayList<TableView<Appointment>>();
+        weekDaysTable = new ArrayList<ListView<Appointment>>();
             weekDaysTable.add(sun);
             weekDaysTable.add(mon);
             weekDaysTable.add(tue);
@@ -93,17 +97,25 @@ public class CalendarController extends Controller{
             weekDaysTable.add(thu);
             weekDaysTable.add(fri);
             weekDaysTable.add(sat);
-        weekDaysCol = new ArrayList<TableColumn<Appointment, String>>();
-            weekDaysCol.add(sunCol);
-            weekDaysCol.add(monCol);
-            weekDaysCol.add(tueCol);
-            weekDaysCol.add(wedCol);
-            weekDaysCol.add(thuCol);
-            weekDaysCol.add(friCol);
-            weekDaysCol.add(satCol);
+        weekDays = new ArrayList<Label>();
+            weekDays.add(sunText);
+            weekDays.add(monText);
+            weekDays.add(tueText);
+            weekDays.add(wedText);
+            weekDays.add(thuText);
+            weekDays.add(friText);
+            weekDays.add(satText);
     }
 
-    @FXML public void handleNewAppoinment() {newStage("/views/EditAppointment.fxml", "New Appointment", new EditAppointmentController());}
+    @FXML public void handleNewAppoinment() {
+        newStage("/views/EditAppointment.fxml", "New Appointment", new EditAppointmentController());}
+  
+    public void handleEditAppoinment(Appointment a) {
+        EditAppointmentController controller = new EditAppointmentController();
+        controller.setAppointmentModel(a);
+        newStage("/views/EditAppointment.fxml", "Edit Appointment", controller);
+    }
+
 
     @FXML public void handleNewGroup() {
         newStage("/views/EditGroup.fxml", "New Group", new EditGroupController());
@@ -115,6 +127,9 @@ public class CalendarController extends Controller{
 
     @FXML public void handleGroups(){
         newStage("/views/ViewUserGroups.fxml", "Groups", new Controller());
+    }
+    @FXML public void handleAddUser() {
+        newStage("/views/AddUser.fxml", "Add user", new AddUserController());
     }
 
     @FXML public void weekTextFieldFocusChange() {
@@ -146,7 +161,7 @@ public class CalendarController extends Controller{
     }
 
     public void emptyWeekDays(){
-        for(TableView table : weekDaysTable){
+        for(ListView table : weekDaysTable){
             table.setItems(null);
         }
     }
@@ -154,15 +169,40 @@ public class CalendarController extends Controller{
     public void setWeekDays() {
         List<ObservableList<Appointment>> appointmentsForWeek = getApplication().getUser().getCalendar().appointmentsForWeek();
         int i = 0;
-        while(i<7){
-            for(TableView<Appointment> table : weekDaysTable){
-                table.setPlaceholder(new Text(""));
+        while(i<7) {
+            for (ListView<Appointment> table : weekDaysTable) {
+                table.setEditable(false);
                 LocalDate day = getApplication().getUser().getCalendar().getDate(i + 1);
                 String dayDescription = getDayDescription(day);
-                weekDaysCol.get(i).setText(""+dayDescription);
-                if (appointmentsForWeek.size()>0){
+                weekDays.get(i).setText(" " + dayDescription);
+                if (appointmentsForWeek.size() > 0) {
                     table.setItems(appointmentsForWeek.get(i));
-                    weekDaysCol.get(i).setCellValueFactory((cellData -> cellData.getValue().CalendarProperty()));
+                    table.setCellFactory((list) -> {
+                        return new ListCell<Appointment>() {
+                            @Override
+                            protected void updateItem(Appointment item, boolean empty) {
+                                super.updateItem(item, empty);
+                                if (item == null || empty) {
+                                    setText(null);
+                                } else {
+                                    setText(item.getCalendarProperty());
+                                }
+                            }
+                        };
+                    });
+
+                    table.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                                                @Override
+                                                   public void handle(MouseEvent click) {
+
+                                                       if (click.getClickCount() == 2) {
+                                                           Appointment a = table.getSelectionModel()
+                                                                   .getSelectedItem();
+                                                           handleEditAppoinment(a);
+                                                       }
+                                                }
+
+                    });
                 }
                 i++;
             }
@@ -184,6 +224,7 @@ public class CalendarController extends Controller{
             currentStage.setTitle(title);
             currentStage.setScene(new Scene(root));
             Controller controller = fxmlLoader.getController();
+            controller.setApp(getApplication());
             controller.setStage(currentStage);
             currentStage.show();
         } catch(Exception e) {
@@ -199,8 +240,6 @@ public class CalendarController extends Controller{
             e.printStackTrace();
         }
     }
-
-
 
 }
 
