@@ -84,8 +84,11 @@ public class Calendar extends Model {
                             "LIMIT 0 , 30";
 
             results = db.query(query);
+            List<Integer> test = new ArrayList<Integer>();
             while(results.next()) {
-                Appointment a = Appointment.getById(results.getInt("AppointmentID"), db, modelCache);
+                int res = results.getInt("AppointmentID");
+                test.add(res);
+                Appointment a = Appointment.getById(res, db, modelCache);
                 appointments.add(a);
             }
         }catch (SQLException e){

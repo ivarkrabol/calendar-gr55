@@ -69,7 +69,7 @@ public class Room extends Model{
         String sql = "" +
                 "SELECT Size\n" +
                 "FROM ROOM\n" +
-                "WHERE RoomName = " + getName();
+                "WHERE RoomName ='" + getName()+"'";
         ResultSet results = db.query(sql);
         if (!results.next()) throw new SQLException("No Room with that Name in database");
         setSize(results.getInt("Size"));
@@ -80,7 +80,7 @@ public class Room extends Model{
     public void saveToDB(DB db) throws SQLException, DBConnectionException {
         String sql = "UPDATE ROOM\n" +
                 "Size = '" + getSize() + "'\n" +
-                "WHERE RoomName = " + getName();
+                "WHERE RoomName ='" + getName()+"'";
 
         db.query(sql);
     }
