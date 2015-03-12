@@ -1,11 +1,13 @@
 package controllers;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ResourceBundle;
 
+import exceptions.DBConnectionException;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.util.StringConverter;
@@ -32,7 +34,6 @@ public class EditAppointmentController extends Controller{
     @FXML
     private ComboBox<Room> roomBox;
 
-
     private LocalTime startTime;
     private LocalTime endTime;
     private LocalDate date;
@@ -40,23 +41,27 @@ public class EditAppointmentController extends Controller{
     private Room room = null;
     private Appointment appointmentModel;
 
-
     public EditAppointmentController(){}
 
     public void setAppointmentModel(Appointment appointmentModel) {
         this.appointmentModel = appointmentModel;
+        titleField.setText(appointmentModel.getTitle());
+        descriptionField.setText(appointmentModel.getDescription());
+        startTimeField.setText(appointmentModel.localTimeFormat(appointmentModel.getStartTimeProperty()));
+        endTimeField.setText(appointmentModel.localTimeFormat(appointmentModel.getEndTimeProperty()));
+        dateField.setValue(appointmentModel.getStartDateProperty());
+        dateField.setValue(appointmentModel.getEndDateProperty());
+        startTimeTextFieldFocusChange();
+        endTimeTextFieldFocusChange();
     }
 
 
     @FXML public void handleSave() {
         if (inputValid()){
-
             appointmentModel = new Appointment(titleField.getText());
             appointmentModel.setDescription(descriptionField.getText());
             appointmentModel.setRoom(room);
-//          appointmentModel.setDate(date);
-//          appointmentModel.setStartTime(this.startTime);
-//          appointmentModel.setEndTime(this.endTime);
+
 
             this.getStage().close();
         }
@@ -143,45 +148,9 @@ public class EditAppointmentController extends Controller{
             int hours = getHour(time);
             int mins = getMin(time);
             this.endTime = LocalTime.of(hours, mins);
-
             if(checkTime(hours, mins, time) && (this.startTime.isBefore(this.endTime))){
                 setStyle(endTimeField, true);
-                LocalDateTime start = LocalDateTime.of(date, startTime);
-                LocalDateTime end = LocalDateTime.of(endDate, endTime);
-                roomBox.setItems(Room.getAvailable(start, end, getApplication().getDb(), getApplication().getModelCache()));
-                roomBox.setCellFactory((combobox) -> {
-                    return new ListCell<Room>() {
-                        @Override
-                        protected void updateItem(Room item, boolean empty) {
-                            super.updateItem(item, empty);
-                            if (item == null || empty) {
-                                setText(null);
-                            } else {
-                                setText(item.getName());
-                            }
-                        }
-                    };
-                });
-                roomBox.setConverter(new StringConverter<Room>() {
-                    @Override
-                    public String toString(Room room) {
-                        if(room == null){
-                            return null;
-                        }else{
-                            return room.getName();
-                        }
-                    }
-
-                    @Override
-                    public Room fromString(String string) {
-                        return null;
-                    }
-                });
-                roomBox.setOnAction((event)->{
-                            Room selectedRoom = roomBox.getSelectionModel().getSelectedItem();
-                            this.room = selectedRoom;
-                        }
-                );
+                setRooms();
                 return true;
             }else{
                 setStyle(endTimeField, false);
@@ -193,6 +162,48 @@ public class EditAppointmentController extends Controller{
 
         }
         return false;
+    }
+
+
+    public void setRooms() {
+        LocalDateTime start = LocalDateTime.of(date, startTime);
+        LocalDateTime end = LocalDateTime.of(endDate, endTime);
+        try{roomBox.setItems(Room.getAvailable(start, end, getApplication().getDb(), getApplication().getModelCache()));}
+        catch (SQLException e){e.printStackTrace();}
+        catch (DBConnectionException e){e.printStackTrace();}
+        roomBox.setCellFactory((combobox) -> {
+            return new ListCell<Room>() {
+                @Override
+                protected void updateItem(Room item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item == null || empty) {
+                        setText(null);
+                    } else {
+                        setText(item.getName());
+                    }
+                }
+            };
+        });
+        roomBox.setConverter(new StringConverter<Room>() {
+            @Override
+            public String toString(Room room) {
+                if (room == null) {
+                    return null;
+                } else {
+                    return room.getName();
+                }
+            }
+
+            @Override
+            public Room fromString(String string) {
+                return null;
+            }
+        });
+        roomBox.setOnAction((event) -> {
+                    Room selectedRoom = roomBox.getSelectionModel().getSelectedItem();
+                    this.room = selectedRoom;
+                }
+        );
     }
 
     private int getMin(String time){
