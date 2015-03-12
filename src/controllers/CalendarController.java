@@ -116,6 +116,7 @@ public class CalendarController extends Controller{
         newStage("/views/EditAppointment.fxml", "Edit Appointment", controller);
     }
 
+
     @FXML public void handleNewGroup() {
         newStage("/views/EditGroup.fxml", "New Group", new EditGroupController());
     }
@@ -126,6 +127,9 @@ public class CalendarController extends Controller{
 
     @FXML public void handleGroups(){
         newStage("/views/ViewUserGroups.fxml", "Groups", new Controller());
+    }
+    @FXML public void handleAddUser() {
+        newStage("/views/AddUser.fxml", "Add user", new AddUserController());
     }
 
     @FXML public void weekTextFieldFocusChange() {
@@ -220,6 +224,7 @@ public class CalendarController extends Controller{
             currentStage.setTitle(title);
             currentStage.setScene(new Scene(root));
             Controller controller = fxmlLoader.getController();
+            controller.setApp(getApplication());
             controller.setStage(currentStage);
             currentStage.show();
         } catch(Exception e) {
