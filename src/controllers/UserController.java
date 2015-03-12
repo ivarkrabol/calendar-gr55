@@ -2,6 +2,7 @@ package controllers;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
 import application.Main;
 import models.User;
 import javafx.fxml.FXML;
@@ -13,6 +14,7 @@ public class UserController extends Controller {
 	@FXML
     private Label userNameLabel;
 
+	
     @FXML public void handleBack(){
         try {
             CalendarController calender = (CalendarController) getApplication().replaceSceneContent("/views/ViewCalendar.fxml");
@@ -22,10 +24,14 @@ public class UserController extends Controller {
             e.printStackTrace();
         }
     }
-    @Override
+    //private int brukernavn = getApplication().getUser().getId();
+    //private hei = getApplication().getUser().getId().
+    
+    /*@Override
     public void initialize(URL location, ResourceBundle resources) {
-       userNameLabel.setText(getApplication().getUser().getFirstName());
-    }
+    	
+       userNameLabel.setText();
+    }*/
     
 
 }

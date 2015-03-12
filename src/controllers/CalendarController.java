@@ -109,7 +109,7 @@ public class CalendarController extends Controller{
 
     @FXML public void handleNewAppoinment() {
         newStage("/views/EditAppointment.fxml", "New Appointment", new EditAppointmentController());}
-
+  
     public void handleEditAppoinment(Appointment a) {
         EditAppointmentController controller = new EditAppointmentController();
         controller.setAppointmentModel(a);
@@ -205,7 +205,6 @@ public class CalendarController extends Controller{
         }
     }
 
-
     private String getDayDescription(LocalDate day){
         String name = ""+day.getDayOfWeek();
         return name.substring(0, 3)+" " + day.getDayOfMonth() + "." + day.getMonthValue();
@@ -236,8 +235,6 @@ public class CalendarController extends Controller{
             e.printStackTrace();
         }
     }
-
-
 
 }
 
