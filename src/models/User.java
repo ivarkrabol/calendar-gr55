@@ -15,14 +15,22 @@ public class User extends Model{
     private String email;
     private String lastName;
     private String firstName;
-    private String phoneNr;
+    private int phoneNr;
+    private String password;
     private Calendar calendar;
     private ObservableList<User> searchResults;
 
 
     public User() {
-
     }
+    public User(String email, String lastName, String firstName, String phoneNr, String password){
+        this.setEmail(email);
+        this.setLastName(lastName);
+        this.setFirstName(firstName);
+        this.setPhoneNr(phoneNr);
+        this.setPassword(password);
+    }
+
 
     private User(int id) {
         this.id = id;
@@ -56,14 +64,17 @@ public class User extends Model{
         this.firstName = firstName;
     }
 
-    public String getPhoneNr() {
+    public int getPhoneNr() {
         return phoneNr;
     }
 
     public void setPhoneNr(String phoneNr) {
-        this.phoneNr = phoneNr;
+        this.phoneNr =  Integer.parseInt(phoneNr);
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public Calendar getCalendar() {
         return calendar;
@@ -109,6 +120,19 @@ public class User extends Model{
         setFirstName(results.getString("FirstName"));
         setPhoneNr(results.getString("PhoneNr"));
         if(results.next()) throw new SQLException("Result not unique");
+    }
+
+    public void insertToDB(DB db, User user){
+        try{String sql = "INSERT INTO USER (Email, LastName, FirstName, PhoneNr, Password)\n" +
+                "VALUES ('" +
+                user.getEmail()+ "',\n'" +
+                user.getLastName()+ "',\n'" +
+                user.firstName+ "',\n'" +
+                user.getPhoneNr() + "',\n'" +
+                user.password + "')";
+                db.insert(sql);
+        }catch(SQLException e){e.printStackTrace();
+        }catch (DBConnectionException e){e.printStackTrace();}
     }
 
     @Override

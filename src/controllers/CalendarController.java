@@ -227,6 +227,7 @@ public class CalendarController extends Controller{
             e.printStackTrace();
         }
     }
+
     private void newStage(String location, String title, Controller Controller){
         Stage currentStage = new Stage();
         try {
