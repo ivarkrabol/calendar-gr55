@@ -29,7 +29,7 @@
                         </Menu>
                         <Menu fx:id="adminButton" mnemonicParsing="false" text="Admin" visible="false">
                             <items>
-                                <MenuItem fx:id="addUser" mnemonicParsing="false" text="Add user" />
+                                <MenuItem fx:id="addUser" mnemonicParsing="false" text="Add user" onAction="#handleAddUser"/>
                             </items>
                         </Menu>
                     </menus>
