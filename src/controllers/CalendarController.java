@@ -187,7 +187,12 @@ public class CalendarController extends Controller{
                             if (click.getClickCount() == 2) {
                                 Appointment a = table.getSelectionModel()
                                         .getSelectedItem();
-                                handleEditAppoinment(a);
+                                if(a==null){
+                                    return;
+                                }else{
+                                    handleEditAppoinment(a);
+
+                                }
                             }
                         }
 
