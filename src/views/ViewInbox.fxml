@@ -19,6 +19,9 @@
                                 <MenuItem mnemonicParsing="false" onAction="#handleBack" text="Back" />
                             </items>
                             <items>
+                                <MenuItem mnemonicParsing="false" onAction="#refreshInbox" text="Refresh" />
+                            </items>
+                            <items>
                                 <MenuItem mnemonicParsing="false" onAction="#handleLogout" text="Logout" />
                             </items>
                         </Menu>
