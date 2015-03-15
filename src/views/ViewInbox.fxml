@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
@@ -10,7 +11,7 @@
 
 <AnchorPane prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MessageController">
     <children>
-        <BorderPane layoutX="0.5" layoutY="7.0" prefHeight="793.0" prefWidth="477.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="323.0" AnchorPane.topAnchor="7.0">
+        <BorderPane layoutX="0.5" layoutY="7.0" prefHeight="800.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <top>
                 <MenuBar BorderPane.alignment="CENTER">
                     <menus>
@@ -33,6 +34,7 @@
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="392.0" minWidth="10.0" prefWidth="62.0" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="745.0" minWidth="10.0" prefWidth="349.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="745.0" minWidth="10.0" prefWidth="349.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="745.0" minWidth="10.0" prefWidth="75.0" />
                     </columnConstraints>
                     <rowConstraints>
@@ -42,7 +44,15 @@
                     </rowConstraints>
                     <children>
                       <ListView fx:id="inboxListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Label fx:id="showInboxLabel" text="label" GridPane.columnIndex="1" GridPane.rowIndex="1"  />
+                  <Label fx:id="showInboxLabel" prefHeight="105.0" prefWidth="160.0" GridPane.columnIndex="1">
+                     <font>
+                        <Font size="30.0" />
+                     </font></Label>
+                  <ListView fx:id="inboxListView2" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Label fx:id="showInboxLabel2" prefHeight="116.0" prefWidth="180.0" GridPane.columnIndex="2">
+                     <font>
+                        <Font size="30.0" />
+                     </font></Label>
                     </children>
                 </GridPane>
             </center>

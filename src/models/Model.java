@@ -19,4 +19,5 @@ public abstract class Model implements Comparable<Appointment> {
     }
 
 
+
 }
