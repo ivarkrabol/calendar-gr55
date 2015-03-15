@@ -13,6 +13,7 @@ import javafx.beans.property.ObjectPropertyBase;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import util.DB;
 import util.ModelCache;
@@ -22,7 +23,6 @@ public class Appointment extends Model {
 
     private int id;
     private User administrator;
-    private ObservableList<User> participants;
     private StringProperty titleProperty = new SimpleStringProperty();
     private StringProperty descriptionProperty = new SimpleStringProperty();
     private StringProperty calendarProperty = new SimpleStringProperty();
@@ -227,15 +227,26 @@ public class Appointment extends Model {
     }
 
     public ObservableList<User> isInvitedToApp(DB db, int id, ModelCache mc) throws DBConnectionException, SQLException  {
+        return getStatusToApp(db, id, mc, "NotAnswered");
+    }
+
+    public ObservableList<User> hasAcceptedToApp(DB db, int id, ModelCache mc) throws DBConnectionException, SQLException  {
+        return getStatusToApp(db, id, mc, "HasAccepted");
+    }
+    public ObservableList<User> hasDeclinedToApp(DB db, int id, ModelCache mc) throws DBConnectionException, SQLException  {
+        return getStatusToApp(db, id, mc, "HasDeclined");
+    }
+
+    public ObservableList<User> getStatusToApp(DB db, int id, ModelCache mc, String status) throws DBConnectionException, SQLException  {
+        ObservableList<User> participants = FXCollections.observableArrayList();
         ResultSet rs;
-        rs = db.query("SELECT UserID FROM PARTICIPANTS WHERE AppointmentID = " + id );
+        rs = db.query("SELECT UserID FROM PARTICIPANTS WHERE AppointmentID = " + id +"AND response ='"+status+"'");
         while (rs.next()) {
             User user = User.getById(rs.getInt("UserID"), db, mc);
             participants.add(user);
         }
         return participants;
     }
-
 
     public static Appointment getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         Appointment appointment;
