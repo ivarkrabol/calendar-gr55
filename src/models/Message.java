@@ -23,6 +23,10 @@ public class Message extends Model{
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public User getRecipient() {
         return recipient;
     }
@@ -76,6 +80,7 @@ public class Message extends Model{
         ResultSet rs;
         ObservableList<Message> inbox = FXCollections.observableArrayList();
         rs = db.query("SELECT MessageID FROM MESSAGE WHERE RecipientID = " + UserID);
+        System.out.print(rs);
         while (rs.next()) {
             int temp = rs.getInt("MessageID");
             inbox.add(getById(temp, db, mc));
@@ -88,6 +93,7 @@ public class Message extends Model{
         Message message;
         if(mc.contains(Message.class, id)) message = mc.get(Message.class, id);
         else message = new Message();
+        message.setId(id);
         message.refreshFromDB(db, mc);
         mc.put(id, message);
         return message;
