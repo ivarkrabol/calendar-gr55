@@ -28,6 +28,7 @@ public class Calendar extends Model {
     private DB db;
     private String owner;
     private ModelCache modelCache;
+    private ObservableList<Appointment> appointments = FXCollections.observableArrayList();
 
 
     public Calendar(int id, DB db, ModelCache modelCache, String owner){
@@ -39,34 +40,22 @@ public class Calendar extends Model {
         this.modelCache=modelCache;
         this.owner=owner;
         setCalendar();
-        setAppointments(startWeekDate, endWeekDate);
-        this.appointments = getAppointments();
     }
 
-     public int getId() {
+    public int getId() {
          return id;
      }
-
-    public int getWeekNumber() {
-        return weekNumber;
-    }
-
     public void setWeekNumber(int weekNumber) {
-        this.weekNumber = weekNumber; setCalendar();
-        setAppointments(startWeekDate, endWeekDate);
-    }
-
-    public int getYearNumber() {
-        return yearNumber;
+        this.weekNumber = weekNumber;
+        setCalendar();
     }
 
     public void setYearNumber(int yearNumber) {
         this.yearNumber=yearNumber;
     }
 
-    private ObservableList<Appointment> appointments = FXCollections.observableArrayList();
 
-    public void setAppointments(LocalDate startdate, LocalDate enddate){
+    public ObservableList<Appointment> getAppointments(LocalDate startdate, LocalDate enddate){
         appointments.removeAll(appointments);
         ResultSet results;
         try {
@@ -79,12 +68,11 @@ public class Calendar extends Model {
                             "SELECT Appointmentid\n" +
                             "FROM APPOINTMENT\n" +
                             "WHERE starttime >=  '"+localTimeFormat(startdate)+"'\n" +
-                            "AND starttime <  '"+localTimeFormat(enddate)+"'\n" +
+                            "AND endtime < '"+localTimeFormat(enddate)+"'\n" +
                             ")\n" +
                             "LIMIT 0 , 30";
-
             results = db.query(query);
-            List<Integer> test = new ArrayList<Integer>();
+            List<Integer> test = new ArrayList<>();
             while(results.next()) {
                 int res = results.getInt("AppointmentID");
                 test.add(res);
@@ -96,11 +84,12 @@ public class Calendar extends Model {
         }catch (DBConnectionException e){
             System.out.println("Exception:" + e);
         }
+        System.out.println("appointments = " + appointments);
+        return appointments;
     }
 
     public ObservableList<Appointment> getAppointmentsForDay(LocalDate localdate){
-     ObservableList<Appointment> dayAppointments = FXCollections.observableArrayList();
-     setAppointments(getDate(1), getDate(7));
+        ObservableList<Appointment> dayAppointments = FXCollections.observableArrayList();
         for(Appointment a:this.appointments){
             if(a.getStartDateProperty().isEqual(localdate)){
                 dayAppointments.add(a);
@@ -112,7 +101,8 @@ public class Calendar extends Model {
 
     public void setCalendar(){
         startWeekDate = getDate(1);
-        endWeekDate = getDate(7);
+        endWeekDate = getEndDate(0);
+        this.appointments = getAppointments(startWeekDate, endWeekDate);
     }
 
     public List<ObservableList<Appointment>> appointmentsForWeek(){
@@ -133,14 +123,14 @@ public class Calendar extends Model {
         LocalDate date = calendar.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         return date;
     }
+    public LocalDate getEndDate(int day) {
+        calendar.set(java.util.Calendar.YEAR, yearNumber);
+        calendar.set(java.util.Calendar.WEEK_OF_YEAR, weekNumber+1);
+        calendar.set(java.util.Calendar.DAY_OF_WEEK, day);
+        LocalDate date = calendar.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return date;
+    }
 
-    public void addAppointment(Appointment appointment){
-		this.appointments.add(appointment);
-	}
-
-	public void removeAppointment(Appointment appointment) {
-		this.appointments.remove(appointment);
-	}
 
     public ObservableList<Appointment> getAppointments() {
         return appointments;
@@ -155,9 +145,9 @@ public class Calendar extends Model {
         throw new SQLException("Calendar is not a DB object and should not be saved");
     }
 
-    public int getWeekNumber(LocalDate today){
+    public int getWeekNumber(LocalDate day){
         WeekFields fields = WeekFields.of(Locale.getDefault());
-        return today.get(fields.weekOfWeekBasedYear());
+        return day.get(fields.weekOfWeekBasedYear());
     }
 
     public String localTimeFormat(LocalDate time){
