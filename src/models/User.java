@@ -1,7 +1,6 @@
 package models;
 
 import exceptions.DBConnectionException;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import util.DB;
@@ -80,7 +79,7 @@ public class User extends Model{
     }
 
     public final void setCalendar(DB db, ModelCache modelCache){
-         calendar = new Calendar(this.getId(), db, modelCache, "UserID");
+         calendar = new Calendar(this.getId(), db, modelCache, Calendar.OwnerType.user);
 
     }
 
