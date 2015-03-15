@@ -19,7 +19,7 @@ import util.DB;
 import util.ModelCache;
 
 
-public class Appointment extends Model {
+public class Appointment extends Model implements Comparable<Appointment>  {
 
     private int id;
     private User administrator;
