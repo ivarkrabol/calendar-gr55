@@ -7,6 +7,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import util.DB;
 import util.ModelCache;
+
+import javax.print.DocFlavor;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -15,6 +17,9 @@ import java.time.LocalDateTime;
 public class Room extends Model{
 
     private StringProperty nameProperty = new SimpleStringProperty();
+    public StringProperty getNameProperty(){
+        return nameProperty;
+    }
     public String getName() {
         return nameProperty.get();
     }

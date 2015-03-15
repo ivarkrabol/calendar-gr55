@@ -19,6 +19,7 @@
                         </Menu>
                         <Menu mnemonicParsing="false" text="Inbox">
                             <items>
+                                <MenuItem mnemonicParsing="false" onAction="#handleViewInbox" text="Show Inbox" />
                                 <MenuItem mnemonicParsing="false" text="Delete" />
                             </items>
                         </Menu>

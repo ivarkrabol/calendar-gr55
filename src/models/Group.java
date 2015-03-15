@@ -30,7 +30,7 @@ public class Group extends Model {
     }
 
 
-    public ObservableList<Group> getGroupsUserIsPartOf(int UserID, DB db, ModelCache mc) throws SQLException, DBConnectionException {
+    public static ObservableList<Group> getGroupsUserIsPartOf(int UserID, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         ResultSet rs;
         ObservableList<Group> groups = FXCollections.observableArrayList();
         rs = db.query("SELECT GroupID FROM PARTICIPANTS WHERE UserID = " + UserID);
@@ -42,7 +42,7 @@ public class Group extends Model {
 
     }
 
-    //public void getMemberGroups
+
 
     public static Group getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException { // this isn't done
         Group group;
