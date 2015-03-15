@@ -92,6 +92,7 @@ public class Message extends Model{
         Message message;
         if(mc.contains(Message.class, id)) message = mc.get(Message.class, id);
         else message = new Message();
+        message.setId(id);
         message.refreshFromDB(db, mc);
         mc.put(id, message);
         return message;
