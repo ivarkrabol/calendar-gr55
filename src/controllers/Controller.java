@@ -5,8 +5,11 @@ import java.util.ResourceBundle;
 
 import application.Main;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class Controller implements Initializable{
@@ -24,7 +27,23 @@ public class Controller implements Initializable{
         Controller.application = application;
     }
 
-    
+
+    protected void newStage(String location, String title, Controller Controller){
+        Stage currentStage = new Stage();
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(location));
+            AnchorPane root = fxmlLoader.load();
+            currentStage.setTitle(title);
+            currentStage.setScene(new Scene(root));
+            Controller controller = fxmlLoader.getController();
+            controller.setApp(getApplication());
+            controller.setStage(currentStage);
+            currentStage.show();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {}
 
@@ -51,7 +70,7 @@ public class Controller implements Initializable{
         }
     }
     public void setAdminUser(boolean b){
-    	this.adminUser = b;
+    	adminUser = b;
     }
     public boolean getAdminUser(){
 		return adminUser;

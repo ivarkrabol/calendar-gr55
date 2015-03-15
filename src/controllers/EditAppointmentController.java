@@ -57,6 +57,10 @@ public class EditAppointmentController extends Controller{
         startTimeValid();
     }
     @FXML public void endTimeTextFieldFocusChange() {endTimeValid();}
+    @FXML public void handleInviteParticipants(){
+        newStage("/views/InviteUser.fxml", "Invited participants", new InviteUserController());
+    }
+
     @FXML public void handleEdit() {
         disableFields(false);
         editButton.setVisible(false);

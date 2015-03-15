@@ -226,21 +226,6 @@ public class CalendarController extends Controller{
         }
     }
 
-    private void newStage(String location, String title, Controller Controller){
-        Stage currentStage = new Stage();
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(location));
-            AnchorPane root = fxmlLoader.load();
-            currentStage.setTitle(title);
-            currentStage.setScene(new Scene(root));
-            Controller controller = fxmlLoader.getController();
-            controller.setApp(getApplication());
-            controller.setStage(currentStage);
-            currentStage.show();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @FXML public void handleViewUser(){
         try {
