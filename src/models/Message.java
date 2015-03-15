@@ -1,6 +1,10 @@
 package models;
 
 import exceptions.DBConnectionException;
+import javafx.beans.property.ObjectPropertyBase;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import util.DB;
@@ -19,6 +23,22 @@ public class Message extends Model{
     private String description;
     private boolean invitation;
     private boolean read;
+
+
+    private Property<Message> messageProperty =  new ObjectPropertyBase<Message>(null) {
+
+        @Override
+        public Object getBean() {
+            return this;
+        }
+
+        @Override
+        public String getName() {
+            return "message";
+        }
+    };
+
+
     public int getId() {
         return id;
     }
@@ -75,6 +95,7 @@ public class Message extends Model{
         this.read = read;
     }
 
+
     //should move this method into User?
     public static ObservableList<Message> getInbox(int UserID, DB db, ModelCache mc) throws SQLException, DBConnectionException  {
         ResultSet rs;
@@ -97,6 +118,9 @@ public class Message extends Model{
         mc.put(id, message);
         return message;
     }
+
+
+
 
     @Override
     public void refreshFromDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {

@@ -304,7 +304,7 @@ public class Appointment extends Model {
                 "Description ='" + getDescription() + "'\n"+
                 "WHERE AppointmentID ='" + getId() + "'";
         if(getRoom()!=null){
-            String room =  "UPDATE APPOINTMENT SET RoomName = '"+getRoom().getName()+"' WHERE AppointmentID =  '"+getId()+"'";
+            String room =  "UPDATE APPOINTMENT SET RoomName = '"+getRoom().getName() + "' WHERE AppointmentID =  '"+getId() + "'";
             db.update(room);
         }
         db.update(sql);
