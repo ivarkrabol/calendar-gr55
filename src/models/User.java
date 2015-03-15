@@ -31,11 +31,6 @@ public class User extends Model{
         this.setPassword(password);
     }
 
-
-    private User(int id) {
-        this.id = id;
-    }
-
     public int getId() {
         return id;
     }
@@ -50,10 +45,6 @@ public class User extends Model{
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public boolean isSuperUser() {
-        return email.equals("admin");
     }
 
     public String getLastName() {

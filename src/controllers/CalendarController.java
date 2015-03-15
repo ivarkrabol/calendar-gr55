@@ -71,7 +71,7 @@ public class CalendarController extends Controller{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        if(getAdminUser()==true){
+        if(getAdminUser()){
             adminButton.setVisible(true);
         }
         year.setText(""+LocalDate.now().getYear());
