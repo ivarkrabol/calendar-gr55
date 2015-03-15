@@ -37,6 +37,7 @@ public class UserController extends Controller {
     public void initialize(URL location, ResourceBundle resources) {
     	User user = getApplication().getUser();
     	String navn = user.getFirstName() + " " + user.getLastName();
+    	userNameLabel.setText(navn);
     	emailLabel.setText(user.getEmail());
     	phoneLabel.setText(Integer.toString(user.getPhoneNr()));
     	
