@@ -1,6 +1,7 @@
 package controllers;
 
 import exceptions.DBConnectionException;
+import javafx.event.ActionEvent;
 import org.controlsfx.dialog.Dialogs;
 
 import javafx.fxml.FXML;
@@ -20,6 +21,11 @@ public class LoginController extends Controller{
     private PasswordField password;
 
     private String correctPassword;
+
+    @FXML
+    void enterIsPressed(ActionEvent event) {
+        handleLogin();
+    }
 
     @FXML public void handleLogin() {
         if(inputValid()){
@@ -43,7 +49,7 @@ public class LoginController extends Controller{
         try{
             DB db = this.getApplication().getDb();
             ResultSet results = db.query("SELECT password FROM USER WHERE EMail = '" + userName.getText() + "'");
-            if(results.next()){
+            if (results.next()){
                 this.correctPassword = results.getString("password");
                 setStyle(userName, true);
                 return true;
