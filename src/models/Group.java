@@ -73,5 +73,10 @@ public class Group extends Model {
     public void saveToDB(DB db) throws SQLException, DBConnectionException {
 
     }
+
+    @Override
+    public void insertToDB(DB db) throws SQLException, DBConnectionException {
+
+    }
 }
 

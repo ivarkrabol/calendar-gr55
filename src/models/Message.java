@@ -23,6 +23,10 @@ public class Message extends Model{
         return id;
     }
 
+    private void setId(int id) {
+        this.id = id;
+    }
+
     public User getRecipient() {
         return recipient;
     }
@@ -123,6 +127,25 @@ public class Message extends Model{
                 "HasBeenRead = '" + isRead() + "'\n" +
                 "WHERE MessageID = " + getId();
 
-        db.query(sql);
+        db.update(sql);
+    }
+
+    @Override
+    public void insertToDB(DB db) throws SQLException, DBConnectionException {
+        String updateSql = "INSERT INTO USER\n" +
+                "(RecipientID, SenderID, SentTime, Description, IsInvitation, HasBeenRead)\n" +
+                "VALUES (\n" +
+                getRecipient().getId() + ",\n" +
+                getSender().getId() + ",\n" +
+                "'" + getSentTime() + "',\n" +
+                "'" + getDescription() + "',\n" +
+                String.valueOf(isInvitation()) + ",\n" +
+                String.valueOf(isRead()) + ")";
+        db.update(updateSql);
+        String querySql = "SELECT MAX(MessageID) AS ID FROM MESSAGE";
+
+        ResultSet results = db.query(querySql);
+        if (!results.next()) throw new SQLException("This shouldn't happen. Sooo...");
+        setId(results.getInt("ID"));
     }
 }
