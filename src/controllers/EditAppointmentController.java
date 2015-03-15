@@ -79,11 +79,11 @@ public class EditAppointmentController extends Controller{
             if(this.appointmentModel==null){
                 System.out.println(""+date + endDate+startTime + endDate);
                 appointmentModel = new Appointment(titleField.getText(), descriptionField.getText(), date, endDate, startTime, endTime, room, getApplication().getUser());
-
                 appointmentModel.insertToDB(getApplication().getDb(), appointmentModel);
             }else{
-                //TODO: Save new thing to DB
-                try{appointmentModel.saveToDB(getApplication().getDb());
+                try{
+                    appointmentModel.setAppointment(titleField.getText(), descriptionField.getText(), date, endDate, startTime, endTime, room);
+                    appointmentModel.saveToDB(getApplication().getDb());
                 }
                 catch (SQLException e){
                     e.printStackTrace();
@@ -96,7 +96,9 @@ public class EditAppointmentController extends Controller{
     }
     @FXML public void handleDelete() {
         if(appointmentModel != null){
-            //TODO: remove appointment from DB
+            try{appointmentModel.removeFromDB(getApplication().getDb());}
+            catch (SQLException e){e.printStackTrace();}
+            catch (DBConnectionException e){e.printStackTrace();}
         }
         this.getStage().close();
     }
@@ -107,9 +109,14 @@ public class EditAppointmentController extends Controller{
         titleField.setText(appointmentModel.getTitle());
         descriptionField.setText(appointmentModel.getDescription());
         startTimeField.setText(appointmentModel.localTimeFormat(appointmentModel.getStartTimeProperty()));
+        startTime=appointmentModel.getStartTimeProperty();
+        endTime = appointmentModel.getEndTimeProperty();
+        date = appointmentModel.getStartDateProperty();
+        endDate = appointmentModel.getEndDateProperty();
         endTimeField.setText(appointmentModel.localTimeFormat(appointmentModel.getEndTimeProperty()));
         dateField.setValue(appointmentModel.getStartDateProperty());
         dateField.setValue(appointmentModel.getEndDateProperty());
+        setRooms();
         startTimeTextFieldFocusChange();
         endTimeTextFieldFocusChange();
         disableFields(true);
