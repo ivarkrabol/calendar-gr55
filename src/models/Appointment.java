@@ -305,40 +305,41 @@ public class Appointment extends Model {
                 "WHERE AppointmentID ='" + getId() + "'";
         if(getRoom()!=null){
             String room =  "UPDATE APPOINTMENT SET RoomName = '"+getRoom().getName()+"' WHERE AppointmentID =  '"+getId()+"'";
-            db.insert(room);
+            db.update(room);
         }
-        db.insert(sql);
+        db.update(sql);
     }
 
-    public void insertToDB(DB db, Appointment appointment){
-        try{String sql = "INSERT INTO `APPOINTMENT` "
-                + "(`Title`, `StartTime`, `EndTime`, `AdministratorID`, "
-                + "`Description`) VALUES ('"+ appointment.getTitle() +"', "
-                + "'"+ LocalDateTime.of(appointment.getStartDateProperty(), appointment.getStartTimeProperty()) + "', "
-                + "'" + LocalDateTime.of(appointment.getEndDateProperty(), appointment.getEndTimeProperty()) + "', "
-                + "'" + appointment.getAdministrator().getId() +"', "
-                + "'" + appointment.getDescription() + "')";
-            db.insert(sql);
-            String sql2 = "select max(AppointmentID) from APPOINTMENT";
-            ResultSet result = db.query(sql2);
-            if(result.next()){
-                appointment.setId(result.getInt(1));
-            }
-            if(appointment.getRoom()!=null){
-                String room =  "UPDATE APPOINTMENT SET RoomName = '"+appointment.getRoom().getName()+"' WHERE AppointmentID =  '"+appointment.getId()+"'";
-                db.insert(room);
-            }
-            String sql3 = "INSERT INTO `PARTICIPANTS` (`UserID`, `AppointmentID`, `Response`) VALUES ('"+ appointment.getAdministrator().getId() + "', '"
-                    + appointment.getId() + "', 'HasAccepted')"
-                    ;
-            db.insert(sql3);
-        }catch(SQLException e){e.printStackTrace();
-        }catch (DBConnectionException e){e.printStackTrace();}
+    @Override
+    public void insertToDB(DB db) throws SQLException, DBConnectionException {
+        String sql = "INSERT INTO `APPOINTMENT` "
+            + "(`Title`, `StartTime`, `EndTime`, `AdministratorID`, "
+            + "`Description`) VALUES ('"+ getTitle() +"', "
+            + "'"+ LocalDateTime.of(getStartDateProperty(), getStartTimeProperty()) + "', "
+            + "'" + LocalDateTime.of(getEndDateProperty(), getEndTimeProperty()) + "', "
+            + "'" + getAdministrator().getId() +"', "
+            + "'" + getDescription() + "')";
+        db.update(sql);
+
+        String sql2 = "SELECT MAX(AppointmentID) AS ID FROM APPOINTMENT";
+        ResultSet results = db.query(sql2);
+        if (!results.next()) throw new SQLException("This shouldn't happen. Sooo...");
+        setId(results.getInt("ID"));;
+
+        if(getRoom()!=null){
+            String room =  "UPDATE APPOINTMENT SET RoomName = '"+getRoom().getName()+"' WHERE AppointmentID =  '"+getId()+"'";
+            db.update(room);
+        }
+
+        String sql3 = "INSERT INTO `PARTICIPANTS` (`UserID`, `AppointmentID`, `Response`) VALUES ('"+ getAdministrator().getId() + "', '"
+                + getId() + "', 'HasAccepted')"
+                ;
+        db.update(sql3);
     }
 
     public void removeFromDB(DB db) throws SQLException, DBConnectionException {
         String sql = "DELETE FROM APPOINTMENT WHERE AppointmentID ="+getId();
-        db.insert(sql);
+        db.update(sql);
     }
 
     public String localTimeFormat(LocalTime time){

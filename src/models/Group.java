@@ -50,6 +50,7 @@ public class Group extends Model {
         else {
             group = new Group();
         }
+        group.setId(id);
         mc.put(id, group);
         group.refreshFromDB(db, mc);
         return group;
@@ -71,6 +72,11 @@ public class Group extends Model {
 
     @Override
     public void saveToDB(DB db) throws SQLException, DBConnectionException {
+
+    }
+
+    @Override
+    public void insertToDB(DB db) throws SQLException, DBConnectionException {
 
     }
 }

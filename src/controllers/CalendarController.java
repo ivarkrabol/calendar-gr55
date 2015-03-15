@@ -12,14 +12,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import models.*;
-
 import java.net.URL;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;
 import java.util.*;
-
-import exceptions.DBConnectionException;
 
 
 public class CalendarController extends Controller{
@@ -75,8 +71,7 @@ public class CalendarController extends Controller{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-    	
-        if(getAdminUser()==true){
+        if(getAdminUser()){
             adminButton.setVisible(true);
         }
         year.setText(""+LocalDate.now().getYear());

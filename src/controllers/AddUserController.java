@@ -51,7 +51,7 @@ public class AddUserController extends Controller {
     	if (inputValid()){
             DB db= getApplication().getDb();
             User user = new User(email.getText(), lname.getText(), fname.getText(), phonenumber.getText(), password.getText());
-            user.insertToDB(db, user);
+            user.insertToDB(db);
         	this.getStage().close();
     	}
     }
