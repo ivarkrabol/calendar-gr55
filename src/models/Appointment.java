@@ -23,6 +23,10 @@ public class Appointment extends Model implements Comparable<Appointment>  {
 
     private int id;
     private User administrator;
+    ObservableList<User> invitedParticipants;
+    ObservableList<User> acceptedParticipants;
+    ObservableList<User> declinedParticipants;
+
     private StringProperty titleProperty = new SimpleStringProperty();
     private StringProperty descriptionProperty = new SimpleStringProperty();
     private StringProperty calendarProperty = new SimpleStringProperty();
@@ -237,21 +241,28 @@ public class Appointment extends Model implements Comparable<Appointment>  {
         return admin.isEmpty();
     }
 
-    public ObservableList<User> isInvitedToApp(DB db, int id, ModelCache mc) throws DBConnectionException, SQLException  {
-        return getStatusToApp(db, id, mc, "NotAnswered");
+    public void setInvitedParticipants(DB db, int id, ModelCache mc) throws DBConnectionException, SQLException  {
+        invitedParticipants=getStatusToApp(db, id, mc, "NotAnswered");}
+    public void setAcceptedParticipants(DB db, int id, ModelCache mc) throws DBConnectionException, SQLException  {
+        acceptedParticipants = getStatusToApp(db, id, mc, "HasAccepted");}
+    public void setDeclinedParticipants(DB db, int id, ModelCache mc) throws DBConnectionException, SQLException  {
+        declinedParticipants=getStatusToApp(db, id, mc, "HasDeclined");
     }
+    public ObservableList<User> getAcceptedParticipants() {
+        return acceptedParticipants;
+    }
+    public ObservableList<User> getInvitedParticipants() {
+        return invitedParticipants;
+    }
+    public ObservableList<User> getDeclinedParticipants() {
 
-    public ObservableList<User> hasAcceptedToApp(DB db, int id, ModelCache mc) throws DBConnectionException, SQLException  {
-        return getStatusToApp(db, id, mc, "HasAccepted");
-    }
-    public ObservableList<User> hasDeclinedToApp(DB db, int id, ModelCache mc) throws DBConnectionException, SQLException  {
-        return getStatusToApp(db, id, mc, "HasDeclined");
+        return declinedParticipants;
     }
 
     public ObservableList<User> getStatusToApp(DB db, int id, ModelCache mc, String status) throws DBConnectionException, SQLException  {
         ObservableList<User> participants = FXCollections.observableArrayList();
         ResultSet rs;
-        rs = db.query("SELECT UserID FROM PARTICIPANTS WHERE AppointmentID = " + id +"AND response ='"+status+"'");
+        rs = db.query("SELECT 'UserID' FROM PARTICIPANTS WHERE AppointmentID = '" + id +"' AND response ='"+status+"'");
         while (rs.next()) {
             User user = User.getById(rs.getInt("UserID"), db, mc);
             participants.add(user);
@@ -304,7 +315,7 @@ public class Appointment extends Model implements Comparable<Appointment>  {
                 "Description ='" + getDescription() + "'\n"+
                 "WHERE AppointmentID ='" + getId() + "'";
         if(getRoom()!=null){
-            String room =  "UPDATE APPOINTMENT SET RoomName = '"+getRoom().getName()+"' WHERE AppointmentID =  '"+getId()+"'";
+            String room =  "UPDATE APPOINTMENT SET RoomName = '"+getRoom().getName() + "' WHERE AppointmentID =  '"+getId() + "'";
             db.update(room);
         }
         db.update(sql);
@@ -324,7 +335,7 @@ public class Appointment extends Model implements Comparable<Appointment>  {
         String sql2 = "SELECT MAX(AppointmentID) AS ID FROM APPOINTMENT";
         ResultSet results = db.query(sql2);
         if (!results.next()) throw new SQLException("This shouldn't happen. Sooo...");
-        setId(results.getInt("ID"));;
+        setId(results.getInt("ID"));
 
         if(getRoom()!=null){
             String room =  "UPDATE APPOINTMENT SET RoomName = '"+getRoom().getName()+"' WHERE AppointmentID =  '"+getId()+"'";
