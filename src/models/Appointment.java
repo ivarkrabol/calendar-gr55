@@ -108,6 +108,17 @@ public class Appointment extends Model {
         setAdministrator(user);
     }
 
+    public void setAppointment(String title, String description, LocalDate startDate,
+                       LocalDate endDate, LocalTime startTime, LocalTime endTime, Room room){
+        setTitle(title);
+        setDescription(description);
+        setStartDateProperty(startDate);
+        setEndDateProperty(endDate);
+        setStartTimeProperty(startTime);
+        setEndTimeProperty(endTime);
+        setRoom(room);
+    }
+
     public StringProperty EmptyProperty() {
         return emptyProperty;
     }
@@ -286,15 +297,17 @@ public class Appointment extends Model {
 
     @Override
     public void saveToDB(DB db) throws SQLException, DBConnectionException {
-        String sql = "UPDATE APPOINTMENT\n" +
-                "StartTime ='" + LocalDateTime.of(getStartDateProperty(), getStartTimeProperty())+ "',\n" +
+        String sql = "UPDATE APPOINTMENT\n SET Title ='" +getTitle()+
+                "', StartTime ='" + LocalDateTime.of(getStartDateProperty(), getStartTimeProperty())+ "',\n" +
                 "EndTime ='" + LocalDateTime.of(getEndDateProperty(), getEndTimeProperty()) + "',\n" +
                 "AdministratorID ='" + getAdministrator().getId() + "',\n" +
-                "Description ='" + getDescription() + "',\n" +
-                "RoomName ='" + getRoom().getName() +"'\n" +
+                "Description ='" + getDescription() + "'\n"+
                 "WHERE AppointmentID ='" + getId() + "'";
-        System.out.println("sql = " + sql);
-        db.query(sql);
+        if(getRoom()!=null){
+            String room =  "UPDATE APPOINTMENT SET RoomName = '"+getRoom().getName()+"' WHERE AppointmentID =  '"+getId()+"'";
+            db.insert(room);
+        }
+        db.insert(sql);
     }
 
     public void insertToDB(DB db, Appointment appointment){

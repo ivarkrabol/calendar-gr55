@@ -81,7 +81,9 @@ public class EditAppointmentController extends Controller{
                 appointmentModel = new Appointment(titleField.getText(), descriptionField.getText(), date, endDate, startTime, endTime, room, getApplication().getUser());
                 appointmentModel.insertToDB(getApplication().getDb(), appointmentModel);
             }else{
-                try{appointmentModel.saveToDB(getApplication().getDb());
+                try{
+                    appointmentModel.setAppointment(titleField.getText(), descriptionField.getText(), date, endDate, startTime, endTime, room);
+                    appointmentModel.saveToDB(getApplication().getDb());
                 }
                 catch (SQLException e){
                     e.printStackTrace();
@@ -107,12 +109,14 @@ public class EditAppointmentController extends Controller{
         titleField.setText(appointmentModel.getTitle());
         descriptionField.setText(appointmentModel.getDescription());
         startTimeField.setText(appointmentModel.localTimeFormat(appointmentModel.getStartTimeProperty()));
+        startTime=appointmentModel.getStartTimeProperty();
+        endTime = appointmentModel.getEndTimeProperty();
+        date = appointmentModel.getStartDateProperty();
+        endDate = appointmentModel.getEndDateProperty();
         endTimeField.setText(appointmentModel.localTimeFormat(appointmentModel.getEndTimeProperty()));
         dateField.setValue(appointmentModel.getStartDateProperty());
         dateField.setValue(appointmentModel.getEndDateProperty());
-        if(appointmentModel.getRoom()!= null){
-
-        }
+        setRooms();
         startTimeTextFieldFocusChange();
         endTimeTextFieldFocusChange();
         disableFields(true);
