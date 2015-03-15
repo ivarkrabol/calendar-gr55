@@ -94,9 +94,11 @@ public class User extends Model{
     }
 
     public static ObservableList<User> searchForUser(String UserName, DB db, ModelCache mc) throws SQLException, DBConnectionException {
-        ResultSet rs;
-        ObservableList<User> searchResults = FXCollections.observableArrayList();
-        rs = db.query("SELECT UserID FROM USER WHERE FirstName = " + UserName + "OR LastName = " + UserName + "OR Email = " + UserName);
+
+    	ObservableList<User> searchResults = FXCollections.observableArrayList();
+    	ResultSet rs;
+        rs = db.query("SELECT UserID FROM USER WHERE FirstName like '%" + UserName + "%' OR LastName like '%" + UserName + "%' OR Email like '%" + UserName + "%'");
+
         while (rs.next()) {
             int temp = rs.getInt("UserID");
             searchResults.add(getById(temp, db, mc));
