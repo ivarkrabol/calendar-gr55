@@ -323,6 +323,11 @@ public class Appointment extends Model {
         }catch (DBConnectionException e){e.printStackTrace();}
     }
 
+    public void removeFromDB(DB db) throws SQLException, DBConnectionException {
+        String sql = "DELETE FROM APPOINTMENT WHERE AppointmentID ="+getId();
+        db.insert(sql);
+    }
+
     public String localTimeFormat(LocalTime time){
         String res = "";
         if(time.getHour()<10){

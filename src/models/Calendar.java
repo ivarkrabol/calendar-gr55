@@ -84,7 +84,6 @@ public class Calendar extends Model {
         }catch (DBConnectionException e){
             System.out.println("Exception:" + e);
         }
-        System.out.println("appointments = " + appointments);
         return appointments;
     }
 
