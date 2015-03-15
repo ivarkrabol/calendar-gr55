@@ -94,7 +94,9 @@ public class EditAppointmentController extends Controller{
     }
     @FXML public void handleDelete() {
         if(appointmentModel != null){
-            //TODO: remove appointment from DB
+            try{appointmentModel.removeFromDB(getApplication().getDb());}
+            catch (SQLException e){e.printStackTrace();}
+            catch (DBConnectionException e){e.printStackTrace();}
         }
         this.getStage().close();
     }
