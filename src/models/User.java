@@ -2,6 +2,7 @@ package models;
 
 import exceptions.DBConnectionException;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import util.DB;
 import util.ModelCache;
@@ -18,7 +19,6 @@ public class User extends Model{
     private int phoneNr;
     private String password;
     private Calendar calendar;
-    private ObservableList<User> searchResults;
 
 
     public User() {
@@ -85,8 +85,9 @@ public class User extends Model{
 
     }
 
-    public ObservableList<User> searchForUser(String UserName, DB db, ModelCache mc) throws SQLException, DBConnectionException {
+    public static ObservableList<User> searchForUser(String UserName, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         ResultSet rs;
+        ObservableList<User> searchResults = FXCollections.observableArrayList();
         rs = db.query("SELECT UserID FROM USER WHERE FirstName = " + UserName + "OR LastName = " + UserName + "OR Email = " + UserName);
         while (rs.next()) {
             int temp = rs.getInt("UserID");

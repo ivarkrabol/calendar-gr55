@@ -251,6 +251,15 @@ public class CalendarController extends Controller{
         }
     }
 
+    @FXML public void handleViewInbox() {
+        try {
+            UserController userController = (UserController) getApplication().replaceSceneContent("/views/ViewInbox.fxml");
+            userController.setApp(getApplication());
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 
 
