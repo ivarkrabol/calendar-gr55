@@ -101,7 +101,8 @@ public class CalendarController extends Controller{
     }
 
     @FXML public void handleNewAppoinment() {
-        newStage("/views/EditAppointment.fxml", "New Appointment", new EditAppointmentController());}
+        newStage("/views/EditAppointment.fxml", "New Appointment", new EditAppointmentController());
+    }
 
     public void handleEditAppoinment(Appointment a) {
         newAppointmentStage("/views/EditAppointment.fxml", "Edit Appointment", a);
@@ -157,7 +158,6 @@ public class CalendarController extends Controller{
 
     public void setWeekDays() {
         List<ObservableList<Appointment>> appointmentsForWeek = getApplication().getUser().getCalendar().appointmentsForWeek();
-        System.out.println("appointmentsForWeek = " + appointmentsForWeek);
         int i = 0;
         while(i<7) {
             for (ListView<Appointment> table : weekDaysTable) {
@@ -180,7 +180,6 @@ public class CalendarController extends Controller{
                             }
                         };
                     });
-
                     table.setOnMouseClicked(new EventHandler<MouseEvent>() {
                         @Override
                         public void handle(MouseEvent click) {
@@ -195,7 +194,6 @@ public class CalendarController extends Controller{
                                 }
                             }
                         }
-
                     });
                 }
                 i++;
