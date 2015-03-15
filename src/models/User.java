@@ -40,12 +40,20 @@ public class User extends Model{
         return id;
     }
 
+    private void setId(int id) {
+        this.id = id;
+    }
+
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isSuperUser() {
+        return email.equals("admin");
     }
 
     public String getLastName() {
@@ -103,7 +111,8 @@ public class User extends Model{
     public static User getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         User user;
         if(mc.contains(User.class, id)) user = mc.get(User.class, id);
-        else user = new User(id);
+        else user = new User();
+        user.setId(id);
         mc.put(id, user);
         user.refreshFromDB(db, mc);
         return user;
@@ -125,27 +134,32 @@ public class User extends Model{
         if(results.next()) throw new SQLException("Result not unique");
     }
 
-    public void insertToDB(DB db, User user){
-        try{String sql = "INSERT INTO USER (Email, LastName, FirstName, PhoneNr, Password)\n" +
-                "VALUES ('" +
-                user.getEmail()+ "',\n'" +
-                user.getLastName()+ "',\n'" +
-                user.firstName+ "',\n'" +
-                user.getPhoneNr() + "',\n'" +
-                user.password + "')";
-                db.insert(sql);
-        }catch(SQLException e){e.printStackTrace();
-        }catch (DBConnectionException e){e.printStackTrace();}
-    }
-
     @Override
     public void saveToDB(DB db) throws SQLException, DBConnectionException {
+
+
         String sql = "UPDATE USER\n" +
                 "EMail = '" + getEmail() + "',\n" +
                 "LastName = '" + getLastName() + "',\n" +
                 "FirstName = '" + getFirstName() + "',\n" +
                 "PhoneNr = '" + getPhoneNr() + "'\n" +
                 "WHERE UserID = " + getId();
-        db.query(sql);
+        db.update(sql);
+    }
+
+    @Override
+    public void insertToDB(DB db) throws SQLException, DBConnectionException {
+        String updateSql = "INSERT INTO USER\n" +
+                "(EMail, LastName, FirstName, PhoneNr)\n" +
+                "VALUES (\n" +
+                "'" + getEmail() + "',\n" +
+                "'" + getLastName() + "',\n" +
+                "'" + getFirstName() + "',\n" +
+                "'" + getPhoneNr() + "' );";
+        db.update(updateSql);
+        String querySql = "SELECT MAX(UserID) AS ID FROM USER";
+        ResultSet results = db.query(querySql);
+        if (!results.next()) throw new SQLException("This shouldn't happen. Sooo...");
+        setId(results.getInt("ID"));
     }
 }
