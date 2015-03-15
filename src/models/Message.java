@@ -23,7 +23,7 @@ public class Message extends Model{
         return id;
     }
 
-    public void setId(int id) {
+    private void setId(int id) {
         this.id = id;
     }
 
@@ -80,7 +80,6 @@ public class Message extends Model{
         ResultSet rs;
         ObservableList<Message> inbox = FXCollections.observableArrayList();
         rs = db.query("SELECT MessageID FROM MESSAGE WHERE RecipientID = " + UserID);
-        System.out.print(rs);
         while (rs.next()) {
             int temp = rs.getInt("MessageID");
             inbox.add(getById(temp, db, mc));
@@ -93,7 +92,6 @@ public class Message extends Model{
         Message message;
         if(mc.contains(Message.class, id)) message = mc.get(Message.class, id);
         else message = new Message();
-        message.setId(id);
         message.refreshFromDB(db, mc);
         mc.put(id, message);
         return message;
@@ -129,6 +127,25 @@ public class Message extends Model{
                 "HasBeenRead = '" + isRead() + "'\n" +
                 "WHERE MessageID = " + getId();
 
-        db.query(sql);
+        db.update(sql);
+    }
+
+    @Override
+    public void insertToDB(DB db) throws SQLException, DBConnectionException {
+        String updateSql = "INSERT INTO USER\n" +
+                "(RecipientID, SenderID, SentTime, Description, IsInvitation, HasBeenRead)\n" +
+                "VALUES (\n" +
+                getRecipient().getId() + ",\n" +
+                getSender().getId() + ",\n" +
+                "'" + getSentTime() + "',\n" +
+                "'" + getDescription() + "',\n" +
+                String.valueOf(isInvitation()) + ",\n" +
+                String.valueOf(isRead()) + ")";
+        db.update(updateSql);
+        String querySql = "SELECT MAX(MessageID) AS ID FROM MESSAGE";
+
+        ResultSet results = db.query(querySql);
+        if (!results.next()) throw new SQLException("This shouldn't happen. Sooo...");
+        setId(results.getInt("ID"));
     }
 }

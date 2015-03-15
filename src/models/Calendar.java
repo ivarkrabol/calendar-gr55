@@ -144,6 +144,11 @@ public class Calendar extends Model {
         throw new SQLException("Calendar is not a DB object and should not be saved");
     }
 
+    @Override
+    public void insertToDB(DB db) throws SQLException, DBConnectionException {
+        throw new SQLException("Calendar is not a DB object");
+    }
+
     public int getWeekNumber(LocalDate day){
         WeekFields fields = WeekFields.of(Locale.getDefault());
         return day.get(fields.weekOfWeekBasedYear());

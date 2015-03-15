@@ -33,7 +33,7 @@ public class Group extends Model {
     public static ObservableList<Group> getGroupsUserIsPartOf(int UserID, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         ResultSet rs;
         ObservableList<Group> groups = FXCollections.observableArrayList();
-        rs = db.query("SELECT GroupID FROM PARTICIPANTS WHERE UserID = " + UserID);
+        rs = db.query("SELECT GroupID FROM UserInGroup WHERE UserID = " + UserID);
         while (rs.next()) {
             int temp = rs.getInt("GroupID");
             groups.add(getById(temp, db, mc));
@@ -72,6 +72,11 @@ public class Group extends Model {
 
     @Override
     public void saveToDB(DB db) throws SQLException, DBConnectionException {
+
+    }
+
+    @Override
+    public void insertToDB(DB db) throws SQLException, DBConnectionException {
 
     }
 }

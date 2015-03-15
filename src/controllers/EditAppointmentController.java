@@ -83,7 +83,13 @@ public class EditAppointmentController extends Controller{
             if(this.appointmentModel==null){
                 System.out.println(""+date + endDate+startTime + endDate);
                 appointmentModel = new Appointment(titleField.getText(), descriptionField.getText(), date, endDate, startTime, endTime, room, getApplication().getUser());
-                appointmentModel.insertToDB(getApplication().getDb(), appointmentModel);
+                try {
+                    appointmentModel.insertToDB(getApplication().getDb());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                } catch (DBConnectionException e) {
+                    e.printStackTrace();
+                }
             }else{
                 try{
                     appointmentModel.setAppointment(titleField.getText(), descriptionField.getText(), date, endDate, startTime, endTime, room);
