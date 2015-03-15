@@ -10,9 +10,17 @@ import javafx.scene.control.Label;
 
 
 public class UserController extends Controller {
+	@Override
+	public void setApp(Main app) {
+		super.setApp(app);
+	}
 
 	@FXML
     private Label userNameLabel;
+	@FXML
+    private Label emailLabel;
+	@FXML
+    private Label phoneLabel;
 
 	
     @FXML public void handleBack(){
@@ -24,14 +32,16 @@ public class UserController extends Controller {
             e.printStackTrace();
         }
     }
-    //private int brukernavn = getApplication().getUser().getId();
-    //private hei = getApplication().getUser().getId().
-    
-    /*@Override
+
+    @Override
     public void initialize(URL location, ResourceBundle resources) {
+    	User user = getApplication().getUser();
+    	String navn = user.getFirstName() + " " + user.getLastName();
+    	userNameLabel.setText(navn);
+    	emailLabel.setText(user.getEmail());
+    	phoneLabel.setText(Integer.toString(user.getPhoneNr()));
     	
-       userNameLabel.setText();
-    }*/
+    }
     
 
 }

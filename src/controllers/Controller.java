@@ -15,7 +15,8 @@ import javafx.stage.Stage;
 public class Controller implements Initializable{
 
 
-    private Main application;
+    private static Main application;
+
     private static boolean adminUser = false;
     private Stage stage;
 
@@ -23,7 +24,7 @@ public class Controller implements Initializable{
         return application;
     }
     public void setApp(Main application){
-        this.application = application;
+        Controller.application = application;
     }
 
 
