@@ -40,17 +40,7 @@ public class InviteUserController extends Controller {
 
     public void setListOfPerson(){
         if(appointment!=null){
-            ObservableList<User> invitedparticipants = FXCollections.observableArrayList();
-            ObservableList<User> acceptedparticipants = FXCollections.observableArrayList();
-            ObservableList<User> declinedparticipants = FXCollections.observableArrayList();
-            try{
-                invitedparticipants.addAll(appointment.isInvitedToApp(getApplication().getDb(), appointment.getId(), getApplication().getModelCache()));
-                acceptedparticipants.addAll(appointment.hasAcceptedToApp(getApplication().getDb(), appointment.getId(), getApplication().getModelCache()));
-                declinedparticipants.addAll(appointment.hasDeclinedToApp(getApplication().getDb(), appointment.getId(), getApplication().getModelCache()));
-            }
-            catch (SQLException e){e.printStackTrace();}
-            catch (DBConnectionException e){e.printStackTrace();}
-            listOfPerson.setItems(invitedparticipants);
+            listOfPerson.setItems(appointment.getAcceptedParticipants());
             listOfPerson.setCellFactory((list) -> {
                 return new ListCell<User>() {
                     @Override

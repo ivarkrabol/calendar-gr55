@@ -21,6 +21,7 @@ public class User extends Model{
     private Calendar calendar;
 
 
+
     public User() {
     }
     public User(String email, String lastName, String firstName, String phoneNr, String password){
