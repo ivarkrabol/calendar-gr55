@@ -287,12 +287,13 @@ public class Appointment extends Model {
     @Override
     public void saveToDB(DB db) throws SQLException, DBConnectionException {
         String sql = "UPDATE APPOINTMENT\n" +
-                "StartTime = " + LocalDateTime.from(getStartDateProperty()).with(getStartTimeProperty()) + ",\n" +
-                "EndTime = " + LocalDateTime.from(getEndDateProperty()).with(getEndTimeProperty()) + ",\n" +
-                "AdministratorID = " + getAdministrator().getId() + ",\n" +
-                "Description = '" + getDescription() + "',\n" +
-                "RoomName = " + getRoom().getName() + "\n" +
-                "WHERE AppointmentID = " + getId();
+                "StartTime ='" + LocalDateTime.of(getStartDateProperty(), getStartTimeProperty())+ "',\n" +
+                "EndTime ='" + LocalDateTime.of(getEndDateProperty(), getEndTimeProperty()) + "',\n" +
+                "AdministratorID ='" + getAdministrator().getId() + "',\n" +
+                "Description ='" + getDescription() + "',\n" +
+                "RoomName ='" + getRoom().getName() +"'\n" +
+                "WHERE AppointmentID ='" + getId() + "'";
+        System.out.println("sql = " + sql);
         db.query(sql);
     }
 
@@ -309,6 +310,10 @@ public class Appointment extends Model {
             ResultSet result = db.query(sql2);
             if(result.next()){
                 appointment.setId(result.getInt(1));
+            }
+            if(appointment.getRoom()!=null){
+                String room =  "UPDATE APPOINTMENT SET RoomName = '"+appointment.getRoom().getName()+"' WHERE AppointmentID =  '"+appointment.getId()+"'";
+                db.insert(room);
             }
             String sql3 = "INSERT INTO `PARTICIPANTS` (`UserID`, `AppointmentID`, `Response`) VALUES ('"+ appointment.getAdministrator().getId() + "', '"
                     + appointment.getId() + "', 'HasAccepted')"
