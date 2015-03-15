@@ -1,12 +1,10 @@
 package controllers;
 
-import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ResourceBundle;
-
-import javafx.fxml.Initializable;
+import exceptions.DBConnectionException;
 import javafx.scene.control.*;
 import javafx.util.StringConverter;
 import models.Room;
@@ -31,6 +29,14 @@ public class EditAppointmentController extends Controller{
     private TextField endTimeField;
     @FXML
     private ComboBox<Room> roomBox;
+    @FXML
+    private Button deleteButton;
+    @FXML
+    private Button saveButton;
+    @FXML
+    private Button editButton;
+    @FXML
+    private Button cancelButton;
 
 
     private LocalTime startTime;
@@ -39,37 +45,103 @@ public class EditAppointmentController extends Controller{
     private LocalDate endDate;
     private Room room = null;
     private Appointment appointmentModel;
+    private boolean edit;
 
-
-    public EditAppointmentController(){}
-
-    public void setAppointmentModel(Appointment appointmentModel) {
-        this.appointmentModel = appointmentModel;
+    //FXML functions
+    @FXML public void titleTextFieldFocusChange() {
+        textFieldValid(titleField);
     }
-
-
+    @FXML public void dateDateFieldFocusChange() {this.date=dateValid(dateField, LocalDate.now());endDateField.setValue(date);}
+    @FXML public void endDateFieldFocusChange() {this.endDate=dateValid(endDateField, date);}
+    @FXML public void startTimeTextFieldFocusChange() {
+        startTimeValid();
+    }
+    @FXML public void endTimeTextFieldFocusChange() {endTimeValid();}
+    @FXML public void handleEdit() {
+        disableFields(false);
+        editButton.setVisible(false);
+        cancelButton.setVisible(true);
+        deleteButton.setVisible(true);
+        saveButton.setVisible(true);}
+    @FXML public void handleCancel(){
+        getStage().close();
+    }
+    @FXML public void disableFields(boolean b){
+        titleField.setDisable(b);
+        descriptionField.setDisable(b);
+        dateField.setDisable(b);
+        endDateField.setDisable(b);
+        startTimeField.setDisable(b);
+        endTimeField.setDisable(b);
+        roomBox.setDisable(b);}
     @FXML public void handleSave() {
         if (inputValid()){
-
-            appointmentModel = new Appointment(titleField.getText());
-            appointmentModel.setDescription(descriptionField.getText());
-            appointmentModel.setRoom(room);
-//          appointmentModel.setDate(date);
-//          appointmentModel.setStartTime(this.startTime);
-//          appointmentModel.setEndTime(this.endTime);
-
+            if(this.appointmentModel==null){
+                System.out.println(""+date + endDate+startTime + endDate);
+                appointmentModel = new Appointment(titleField.getText(), descriptionField.getText(), date, endDate, startTime, endTime, room, getApplication().getUser());
+                try {
+                    appointmentModel.insertToDB(getApplication().getDb());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                } catch (DBConnectionException e) {
+                    e.printStackTrace();
+                }
+            }else{
+                try{
+                    appointmentModel.setAppointment(titleField.getText(), descriptionField.getText(), date, endDate, startTime, endTime, room);
+                    appointmentModel.saveToDB(getApplication().getDb());
+                }
+                catch (SQLException e){
+                    e.printStackTrace();
+                }catch (DBConnectionException e){
+                    e.printStackTrace();
+                }
+            }
             this.getStage().close();
         }
     }
-
-
     @FXML public void handleDelete() {
+        if(appointmentModel != null){
+            try{appointmentModel.removeFromDB(getApplication().getDb());}
+            catch (SQLException e){e.printStackTrace();}
+            catch (DBConnectionException e){e.printStackTrace();}
+        }
         this.getStage().close();
     }
 
+    //set the fields to the appointment
+    public void setAppointmentModel(Appointment appointmentModel) {
+        this.appointmentModel = appointmentModel;
+        titleField.setText(appointmentModel.getTitle());
+        descriptionField.setText(appointmentModel.getDescription());
+        startTimeField.setText(appointmentModel.localTimeFormat(appointmentModel.getStartTimeProperty()));
+        startTime=appointmentModel.getStartTimeProperty();
+        endTime = appointmentModel.getEndTimeProperty();
+        date = appointmentModel.getStartDateProperty();
+        endDate = appointmentModel.getEndDateProperty();
+        endTimeField.setText(appointmentModel.localTimeFormat(appointmentModel.getEndTimeProperty()));
+        dateField.setValue(appointmentModel.getStartDateProperty());
+        dateField.setValue(appointmentModel.getEndDateProperty());
+        setRooms();
+        startTimeTextFieldFocusChange();
+        endTimeTextFieldFocusChange();
+        disableFields(true);
+    }
 
+    //set the buttons visibilty
+    public void setEdit(boolean edit) {
+        this.edit = edit;
+        if(edit == true){
+            editButton.setVisible(true);
+            cancelButton.setVisible(true);
+            deleteButton.setVisible(false);
+            saveButton.setVisible(false);
+        }if(appointmentModel.getStartDateProperty().isBefore(LocalDate.now())){
+            editButton.setVisible(false);
+        }
+    }
 
-
+    //validation for the input from the user
     public boolean inputValid(){
         String error = "";
         if (!textFieldValid(titleField)){error += "The appointment must have a title\n";}
@@ -96,17 +168,7 @@ public class EditAppointmentController extends Controller{
             return false;}
     }
 
-    @FXML public void titleTextFieldFocusChange() {
-        textFieldValid(titleField);
-    }
-    @FXML public void dateDateFieldFocusChange() {this.date=dateValid(dateField, LocalDate.now());endDateField.setValue(date);}
-    @FXML public void endDateFieldFocusChange() {this.endDate=dateValid(endDateField, date);}
-    @FXML public void startTimeTextFieldFocusChange() {
-        startTimeValid();
-    }
-    @FXML public void endTimeTextFieldFocusChange() {endTimeValid();}
-
-
+    //validate textfields
     private boolean textFieldValid(TextField text){
         if(text.getText().length()==0){
             setStyle(text, false);
@@ -117,6 +179,7 @@ public class EditAppointmentController extends Controller{
         }
     }
 
+    //validate starttime
     private boolean startTimeValid(){
         String time = startTimeField.getText();
         try {
@@ -137,51 +200,16 @@ public class EditAppointmentController extends Controller{
         return false;
     }
 
+    //validate endtime
     private boolean endTimeValid() {
         String time = endTimeField.getText();
         try {
             int hours = getHour(time);
             int mins = getMin(time);
             this.endTime = LocalTime.of(hours, mins);
-
             if(checkTime(hours, mins, time) && (this.startTime.isBefore(this.endTime))){
                 setStyle(endTimeField, true);
-                LocalDateTime start = LocalDateTime.of(date, startTime);
-                LocalDateTime end = LocalDateTime.of(endDate, endTime);
-                roomBox.setItems(Room.getAvailable(start, end, getApplication().getDb(), getApplication().getModelCache()));
-                roomBox.setCellFactory((combobox) -> {
-                    return new ListCell<Room>() {
-                        @Override
-                        protected void updateItem(Room item, boolean empty) {
-                            super.updateItem(item, empty);
-                            if (item == null || empty) {
-                                setText(null);
-                            } else {
-                                setText(item.getName());
-                            }
-                        }
-                    };
-                });
-                roomBox.setConverter(new StringConverter<Room>() {
-                    @Override
-                    public String toString(Room room) {
-                        if(room == null){
-                            return null;
-                        }else{
-                            return room.getName();
-                        }
-                    }
-
-                    @Override
-                    public Room fromString(String string) {
-                        return null;
-                    }
-                });
-                roomBox.setOnAction((event)->{
-                            Room selectedRoom = roomBox.getSelectionModel().getSelectedItem();
-                            this.room = selectedRoom;
-                        }
-                );
+                setRooms();
                 return true;
             }else{
                 setStyle(endTimeField, false);
@@ -195,19 +223,7 @@ public class EditAppointmentController extends Controller{
         return false;
     }
 
-    private int getMin(String time){
-        return Integer.parseInt(time.substring(3, 5));
-    }
-    private int getHour(String time){
-        return Integer.parseInt(time.substring(0, 2));
-    }
-    private boolean checkTime(int hours, int mins, String time){
-        if((hours>=0) && (hours<24) && (mins>=0) && (mins<60) && (time.charAt(2)==':')){
-            return true;
-        }
-        else{ return false; }
-    }
-
+    //validate startdate
     private LocalDate dateValid(DatePicker date, LocalDate compare) {
         try {
             if((date!=null) && (date.getValue().compareTo(compare)>=0)){
@@ -223,6 +239,64 @@ public class EditAppointmentController extends Controller{
         return null;
     }
 
+    //fills the combobox with available rooms
+    public void setRooms() {
+        LocalDateTime start = LocalDateTime.of(date, startTime);
+        LocalDateTime end = LocalDateTime.of(endDate, endTime);
+        try{roomBox.setItems(Room.getAvailable(start, end, getApplication().getDb(), getApplication().getModelCache()));}
+        catch (SQLException e){e.printStackTrace();}
+        catch (DBConnectionException e){e.printStackTrace();}
+        roomBox.setCellFactory((combobox) -> {
+            return new ListCell<Room>() {
+                @Override
+                protected void updateItem(Room item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item == null || empty) {
+                        setText(null);
+                    } else {
+                        setText(item.getName());
+                    }
+                }
+            };
+        });
+        roomBox.setConverter(new StringConverter<Room>() {
+            @Override
+            public String toString(Room room) {
+                if (room == null) {
+                    return null;
+                } else {
+                    return room.getName();
+                }
+            }
+
+            @Override
+            public Room fromString(String string) {
+                return null;
+            }
+        });
+        roomBox.setOnAction((event) -> {
+                    Room selectedRoom = roomBox.getSelectionModel().getSelectedItem();
+                    this.room = selectedRoom;
+                }
+        );
+    }
+
+
+
+    //private helpmethods
+
+    private int getMin(String time){
+        return Integer.parseInt(time.substring(3, 5));
+    }
+    private int getHour(String time){
+        return Integer.parseInt(time.substring(0, 2));
+    }
+    private boolean checkTime(int hours, int mins, String time){
+        if((hours>=0) && (hours<24) && (mins>=0) && (mins<60) && (time.charAt(2)==':')){
+            return true;
+        }
+        else{ return false; }
+    }
+
 
 }
-

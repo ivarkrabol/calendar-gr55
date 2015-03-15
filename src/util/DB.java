@@ -68,7 +68,7 @@ public class DB {
         result = connection.createStatement().executeQuery(sql);
         return result;
     }
-    public void insert(String sql) throws SQLException, DBConnectionException {
+    public void update(String sql) throws SQLException, DBConnectionException {
     	ensureConnection();
         connection.createStatement().executeUpdate(sql);
     }

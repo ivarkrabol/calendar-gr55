@@ -6,6 +6,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuItem?>
+
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.UserController">
@@ -22,7 +23,7 @@
                             <MenuItem mnemonicParsing="false" onAction="#handleBack" text="Back" />
                         </items>
                         <items>
-                            <MenuItem mnemonicParsing="false" onAction="#handleLogout" text="Logut" />
+                            <MenuItem mnemonicParsing="false" onAction="#handleLogout" text="Logout" />
                         </items>
                     </Menu>
                 </menus>
@@ -40,7 +41,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label fx:id="userNameLabel" text="Label" />
+                  <Label fx:id="userNameLabel" text= "label" />
                </children>
             </GridPane>
          </center>

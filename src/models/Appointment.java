@@ -13,6 +13,7 @@ import javafx.beans.property.ObjectPropertyBase;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import util.DB;
 import util.ModelCache;
@@ -22,7 +23,6 @@ public class Appointment extends Model {
 
     private int id;
     private User administrator;
-    private ObservableList<User> participants;
     private StringProperty titleProperty = new SimpleStringProperty();
     private StringProperty descriptionProperty = new SimpleStringProperty();
     private StringProperty calendarProperty = new SimpleStringProperty();
@@ -94,9 +94,29 @@ public class Appointment extends Model {
     };
 
 
+
     public Appointment(){ }
-    public Appointment(String title){
+    public Appointment(String title, String description, LocalDate startDate,
+                       LocalDate endDate, LocalTime startTime, LocalTime endTime, Room room, User user){
         setTitle(title);
+        setDescription(description);
+        setStartDateProperty(startDate);
+        setEndDateProperty(endDate);
+        setStartTimeProperty(startTime);
+        setEndTimeProperty(endTime);
+        setRoom(room);
+        setAdministrator(user);
+    }
+
+    public void setAppointment(String title, String description, LocalDate startDate,
+                       LocalDate endDate, LocalTime startTime, LocalTime endTime, Room room){
+        setTitle(title);
+        setDescription(description);
+        setStartDateProperty(startDate);
+        setEndDateProperty(endDate);
+        setStartTimeProperty(startTime);
+        setEndTimeProperty(endTime);
+        setRoom(room);
     }
 
     public StringProperty EmptyProperty() {
@@ -218,15 +238,26 @@ public class Appointment extends Model {
     }
 
     public ObservableList<User> isInvitedToApp(DB db, int id, ModelCache mc) throws DBConnectionException, SQLException  {
+        return getStatusToApp(db, id, mc, "NotAnswered");
+    }
+
+    public ObservableList<User> hasAcceptedToApp(DB db, int id, ModelCache mc) throws DBConnectionException, SQLException  {
+        return getStatusToApp(db, id, mc, "HasAccepted");
+    }
+    public ObservableList<User> hasDeclinedToApp(DB db, int id, ModelCache mc) throws DBConnectionException, SQLException  {
+        return getStatusToApp(db, id, mc, "HasDeclined");
+    }
+
+    public ObservableList<User> getStatusToApp(DB db, int id, ModelCache mc, String status) throws DBConnectionException, SQLException  {
+        ObservableList<User> participants = FXCollections.observableArrayList();
         ResultSet rs;
-        rs = db.query("SELECT UserID FROM PARTICIPANTS WHERE AppointmentID = " + id );
+        rs = db.query("SELECT UserID FROM PARTICIPANTS WHERE AppointmentID = " + id +"AND response ='"+status+"'");
         while (rs.next()) {
             User user = User.getById(rs.getInt("UserID"), db, mc);
             participants.add(user);
         }
         return participants;
     }
-
 
     public static Appointment getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         Appointment appointment;
@@ -266,14 +297,49 @@ public class Appointment extends Model {
 
     @Override
     public void saveToDB(DB db) throws SQLException, DBConnectionException {
-        String sql = "UPDATE APPOINTMENT\n" +
-                "StartTime = " + LocalDateTime.from(getStartDateProperty()).with(getStartTimeProperty()) + ",\n" +
-                "EndTime = " + LocalDateTime.from(getEndDateProperty()).with(getEndTimeProperty()) + ",\n" +
-                "AdministratorID = " + getAdministrator().getId() + ",\n" +
-                "Description = '" + getDescription() + "',\n" +
-                "RoomName = " + getRoom().getName() + "\n" +
-                "WHERE AppointmentID = " + getId();
-        db.query(sql);
+        String sql = "UPDATE APPOINTMENT\n SET Title ='" +getTitle()+
+                "', StartTime ='" + LocalDateTime.of(getStartDateProperty(), getStartTimeProperty())+ "',\n" +
+                "EndTime ='" + LocalDateTime.of(getEndDateProperty(), getEndTimeProperty()) + "',\n" +
+                "AdministratorID ='" + getAdministrator().getId() + "',\n" +
+                "Description ='" + getDescription() + "'\n"+
+                "WHERE AppointmentID ='" + getId() + "'";
+        if(getRoom()!=null){
+            String room =  "UPDATE APPOINTMENT SET RoomName = '"+getRoom().getName()+"' WHERE AppointmentID =  '"+getId()+"'";
+            db.update(room);
+        }
+        db.update(sql);
+    }
+
+    @Override
+    public void insertToDB(DB db) throws SQLException, DBConnectionException {
+        String sql = "INSERT INTO `APPOINTMENT` "
+            + "(`Title`, `StartTime`, `EndTime`, `AdministratorID`, "
+            + "`Description`) VALUES ('"+ getTitle() +"', "
+            + "'"+ LocalDateTime.of(getStartDateProperty(), getStartTimeProperty()) + "', "
+            + "'" + LocalDateTime.of(getEndDateProperty(), getEndTimeProperty()) + "', "
+            + "'" + getAdministrator().getId() +"', "
+            + "'" + getDescription() + "')";
+        db.update(sql);
+
+        String sql2 = "SELECT MAX(AppointmentID) AS ID FROM APPOINTMENT";
+        ResultSet results = db.query(sql2);
+        if (!results.next()) throw new SQLException("This shouldn't happen. Sooo...");
+        setId(results.getInt("ID"));;
+
+        if(getRoom()!=null){
+            String room =  "UPDATE APPOINTMENT SET RoomName = '"+getRoom().getName()+"' WHERE AppointmentID =  '"+getId()+"'";
+            db.update(room);
+        }
+
+        String sql3 = "INSERT INTO `PARTICIPANTS` (`UserID`, `AppointmentID`, `Response`) VALUES ('"+ getAdministrator().getId() + "', '"
+                + getId() + "', 'HasAccepted')"
+                ;
+        db.update(sql3);
+    }
+
+    public void removeFromDB(DB db) throws SQLException, DBConnectionException {
+        String sql = "DELETE FROM APPOINTMENT WHERE AppointmentID ="+getId();
+        db.update(sql);
     }
 
     public String localTimeFormat(LocalTime time){

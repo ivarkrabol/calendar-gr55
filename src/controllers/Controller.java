@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 
 public class Controller implements Initializable{
 
+
     private Main application;
     private static boolean adminUser = false;
     private Stage stage;
@@ -39,6 +40,7 @@ public class Controller implements Initializable{
         this.getApplication().setUser(null);
 
     }
+
 
     protected void setStyle(TextField t, boolean b){
         if(b){

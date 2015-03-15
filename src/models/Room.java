@@ -7,6 +7,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import util.DB;
 import util.ModelCache;
+
+import javax.print.DocFlavor;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -15,6 +17,9 @@ import java.time.LocalDateTime;
 public class Room extends Model{
 
     private StringProperty nameProperty = new SimpleStringProperty();
+    public StringProperty getNameProperty(){
+        return nameProperty;
+    }
     public String getName() {
         return nameProperty.get();
     }
@@ -82,6 +87,16 @@ public class Room extends Model{
                 "Size = '" + getSize() + "'\n" +
                 "WHERE RoomName ='" + getName()+"'";
 
-        db.query(sql);
+        db.update(sql);
+    }
+
+    @Override
+    public void insertToDB(DB db) throws SQLException, DBConnectionException {
+        String sql = "INSERT INTO ROOM\n" +
+                "(RoomName, Size)\n" +
+                "VALUES (\n" +
+                "'" + getName() + "', \n" +
+                + getSize() + ")";
+        db.update(sql);
     }
 }

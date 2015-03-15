@@ -10,7 +10,7 @@ public abstract class Model implements Comparable<Appointment> {
 
     public abstract void refreshFromDB(DB db, ModelCache mc) throws SQLException, DBConnectionException;
     public abstract void saveToDB(DB db) throws SQLException, DBConnectionException;
-    public abstract void createInDB(DB db) throws SQLException, DBConnectionException;
+    public abstract void insertToDB(DB db) throws SQLException, DBConnectionException;
 
 
     @Override

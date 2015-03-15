@@ -1,6 +1,8 @@
 package models;
 
 import exceptions.DBConnectionException;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import util.DB;
 import util.ModelCache;
@@ -10,17 +12,28 @@ import java.sql.SQLException;
 
 public class User extends Model{
 
-    private int id = 0;
+    private int id;
     private String email;
     private String lastName;
     private String firstName;
-    private String phoneNr;
+    private int phoneNr;
+    private String password;
     private Calendar calendar;
-    private ObservableList<User> searchResults;
 
 
     public User() {
+    }
+    public User(String email, String lastName, String firstName, String phoneNr, String password){
+        this.setEmail(email);
+        this.setLastName(lastName);
+        this.setFirstName(firstName);
+        this.setPhoneNr(phoneNr);
+        this.setPassword(password);
+    }
 
+
+    private User(int id) {
+        this.id = id;
     }
 
     public int getId() {
@@ -59,14 +72,17 @@ public class User extends Model{
         this.firstName = firstName;
     }
 
-    public String getPhoneNr() {
+    public int getPhoneNr() {
         return phoneNr;
     }
 
     public void setPhoneNr(String phoneNr) {
-        this.phoneNr = phoneNr;
+        this.phoneNr =  Integer.parseInt(phoneNr);
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public Calendar getCalendar() {
         return calendar;
@@ -77,8 +93,9 @@ public class User extends Model{
 
     }
 
-    public ObservableList<User> searchForUser(String UserName, DB db, ModelCache mc) throws SQLException, DBConnectionException {
+    public static ObservableList<User> searchForUser(String UserName, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         ResultSet rs;
+        ObservableList<User> searchResults = FXCollections.observableArrayList();
         rs = db.query("SELECT UserID FROM USER WHERE FirstName = " + UserName + "OR LastName = " + UserName + "OR Email = " + UserName);
         while (rs.next()) {
             int temp = rs.getInt("UserID");
@@ -125,21 +142,21 @@ public class User extends Model{
                 "FirstName = '" + getFirstName() + "',\n" +
                 "PhoneNr = '" + getPhoneNr() + "'\n" +
                 "WHERE UserID = " + getId();
-        db.query(sql);
+        db.update(sql);
     }
 
     @Override
-    public void createInDB(DB db) throws SQLException, DBConnectionException {
-        String sql = "INSERT INTO USER\n" +
+    public void insertToDB(DB db) throws SQLException, DBConnectionException {
+        String updateSql = "INSERT INTO USER\n" +
                 "(EMail, LastName, FirstName, PhoneNr)\n" +
-                "VALUES\n" +
+                "VALUES (\n" +
                 "'" + getEmail() + "',\n" +
                 "'" + getLastName() + "',\n" +
                 "'" + getFirstName() + "',\n" +
-                "'" + getPhoneNr() + "';\n" +
-                "SELECT LAST_INSERT_ID() AS ID";
-
-        ResultSet results = db.query(sql);
+                "'" + getPhoneNr() + "' );";
+        db.update(updateSql);
+        String querySql = "SELECT MAX(UserID) AS ID FROM USER";
+        ResultSet results = db.query(querySql);
         if (!results.next()) throw new SQLException("This shouldn't happen. Sooo...");
         setId(results.getInt("ID"));
     }
