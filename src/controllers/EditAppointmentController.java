@@ -5,7 +5,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import exceptions.DBConnectionException;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import models.Room;
 import org.controlsfx.dialog.Dialogs;
@@ -37,6 +41,8 @@ public class EditAppointmentController extends Controller{
     private Button editButton;
     @FXML
     private Button cancelButton;
+    @FXML
+    private Button inviteButton;
 
 
     private LocalTime startTime;
@@ -58,8 +64,12 @@ public class EditAppointmentController extends Controller{
     }
     @FXML public void endTimeTextFieldFocusChange() {endTimeValid();}
     @FXML public void handleInviteParticipants(){
-        newStage("/views/InviteUser.fxml", "Invited participants", new InviteUserController());
+        if(this.appointmentModel==null){
+            appointmentModel = new Appointment();
+        }
+        newInvitedStage("/views/InviteUser.fxml", "Invited participants", appointmentModel);
     }
+
 
     @FXML public void handleEdit() {
         disableFields(false);
@@ -77,11 +87,11 @@ public class EditAppointmentController extends Controller{
         endDateField.setDisable(b);
         startTimeField.setDisable(b);
         endTimeField.setDisable(b);
+        inviteButton.setDisable(b);
         roomBox.setDisable(b);}
     @FXML public void handleSave() {
         if (inputValid()){
             if(this.appointmentModel==null){
-                System.out.println(""+date + endDate+startTime + endDate);
                 appointmentModel = new Appointment(titleField.getText(), descriptionField.getText(), date, endDate, startTime, endTime, room, getApplication().getUser());
                 appointmentModel.insertToDB(getApplication().getDb(), appointmentModel);
             }else{
@@ -294,6 +304,22 @@ public class EditAppointmentController extends Controller{
             return true;
         }
         else{ return false; }
+    }
+    private void newInvitedStage(String location, String title, Appointment a){
+        Stage currentStage = new Stage();
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(location));
+            AnchorPane root = fxmlLoader.load();
+            currentStage.setTitle(title);
+            currentStage.setScene(new Scene(root));
+            InviteUserController controller = fxmlLoader.getController();
+            controller.setApp(getApplication());
+            controller.setStage(currentStage);
+            controller.setAppointment(a);
+            currentStage.show();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
