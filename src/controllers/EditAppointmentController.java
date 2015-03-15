@@ -77,11 +77,14 @@ public class EditAppointmentController extends Controller{
     @FXML public void handleSave() {
         if (inputValid()){
             if(this.appointmentModel==null){
-                appointmentModel = new Appointment(titleField.getText());
-                //TODO: Insert new appointment
+                System.out.println(""+date + endDate+startTime + endDate);
+                appointmentModel = new Appointment(titleField.getText(), descriptionField.getText(), date, endDate, startTime, endTime, room, getApplication().getUser());
+
+                appointmentModel.insertToDB(getApplication().getDb(), appointmentModel);
             }else{
                 //TODO: Save new thing to DB
-                try{appointmentModel.saveToDB(getApplication().getDb());}
+                try{appointmentModel.saveToDB(getApplication().getDb());
+                }
                 catch (SQLException e){
                     e.printStackTrace();
                 }catch (DBConnectionException e){
@@ -284,4 +287,3 @@ public class EditAppointmentController extends Controller{
 
 
 }
-

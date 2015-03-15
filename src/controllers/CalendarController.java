@@ -157,6 +157,7 @@ public class CalendarController extends Controller{
 
     public void setWeekDays() {
         List<ObservableList<Appointment>> appointmentsForWeek = getApplication().getUser().getCalendar().appointmentsForWeek();
+        System.out.println("appointmentsForWeek = " + appointmentsForWeek);
         int i = 0;
         while(i<7) {
             for (ListView<Appointment> table : weekDaysTable) {
@@ -191,7 +192,6 @@ public class CalendarController extends Controller{
                                     return;
                                 }else{
                                     handleEditAppoinment(a);
-
                                 }
                             }
                         }
