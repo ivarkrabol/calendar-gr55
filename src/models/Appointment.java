@@ -94,9 +94,18 @@ public class Appointment extends Model {
     };
 
 
+
     public Appointment(){ }
-    public Appointment(String title){
+    public Appointment(String title, String description, LocalDate startDate,
+                       LocalDate endDate, LocalTime startTime, LocalTime endTime, Room room, User user){
         setTitle(title);
+        setDescription(description);
+        setStartDateProperty(startDate);
+        setEndDateProperty(endDate);
+        setStartTimeProperty(startTime);
+        setEndTimeProperty(endTime);
+        setRoom(room);
+        setAdministrator(user);
     }
 
     public StringProperty EmptyProperty() {
@@ -274,6 +283,28 @@ public class Appointment extends Model {
                 "RoomName = " + getRoom().getName() + "\n" +
                 "WHERE AppointmentID = " + getId();
         db.query(sql);
+    }
+
+    public void insertToDB(DB db, Appointment appointment){
+        try{String sql = "INSERT INTO `APPOINTMENT` "
+                + "(`Title`, `StartTime`, `EndTime`, `AdministratorID`, "
+                + "`Description`) VALUES ('"+ appointment.getTitle() +"', "
+                + "'"+ LocalDateTime.of(appointment.getStartDateProperty(), appointment.getStartTimeProperty()) + "', "
+                + "'" + LocalDateTime.of(appointment.getEndDateProperty(), appointment.getEndTimeProperty()) + "', "
+                + "'" + appointment.getAdministrator().getId() +"', "
+                + "'" + appointment.getDescription() + "')";
+            db.insert(sql);
+            String sql2 = "select max(AppointmentID) from APPOINTMENT";
+            ResultSet result = db.query(sql2);
+            if(result.next()){
+                appointment.setId(result.getInt(1));
+            }
+            String sql3 = "INSERT INTO `PARTICIPANTS` (`UserID`, `AppointmentID`, `Response`) VALUES ('"+ appointment.getAdministrator().getId() + "', '"
+                    + appointment.getId() + "', 'HasAccepted')"
+                    ;
+            db.insert(sql3);
+        }catch(SQLException e){e.printStackTrace();
+        }catch (DBConnectionException e){e.printStackTrace();}
     }
 
     public String localTimeFormat(LocalTime time){
