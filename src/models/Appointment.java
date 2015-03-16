@@ -241,12 +241,10 @@ public class Appointment extends Model implements Comparable<Appointment>  {
         return admin.isEmpty();
     }
 
-    public void setInvitedParticipants(DB db, int id, ModelCache mc) throws DBConnectionException, SQLException  {
-        invitedParticipants=getStatusToApp(db, id, mc, "NotAnswered");}
-    public void setAcceptedParticipants(DB db, int id, ModelCache mc) throws DBConnectionException, SQLException  {
-        acceptedParticipants = getStatusToApp(db, id, mc, "HasAccepted");}
-    public void setDeclinedParticipants(DB db, int id, ModelCache mc) throws DBConnectionException, SQLException  {
+    public void setParticipants(DB db, int id, ModelCache mc) throws DBConnectionException, SQLException  {
         declinedParticipants=getStatusToApp(db, id, mc, "HasDeclined");
+        acceptedParticipants = getStatusToApp(db, id, mc, "HasAccepted");
+        invitedParticipants=getStatusToApp(db, id, mc, "NotAnswered");
     }
     public ObservableList<User> getAcceptedParticipants() {
         return acceptedParticipants;
@@ -261,8 +259,11 @@ public class Appointment extends Model implements Comparable<Appointment>  {
 
     public ObservableList<User> getStatusToApp(DB db, int id, ModelCache mc, String status) throws DBConnectionException, SQLException  {
         ObservableList<User> participants = FXCollections.observableArrayList();
-        ResultSet rs;
-        rs = db.query("SELECT 'UserID' FROM PARTICIPANTS WHERE AppointmentID = '" + id +"' AND response ='"+status+"'");
+        String query = "SELECT  `UserID` \n" +
+                "FROM  `PARTICIPANTS` \n" +
+                "WHERE  `AppointmentID` ="+id+"\n" +
+                "AND  `Response` =  '"+status+"'";
+        ResultSet rs = db.query(query);
         while (rs.next()) {
             User user = User.getById(rs.getInt("UserID"), db, mc);
             participants.add(user);
