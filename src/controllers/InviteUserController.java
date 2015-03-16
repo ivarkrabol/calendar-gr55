@@ -39,7 +39,6 @@ public class InviteUserController extends Controller {
         @Override
         public void initialize(URL location, ResourceBundle resources) {
             try {
-                System.out.println("User.getUsers(getApplication().getDb(), getApplication().getModelCache()) = " + User.getUsers(getApplication().getDb(), getApplication().getModelCache()));
                 searchPerson.setItems(User.getUsers(getApplication().getDb(), getApplication().getModelCache()));
             } catch (SQLException e) {
                 e.printStackTrace();
