@@ -1,6 +1,8 @@
 package models;
 
 import exceptions.DBConnectionException;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import util.DB;
@@ -12,7 +14,13 @@ import java.sql.SQLException;
 public class Group extends Model {
 
     private int id;
-
+    //private String groupName;
+    //private StringProperty nummer = new SimpleStringProperty();
+    
+//    public StringProperty nummerProperty(){
+//    	return nummer;
+//    }
+    
     public void setId(int id) {
         this.id = id;
     }
@@ -33,7 +41,7 @@ public class Group extends Model {
     public static ObservableList<Group> getGroupsUserIsPartOf(int UserID, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         ResultSet rs;
         ObservableList<Group> groups = FXCollections.observableArrayList();
-        rs = db.query("SELECT GroupID FROM UserInGroup WHERE UserID = " + UserID);
+        rs = db.query("SELECT GroupID FROM PARTICIPANTS WHERE UserID = " + UserID + " AND GroupID is not NULL");
         while (rs.next()) {
             int temp = rs.getInt("GroupID");
             groups.add(getById(temp, db, mc));
@@ -41,9 +49,6 @@ public class Group extends Model {
         return groups;
 
     }
-
-
-
     public static Group getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException { // this isn't done
         Group group;
         if (mc.contains(Group.class, id)) group = mc.get(Group.class, id);
@@ -55,15 +60,22 @@ public class Group extends Model {
         group.refreshFromDB(db, mc);
         return group;
     }
+    
+    public static String getName(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException  {
+        ResultSet results = db.query("SELECT GroupName FROM `GROUP` WHERE GroupID = " + id);
+        String groupName = null;
+        while (results.next()) {
+        	groupName = results.getString("GroupName");
+        }
+        return groupName;
+    }
 
 
     @Override
     public void refreshFromDB(DB db, ModelCache mc) throws SQLException, DBConnectionException { // ikke ferdig
         String sql = "" +
-                "SELECT Description, AdministratorID\n" +
-                "FROM GROUP\n" +
-                "WHERE GroupID = " + id;
-
+                "SELECT 'Description', 'AdministratorID'\n" +
+                "FROM `GROUP` WHERE GroupID = " + id;
         ResultSet results = db.query(sql);
         if (!results.next()) throw new SQLException("No Group with that ID in database");
         if (results.next()) throw new SQLException("Result not unique");
