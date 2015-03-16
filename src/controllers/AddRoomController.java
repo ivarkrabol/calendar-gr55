@@ -29,7 +29,7 @@ public class AddRoomController extends Controller {
     void handleSave(ActionEvent event) throws DBConnectionException, SQLException {
     	if (inputValid()){
             DB db= getApplication().getDb();
-            Room room = new Room(rname.getText());
+            Room room = new Room(rname.getText(), Integer.parseInt(rsize.getText()));
             room.insertToDB(db);
         	this.getStage().close();
     	}
