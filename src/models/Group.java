@@ -14,14 +14,40 @@ import java.sql.SQLException;
 public class Group extends Model {
 
     private int id;
-    //private String groupName;
-    //private StringProperty nummer = new SimpleStringProperty();
+    private String groupName;
+    private String description;
+    private int adminId;
     
-//    public StringProperty nummerProperty(){
-//    	return nummer;
-//    }
+    public Group() {
+    }
+    public Group(String groupName, String description, int adminId){
+        this.setGroupName(groupName);
+        this.setDescription(description);
+        this.setAdminId(adminId);
+    }
     
-    public void setId(int id) {
+    private void setAdminId(int adminId) {
+    	this.adminId = adminId;
+	}
+    private int getAdminId(){
+    	return adminId;
+    }
+    
+    private void setDescription(String description) {
+    	this.description = description;
+	}
+    private String getDescription(){
+    	return description;
+    }
+    
+	public void setGroupName(String gname) {
+		this.groupName = gname;
+	}
+    public String getGroupName(){
+    	return groupName;
+    }
+    
+	public void setId(int id) {
         this.id = id;
     }
 
@@ -89,7 +115,13 @@ public class Group extends Model {
 
     @Override
     public void insertToDB(DB db) throws SQLException, DBConnectionException {
-
+        String updateSql = "INSERT INTO `GROUP`\n" +
+                "(GroupName, Description, AdministratorID)\n" +
+                "VALUES (\n" +
+                "'" + getGroupName() + "',\n" +
+                "'" + getDescription() + "',\n" +
+                "'" + getAdminId() + "' );";
+        db.update(updateSql);
     }
 }
 
