@@ -11,9 +11,9 @@
 
 <AnchorPane prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MessageController">
     <children>
-        <BorderPane layoutX="0.5" layoutY="7.0" prefHeight="800.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <BorderPane layoutX="0.5" layoutY="7.0" minWidth="1000.0" prefHeight="800.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <top>
-                <MenuBar BorderPane.alignment="CENTER">
+                <MenuBar prefHeight="32.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
                     <menus>
                         <Menu mnemonicParsing="false" text="Menu">
                             <items>
@@ -30,11 +30,12 @@
                 </MenuBar>
             </top>
             <center>
-                <GridPane BorderPane.alignment="CENTER">
+                <GridPane prefWidth="1000.0" BorderPane.alignment="CENTER">
                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="392.0" minWidth="10.0" prefWidth="62.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="745.0" minWidth="10.0" prefWidth="269.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="745.0" minWidth="10.0" prefWidth="403.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="392.0" minWidth="10.0" prefWidth="113.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="745.0" minWidth="10.0" prefWidth="215.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="745.0" minWidth="10.0" prefWidth="374.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="745.0" minWidth="10.0" prefWidth="239.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="745.0" minWidth="10.0" prefWidth="75.0" />
                     </columnConstraints>
                     <rowConstraints>
@@ -43,13 +44,18 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                      <ListView fx:id="inboxListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                      <ListView fx:id="inboxListView" onMouseClicked="#handleMouseClick" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label fx:id="showInboxLabel" prefHeight="105.0" prefWidth="160.0" GridPane.columnIndex="1">
                      <font>
                         <Font size="30.0" />
                      </font></Label>
-                  <ListView fx:id="inboxListView2" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <ListView fx:id="inboxListView2" onMouseClicked="#handleMouseClick" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                   <Label fx:id="showInboxLabel2" prefHeight="116.0" prefWidth="180.0" GridPane.columnIndex="2">
+                     <font>
+                        <Font size="30.0" />
+                     </font></Label>
+                  <ListView fx:id="inboxListView3" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                     <Label fx:id="showInboxLabel3" text="Label" GridPane.columnIndex="3">
                      <font>
                         <Font size="30.0" />
                      </font></Label>
