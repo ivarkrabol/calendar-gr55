@@ -52,28 +52,41 @@ public class MessageController extends UserController{
         }
     }
 
-    public ObservableList<String> convert() throws SQLException, DBConnectionException {
+    public ObservableList<String> getSenderName() throws SQLException, DBConnectionException {
         ObservableList<Message> inbox = FXCollections.observableArrayList();
         ObservableList<String> SenderList = FXCollections.observableArrayList();
-        inbox = Message.getInbox(getApplication().getUser().getId(), getApplication().getDb(), getApplication().getModelCache());
+        inbox.addAll(Message.getInbox(getApplication().getUser().getId(), getApplication().getDb(), getApplication().getModelCache()));
         int i = 0;
-        while (!inbox.isEmpty()) {
-            String str = inbox.get(i).getSender().getFirstName();
+        while (i < inbox.size()) {
+            String str = inbox.get(i).getSender().getFirstName() + " " + inbox.get(i).getSender().getLastName();
             SenderList.add(str);
             i++;
-            System.out.print(str);
         }
 
         return SenderList;
     }
 
+    public ObservableList<String> getDescription() throws SQLException, DBConnectionException {
+        ObservableList<Message> inbox = FXCollections.observableArrayList();
+        ObservableList<String> DescriptionList = FXCollections.observableArrayList();
+        inbox.addAll(Message.getInbox(getApplication().getUser().getId(), getApplication().getDb(), getApplication().getModelCache()));
+        int i = 0;
+        while (i < inbox.size()) {
+            String str = inbox.get(i).getDescription();
+            DescriptionList.add(str);
+            i++;
+        }
+
+        return DescriptionList;
+    }
 
     public void initialize(URL url, ResourceBundle resource) {
-        showInboxLabel.setText("From");
-        showInboxLabel2.setText("Description");
+        showInboxLabel.setText("From:");
+        showInboxLabel2.setText("Description:");
 
         try {
-            inboxListView.setItems(convert());
+            inboxListView.setItems(getSenderName());
+            inboxListView2.setItems(getDescription());
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (DBConnectionException e) {
@@ -84,10 +97,8 @@ public class MessageController extends UserController{
 
 
 
-    public void refreshInbox() {
+    public void refreshInbox() { //vet ikke om denne funker?
         initialize(url, resource);
-
-        
 
     }
 
