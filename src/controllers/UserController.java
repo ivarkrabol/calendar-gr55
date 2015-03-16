@@ -45,16 +45,19 @@ public class UserController extends Controller {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-    	
-    	String navn = user.getFirstName() + " " + user.getLastName();
-    	userNameLabel.setText(navn);
-    	emailLabel.setText(user.getEmail());
-    	phoneLabel.setText(Integer.toString(user.getPhoneNr()));
+    	displayUser();
     	displayGroups();
     	
     }
     
-    public void displayGroups() {
+    private void displayUser() {
+    	String navn = user.getFirstName() + " " + user.getLastName();
+    	userNameLabel.setText(navn);
+    	emailLabel.setText(user.getEmail());
+    	phoneLabel.setText(Integer.toString(user.getPhoneNr()));
+	}
+
+	public void displayGroups() {
     	ObservableList<Group> groups;
 		try {
 			groups = Group.getGroupsUserIsPartOf(user.getId(), getApplication().getDb(), getApplication().getModelCache());

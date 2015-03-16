@@ -37,8 +37,8 @@ public class AddRoomController extends Controller {
     
 	private boolean inputValid() {
 		String error = "";
-        if (!textFieldValid(rname)){error += "The group must have a valid name\n";}
-        //if (!textFieldValid(descriptionField)){error += "The group must have a description\n";}
+        if (!textFieldValid(rname)){error += "The room must have a valid name\n";}
+        if (!textFieldValid(rsize)){error += "The room must have a size\n";}
         
         if(error.length()==0){return true;}
         else{
