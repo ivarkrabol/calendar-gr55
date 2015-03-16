@@ -14,11 +14,12 @@ import java.sql.SQLException;
 public class Group extends Model {
 
     private int id;
-    private StringProperty nummer = new SimpleStringProperty();
+    //private String groupName;
+    //private StringProperty nummer = new SimpleStringProperty();
     
-    public StringProperty nummerProperty(){
-    	return nummer;
-    }
+//    public StringProperty nummerProperty(){
+//    	return nummer;
+//    }
     
     public void setId(int id) {
         this.id = id;
@@ -48,9 +49,6 @@ public class Group extends Model {
         return groups;
 
     }
-
-
-
     public static Group getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException { // this isn't done
         Group group;
         if (mc.contains(Group.class, id)) group = mc.get(Group.class, id);
@@ -61,6 +59,15 @@ public class Group extends Model {
         mc.put(id, group);
         group.refreshFromDB(db, mc);
         return group;
+    }
+    
+    public static String getName(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException  {
+        ResultSet results = db.query("SELECT GroupName FROM `GROUP` WHERE GroupID = " + id);
+        String groupName = null;
+        while (results.next()) {
+        	groupName = results.getString("GroupName");
+        }
+        return groupName;
     }
 
 

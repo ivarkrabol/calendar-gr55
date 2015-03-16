@@ -10,7 +10,9 @@ import exceptions.DBConnectionException;
 import application.Main;
 import models.Appointment;
 import models.Group;
+import models.Message;
 import models.User;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -33,9 +35,7 @@ public class UserController extends Controller {
 	@FXML
     private Label phoneLabel;
 	@FXML
-	private TableView<Group> TableViewGroup;
-	@FXML
-    private TableColumn<Group, Integer> TableColGroup;
+	private ListView<String> groupList;
     
 	private User user = getApplication().getUser();
 	
@@ -64,16 +64,11 @@ public class UserController extends Controller {
     	ObservableList<Group> groups;
 		try {
 			groups = Group.getGroupsUserIsPartOf(user.getId(), getApplication().getDb(), getApplication().getModelCache());
-			TableColGroup.setCellValueFactory(new PropertyValueFactory<Group, Integer>("nummer"));
-			
-			TableViewGroup.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
-			TableViewGroup.setItems(groups);
-		    assert TableViewGroup.getItems() == groups;
-//			for (int i = 0; i < groups.size(); i++) {
-//				System.out.println(groups.get(i).getId());
-//				groupNames.add(i);
-//			}
+			ObservableList<String> groupNames = FXCollections.observableArrayList();
+			for (int i = 0; i < groups.size(); i++) {
+				groupNames.add(Group.getName(groups.get(i).getId(), getApplication().getDb(), getApplication().getModelCache()));
+			}
+			groupList.setItems(groupNames);
 		} catch (DBConnectionException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
