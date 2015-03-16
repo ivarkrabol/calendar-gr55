@@ -84,20 +84,20 @@
                                 <RowConstraints maxHeight="622.0" minHeight="10.0" prefHeight="607.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <ListView fx:id="sun" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
-                                <ListView fx:id="mon" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                <ListView fx:id="tue" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                <ListView fx:id="wed" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                <ListView fx:id="thu" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                                <ListView fx:id="fri" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                                <ListView fx:id="sat" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="6" GridPane.rowIndex="1" />
-                                <Label fx:id="sunText" prefHeight="15.0" prefWidth="152.0" />
-                                <Label fx:id="monText" prefHeight="15.0" prefWidth="137.0" GridPane.columnIndex="1" />
-                                <Label fx:id="tueText" prefHeight="15.0" prefWidth="138.0" GridPane.columnIndex="2" />
-                                <Label fx:id="wedText" prefHeight="15.0" prefWidth="141.0" GridPane.columnIndex="3" />
-                                <Label fx:id="thuText" prefHeight="15.0" prefWidth="143.0" GridPane.columnIndex="4" />
-                                <Label fx:id="friText" prefHeight="15.0" prefWidth="133.0" GridPane.columnIndex="5" />
-                                <Label fx:id="satText" prefHeight="15.0" prefWidth="138.0" GridPane.columnIndex="6" />
+                                <ListView fx:id="mon" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
+                                <ListView fx:id="tue" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                <ListView fx:id="wed" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                <ListView fx:id="thu" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                <ListView fx:id="fri" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                <ListView fx:id="sat" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                <ListView fx:id="sun" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                                <Label fx:id="monText" prefHeight="15.0" prefWidth="152.0" />
+                                <Label fx:id="tueText" prefHeight="15.0" prefWidth="137.0" GridPane.columnIndex="1" />
+                                <Label fx:id="wedText" prefHeight="15.0" prefWidth="138.0" GridPane.columnIndex="2" />
+                                <Label fx:id="thuText" prefHeight="15.0" prefWidth="141.0" GridPane.columnIndex="3" />
+                                <Label fx:id="friText" prefHeight="15.0" prefWidth="143.0" GridPane.columnIndex="4" />
+                                <Label fx:id="satText" prefHeight="15.0" prefWidth="133.0" GridPane.columnIndex="5" />
+                                <Label fx:id="sunText" prefHeight="15.0" prefWidth="138.0" GridPane.columnIndex="6" />
                             </children>
                         </GridPane>
                         <GridPane GridPane.columnIndex="1">

@@ -12,6 +12,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import models.*;
+import models.Calendar;
+
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;
@@ -60,8 +62,9 @@ public class CalendarController extends Controller{
     private Menu adminButton;
 
 
-    private List<ListView<Appointment>> weekDaysTable;
-    private List<Label> weekDays;
+    private Map<Integer, ListView<Appointment>> weekDaysTable;
+    private Map<Integer, Label> weekDays;
+    private Calendar calendarModel;
 
 
     @Override
@@ -75,29 +78,30 @@ public class CalendarController extends Controller{
             adminButton.setVisible(true);
         }
         year.setText(""+LocalDate.now().getYear());
-        week.setText(""+LocalDate.now().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
+        week.setText("" + LocalDate.now().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
         setStyle(week, true);
         setStyle(year, true);
-        setList();
+        setMaps();
+        calendarModel = getApplication().getUser().getCalendar();
     }
 
-    public final void setList(){
-        weekDaysTable = new ArrayList<ListView<Appointment>>();
-        weekDaysTable.add(sun);
-        weekDaysTable.add(mon);
-        weekDaysTable.add(tue);
-        weekDaysTable.add(wed);
-        weekDaysTable.add(thu);
-        weekDaysTable.add(fri);
-        weekDaysTable.add(sat);
-        weekDays = new ArrayList<Label>();
-        weekDays.add(sunText);
-        weekDays.add(monText);
-        weekDays.add(tueText);
-        weekDays.add(wedText);
-        weekDays.add(thuText);
-        weekDays.add(friText);
-        weekDays.add(satText);
+    public final void setMaps(){
+        weekDaysTable = new HashMap<Integer, ListView<Appointment>>();
+        weekDaysTable.put(java.util.Calendar.MONDAY, mon);
+        weekDaysTable.put(java.util.Calendar.TUESDAY, tue);
+        weekDaysTable.put(java.util.Calendar.WEDNESDAY, wed);
+        weekDaysTable.put(java.util.Calendar.THURSDAY, thu);
+        weekDaysTable.put(java.util.Calendar.FRIDAY, fri);
+        weekDaysTable.put(java.util.Calendar.SATURDAY, sat);
+        weekDaysTable.put(java.util.Calendar.SUNDAY, sun);
+        weekDays = new HashMap<Integer, Label>();
+        weekDays.put(java.util.Calendar.MONDAY, monText);
+        weekDays.put(java.util.Calendar.TUESDAY, tueText);
+        weekDays.put(java.util.Calendar.WEDNESDAY, wedText);
+        weekDays.put(java.util.Calendar.THURSDAY, thuText);
+        weekDays.put(java.util.Calendar.FRIDAY, friText);
+        weekDays.put(java.util.Calendar.SATURDAY, satText);
+        weekDays.put(java.util.Calendar.SUNDAY, sunText);
     }
 
     @FXML public void handleNewAppoinment() {
@@ -126,7 +130,7 @@ public class CalendarController extends Controller{
         try{
             int w = Integer.parseInt(week.getText());
             if((w>0) && (w<53)){
-                getApplication().getUser().getCalendar().setWeekNumber(w);
+                calendarModel.setWeekNumber(w);
                 emptyWeekDays();
                 setWeekDays();
                 setStyle(week, true);
@@ -141,7 +145,9 @@ public class CalendarController extends Controller{
         try{
             int y = Integer.parseInt(year.getText());
             if((y>2014) && (y<2025)){
-                getApplication().getUser().getCalendar().setYearNumber(y);
+                calendarModel.setYearNumber(y);
+                emptyWeekDays();
+                setWeekDays();
                 setStyle(year, true);
             }else{
                 setStyle(year, false);
@@ -151,52 +157,45 @@ public class CalendarController extends Controller{
     }
 
     public void emptyWeekDays(){
-        for(ListView table : weekDaysTable){
+        for(ListView table : weekDaysTable.values()){
             table.setItems(null);
         }
     }
 
     public void setWeekDays() {
-        List<ObservableList<Appointment>> appointmentsForWeek = getApplication().getUser().getCalendar().appointmentsForWeek();
-        int i = 0;
-        while(i<7) {
-            for (ListView<Appointment> table : weekDaysTable) {
-                table.setEditable(false);
-                LocalDate day = getApplication().getUser().getCalendar().getDate(i + 1);
-                String dayDescription = getDayDescription(day);
-                weekDays.get(i).setText("   " + dayDescription);
-                if (appointmentsForWeek.size() > 0) {
-                    table.setItems(appointmentsForWeek.get(i));
-                    table.setCellFactory((list) -> {
-                        return new ListCell<Appointment>() {
-                            @Override
-                            protected void updateItem(Appointment item, boolean empty) {
-                                super.updateItem(item, empty);
-                                if (item == null || empty) {
-                                    setText(null);
-                                } else {
-                                    setText(item.getCalendarProperty());
-                                }
-                            }
-                        };
-                    });
-                    table.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        Map<Integer, ObservableList<Appointment>> appointmentsForWeek = calendarModel.appointmentsForWeek();
+        for(int day : Calendar.daysOfWeek) {
+            ListView<Appointment> table = weekDaysTable.get(day);
+            ObservableList<Appointment> appointments = appointmentsForWeek.get(day);
+            table.setEditable(false);
+            LocalDate date = calendarModel.getDate(day);
+            String dayDescription = getDayDescription(date);
+            weekDays.get(day).setText("   " + dayDescription);
+            if (appointments.size() > 0) {
+                table.setItems(appointments);
+                table.setCellFactory((list) -> {
+                    return new ListCell<Appointment>() {
                         @Override
-                        public void handle(MouseEvent click) {
-
-                            if (click.getClickCount() == 2) {
-                                Appointment a = table.getSelectionModel()
-                                        .getSelectedItem();
-                                if(a==null){
-                                    return;
-                                }else{
-                                    handleEditAppoinment(a);
-                                }
+                        protected void updateItem(Appointment item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (item == null || empty) {
+                                setText(null);
+                            } else {
+                                setText(item.getCalendarProperty());
                             }
                         }
-                    });
-                }
-                i++;
+                    };
+                });
+                table.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent click) {
+                        if (click.getClickCount() == 2) {
+                            Appointment a = table.getSelectionModel()
+                                    .getSelectedItem();
+                            if(a!=null) handleEditAppoinment(a);
+                        }
+                    }
+                });
             }
         }
     }
