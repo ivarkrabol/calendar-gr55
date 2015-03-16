@@ -144,6 +144,8 @@ public class Message extends Model{
 
     }
 
+
+
     @Override
     public void saveToDB(DB db) throws SQLException, DBConnectionException {
         String sql = "UPDATE MESSAGE\n" +

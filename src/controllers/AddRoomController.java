@@ -1,21 +1,14 @@
 package controllers;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import models.Group;
-import models.Room;
-import models.User;
-
-import org.controlsfx.dialog.Dialogs;
-
-import util.DB;
-import exceptions.DBConnectionException;
 import application.Main;
+import exceptions.DBConnectionException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import models.Room;
+import org.controlsfx.dialog.Dialogs;
+import util.DB;
+
+import java.sql.SQLException;
 
 public class AddRoomController extends Controller {
 	@FXML
@@ -44,7 +37,7 @@ public class AddRoomController extends Controller {
     
 	private boolean inputValid() {
 		String error = "";
-        if (!textFieldValid(gname)){error += "The group must have a valid name\n";}
+        if (!textFieldValid(rname)){error += "The group must have a valid name\n";}
         //if (!textFieldValid(descriptionField)){error += "The group must have a description\n";}
         
         if(error.length()==0){return true;}

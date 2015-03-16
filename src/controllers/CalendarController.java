@@ -125,6 +125,9 @@ public class CalendarController extends Controller{
     @FXML public void handleAddUser() {
         newStage("/views/AddUser.fxml", "Add user", new AddUserController());
     }
+    @FXML public void handleAddRoom() {
+        newStage("/views/AddRoom.fxml", "Add room", new AddUserController());
+    }
 
     @FXML public void weekTextFieldFocusChange() {
         try{

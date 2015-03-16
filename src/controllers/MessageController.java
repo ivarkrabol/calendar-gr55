@@ -18,14 +18,15 @@ import java.util.ResourceBundle;
 public class MessageController extends UserController{
 
     private Message message;
-    private ObservableList<Message> inbox = FXCollections.observableArrayList();
-    private ObservableList<String> SenderList = FXCollections.observableArrayList();
 
     @FXML
     private Label showInboxLabel;
 
     @FXML
     private Label showInboxLabel2;
+
+    private ResourceBundle resource;
+    private URL url;
 
 
     @FXML
@@ -52,7 +53,9 @@ public class MessageController extends UserController{
     }
 
     public ObservableList<String> convert() throws SQLException, DBConnectionException {
-        inbox.addAll(Message.getInbox(getApplication().getUser().getId(), getApplication().getDb(), getApplication().getModelCache()));
+        ObservableList<Message> inbox = FXCollections.observableArrayList();
+        ObservableList<String> SenderList = FXCollections.observableArrayList();
+        inbox = Message.getInbox(getApplication().getUser().getId(), getApplication().getDb(), getApplication().getModelCache());
         int i = 0;
         while (!inbox.isEmpty()) {
             String str = inbox.get(i).getSender().getFirstName();
@@ -82,6 +85,7 @@ public class MessageController extends UserController{
 
 
     public void refreshInbox() {
+        initialize(url, resource);
 
         
 
