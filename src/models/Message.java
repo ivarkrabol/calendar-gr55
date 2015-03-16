@@ -1,10 +1,6 @@
 package models;
 
 import exceptions.DBConnectionException;
-import javafx.beans.property.ObjectPropertyBase;
-import javafx.beans.property.Property;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import util.DB;
@@ -23,20 +19,27 @@ public class Message extends Model{
     private String description;
     private boolean invitation;
     private boolean read;
-
-
-    private Property<Message> messageProperty =  new ObjectPropertyBase<Message>(null) {
-
-        @Override
-        public Object getBean() {
-            return this;
-        }
-
-        @Override
-        public String getName() {
-            return "message";
-        }
-    };
+//
+//    private SimpleStringProperty sender;
+//    private SimpleStringProperty invitation;
+//    private StringProperty descriptionProperty = new SimpleStringProperty();
+//
+//    private Message(String description, User sender, boolean invitation);
+//
+//
+//
+//    private Property<Message> messageProperty =  new ObjectPropertyBase<Message>(null) {
+//
+//        @Override
+//        public Object getBean() {
+//            return this;
+//        }
+//
+//        @Override
+//        public String getName() {
+//            return "message";
+//        }
+//    };
 
 
     public int getId() {
