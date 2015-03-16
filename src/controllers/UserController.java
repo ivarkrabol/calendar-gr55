@@ -2,6 +2,7 @@ package controllers;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -14,6 +15,9 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 
 public class UserController extends Controller {
@@ -29,8 +33,10 @@ public class UserController extends Controller {
 	@FXML
     private Label phoneLabel;
 	@FXML
-    private javafx.scene.control.ListView<Group> groupList;
-	
+	private TableView<Group> TableViewGroup;
+	@FXML
+    private TableColumn<Group, Integer> TableColGroup;
+    
 	private User user = getApplication().getUser();
 	
     @FXML public void handleBack(){
@@ -58,11 +64,19 @@ public class UserController extends Controller {
     	ObservableList<Group> groups;
 		try {
 			groups = Group.getGroupsUserIsPartOf(user.getId(), getApplication().getDb(), getApplication().getModelCache());
-			groupList.setItems(groups);
+			TableColGroup.setCellValueFactory(new PropertyValueFactory<Group, Integer>("nummer"));
+			
+			TableViewGroup.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+			TableViewGroup.setItems(groups);
+		    assert TableViewGroup.getItems() == groups;
+//			for (int i = 0; i < groups.size(); i++) {
+//				System.out.println(groups.get(i).getId());
+//				groupNames.add(i);
+//			}
 		} catch (DBConnectionException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
-			
 			e.printStackTrace();
 		}
     	

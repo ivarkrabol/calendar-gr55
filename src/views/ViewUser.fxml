@@ -70,7 +70,11 @@
                         </Label>
                      </children>
                   </GridPane>
-                  <ListView fx:id="groupList" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
+                  <TableView fx:id="TableViewGroup" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+                    <columns>
+                      <TableColumn fx:id="TableColGroup" minWidth="-1.0" prefWidth="-1.0" text="Grupper" />
+                    </columns>
+                  </TableView>
                </children>
             </GridPane>
          </center>
