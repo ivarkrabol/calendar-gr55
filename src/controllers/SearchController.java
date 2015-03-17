@@ -70,15 +70,17 @@ public class SearchController extends Controller{
                 return null;
             }
         });
-        userList.setOnAction((event) -> {
+        userList.setOnAction((event) -> { //problemet er at man ser sin egen Calender igjen, og at dersom man lukker med back, får man en annens calender.
                     selectedUser = userList.getSelectionModel().getSelectedItem();
-                    CalendarController calender = null;
+                    GuestCalendarController calender = null;
                     try {
+                        User user = getApplication().getUser(); // må ta vare på den gamle brukeren.
+                        calender = (GuestCalendarController) getApplication().replaceSceneContent("/views/ViewGuestCalendar.fxml");
                         getStage().close();
-                        calender.getApplication().setUser(selectedUser);
+                        calender.getApplication().setUser(selectedUser); // denne setter den for seint
                         calender.setWeekDays();
                         calender.setApp(getApplication());
-                        calender = (CalendarController) getApplication().replaceSceneContent("/views/ViewCalendar.fxml");
+
 
 
                     } catch (Exception e) {
