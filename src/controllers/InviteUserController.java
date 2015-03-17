@@ -1,5 +1,6 @@
     package controllers;
 
+import exceptions.AlreadyInvitedException;
 import exceptions.DBConnectionException;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,10 +14,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 import models.Appointment;
+import models.Message;
 import models.User;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
+import util.DB;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -145,13 +148,20 @@ public class InviteUserController extends Controller {
     }
 
     @FXML public void handleInvite(ActionEvent actionEvent) {
-        appointment.invite(selectedUser);
         try {
-            appointment.saveToDB(getApplication().getDb());
+            Message invitation = appointment.invite(selectedUser);
+            DB db = getApplication().getDb();
+            appointment.saveToDB(db);
+            invitation.insertToDB(db);
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (DBConnectionException e) {
             e.printStackTrace();
+        } catch (AlreadyInvitedException e) {
+            Dialogs.create()
+                .title("User already invited")
+                .message("The user you selected has already been invited.")
+                .showInformation();
         }
         setAppointment(appointment);
     }

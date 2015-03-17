@@ -1,5 +1,6 @@
 package models;
 
+import exceptions.AlreadyInvitedException;
 import exceptions.DBConnectionException;
 import util.DB;
 import util.ModelCache;
@@ -20,7 +21,7 @@ public abstract class Attendable extends Model {
         @Override public String toString() { return name; }
     }
 
-    private User administrator;
+    protected User administrator;
     private Map<User, Response> responses;
 
     public User getAdministrator() {
@@ -45,13 +46,18 @@ public abstract class Attendable extends Model {
         responses.put(user, Response.HAS_DECLINED);
     }
 
-    public void invite(User user) {
-        if(responses.containsKey(user)) return;
+    public Message invite(User user) throws AlreadyInvitedException {
+        if(responses.containsKey(user)) throw new AlreadyInvitedException();
         responses.put(user, Response.NOT_ANSWERED);
-        //TODO: Send message
+        Message invitation = new Message(user, administrator, true);
+        invitation.setDescription(getInvitationText());
+        return invitation;
     }
 
+    protected abstract String getInvitationText();
+
     protected abstract String[] getIdPair();
+
     private String getParticipantsWhereClause() {
         return "`" + getIdPair()[0] + "` = " + getIdPair()[1];
     }

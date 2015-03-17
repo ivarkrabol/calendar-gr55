@@ -22,7 +22,6 @@ import util.ModelCache;
 public class Appointment extends Attendable implements Comparable<Appointment>  {
 
     private int id;
-    private User administrator;
 //    ObservableList<User> invitedParticipants;
 //    ObservableList<User> acceptedParticipants;
 //    ObservableList<User> declinedParticipants;
@@ -144,6 +143,16 @@ public class Appointment extends Attendable implements Comparable<Appointment>  
 
     public User getAdministrator() {
         return administrator;
+    }
+
+    @Override
+    protected String getInvitationText() {
+        return "You have been invited to an appointment by " + administrator.getEmail() + "\n" +
+                "Title: " + getTitle() + "\n" +
+                "Time: " + LocalDateTime.of(getStartDateProperty(), getStartTimeProperty()) +
+                " to " + LocalDateTime.of(getEndDateProperty(), getEndTimeProperty()) + "\n" +
+                (getRoom() != null ? "Room: " + getRoom().getName() + "\n\n" : "\n") +
+                "Use the button below to choose whether or not you wish to attend.";
     }
 
     private void setAdministrator(User administrator) {

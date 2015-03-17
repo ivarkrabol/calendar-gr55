@@ -19,6 +19,17 @@ public class Message extends Model{
     private String description;
     private boolean invitation;
     private boolean read;
+
+    private Message() {
+    }
+
+    public Message(User recipient, User sender, boolean invitation) {
+        this.recipient = recipient;
+        this.sender = sender;
+        this.invitation = invitation;
+        this.read = false;
+    }
+
 //
 //    private SimpleStringProperty sender;
 //    private SimpleStringProperty invitation;
@@ -70,7 +81,7 @@ public class Message extends Model{
         return sentTime;
     }
 
-    public void setSentTime(Timestamp sentTime) {
+    private void setSentTime(Timestamp sentTime) {
         this.sentTime = sentTime;
     }
 
@@ -151,7 +162,6 @@ public class Message extends Model{
         String sql = "UPDATE MESSAGE SET\n" +
                 "RecipientID = " + getRecipient().getId() + ",\n" +
                 "SenderID = " + getSender().getId() + ",\n" +
-                "SentTime = '" + getSentTime() + "',\n" +
                 "Description = '" + getDescription() + "',\n" +
                 "IsInvitation = '" + isInvitation() + "',\n" +
                 "HasBeenRead = '" + isRead() + "'\n" +
@@ -162,15 +172,16 @@ public class Message extends Model{
 
     @Override
     public void insertToDB(DB db) throws SQLException, DBConnectionException {
-        String updateSql = "INSERT INTO USER\n" +
+        String updateSql = "INSERT INTO MESSAGE\n" +
                 "(RecipientID, SenderID, SentTime, Description, IsInvitation, HasBeenRead)\n" +
                 "VALUES (\n" +
                 getRecipient().getId() + ",\n" +
                 getSender().getId() + ",\n" +
-                "'" + getSentTime() + "',\n" +
+                "NOW(),\n" +
                 "'" + getDescription() + "',\n" +
                 String.valueOf(isInvitation()) + ",\n" +
                 String.valueOf(isRead()) + ")";
+        System.out.println(updateSql);
         db.update(updateSql);
         String querySql = "SELECT MAX(MessageID) AS ID FROM MESSAGE";
 
