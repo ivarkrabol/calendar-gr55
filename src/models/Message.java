@@ -1,6 +1,9 @@
 package models;
 
 import exceptions.DBConnectionException;
+import javafx.beans.property.ObjectPropertyBase;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import util.DB;
@@ -15,42 +18,67 @@ public class Message extends Model{
     private int id;
     private User recipient;
     private User sender;
-    private Timestamp sentTime;
-    private String description;
+    private SimpleStringProperty username = new SimpleStringProperty();
+    private SimpleStringProperty description = new SimpleStringProperty();
+    private Property<Timestamp> sentTime =  new ObjectPropertyBase<Timestamp>(null) {
+
+        @Override
+        public Object getBean() {
+            return this;
+        }
+
+        @Override
+        public String getName() {
+            return "room";
+        }
+    };
+
+    public void setSender(User sender) {
+        this.sender = sender;
+    }
+
+    public User getSender() {
+        return sender;
+    }
+
+    public void setUsername() {
+        this.username.set(getSender().getFirstName()+" "+getSender().getLastName());
+    }
+
+    public String getUsername() {
+        return username.get();
+    }
+
+    public SimpleStringProperty usernameProperty() {
+        setUsername();
+        return username;
+    }
+
+    public void setSentTime(Timestamp sentTime) {
+        this.sentTime.setValue(sentTime);
+    }
+
+    public Timestamp getSentTime() {
+        return sentTime.getValue();
+    }
+
+    public Property<Timestamp> sentTimeProperty() {
+        return sentTime;
+    }
+
+
     private boolean invitation;
     private boolean read;
 
     private Message() {
+
     }
 
     public Message(User recipient, User sender, boolean invitation) {
         this.recipient = recipient;
-        this.sender = sender;
         this.invitation = invitation;
         this.read = false;
     }
-
-//
-//    private SimpleStringProperty sender;
-//    private SimpleStringProperty invitation;
-//    private StringProperty descriptionProperty = new SimpleStringProperty();
-//
-//    private Message(String description, User sender, boolean invitation);
-//
-//
-//
-//    private Property<Message> messageProperty =  new ObjectPropertyBase<Message>(null) {
-//
-//        @Override
-//        public Object getBean() {
-//            return this;
-//        }
-//
-//        @Override
-//        public String getName() {
-//            return "message";
-//        }
-//    };
 
 
     public int getId() {
@@ -69,28 +97,18 @@ public class Message extends Model{
         this.recipient = recipient;
     }
 
-    public User getSender() {
-        return sender;
-    }
 
-    public void setSender(User sender) {
-        this.sender = sender;
-    }
-
-    public Timestamp getSentTime() {
-        return sentTime;
-    }
-
-    private void setSentTime(Timestamp sentTime) {
-        this.sentTime = sentTime;
-    }
 
     public String getDescription() {
-        return description;
+        return description.get();
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        this.description.set(description);
+    }
+
+    public SimpleStringProperty descriptionProperty() {
+        return description;
     }
 
     public boolean isInvitation() {
