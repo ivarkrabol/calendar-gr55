@@ -15,6 +15,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 
+import javax.swing.text.html.ImageView;
+
 
 public class UserController extends Controller {
 	@Override
@@ -24,12 +26,16 @@ public class UserController extends Controller {
 
 	@FXML
     private Label userNameLabel;
+    @FXML
+    private Label userName;
 	@FXML
     private Label emailLabel;
 	@FXML
     private Label phoneLabel;
 	@FXML
 	private ListView<String> groupList;
+    @FXML
+    private ImageView image;
     
 	private User user = getApplication().getUser();
 	
@@ -53,6 +59,7 @@ public class UserController extends Controller {
     private void displayUser() {
     	String navn = user.getFirstName() + " " + user.getLastName();
     	userNameLabel.setText(navn);
+        userName.setText(user.getFirstName());
     	emailLabel.setText(user.getEmail());
     	phoneLabel.setText(Integer.toString(user.getPhoneNr()));
 	}
