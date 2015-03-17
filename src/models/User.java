@@ -5,9 +5,15 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
 import util.DB;
 import util.ModelCache;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -87,7 +93,32 @@ public class User extends Model{
 
     public final void setCalendar(DB db, ModelCache modelCache){
          calendar = new Calendar(this.getId(), db, modelCache, Calendar.OwnerType.USER);
+    }
 
+    public Image getImage (DB db, ModelCache mc) {
+        ResultSet rs;
+        BufferedImage image = null;
+        InputStream fis = null;
+        Image newImage = null;
+        try {
+            String query = "SELECT  `Image`"+
+                    "FROM USER "+
+                    "WHERE  `UserID` ="+getId()+"";
+            rs = db.query(query);
+            if (rs.next()) {
+                fis = rs.getBinaryStream("Image");
+                System.out.println("fis = " + fis);
+                image = ImageIO.read(fis);
+                newImage = SwingFXUtils.toFXImage(image, null);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (DBConnectionException e) {
+            e.printStackTrace();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        return newImage;
     }
 
     public static ObservableList<User> searchForUser(String UserName, DB db, ModelCache mc) throws SQLException, DBConnectionException {

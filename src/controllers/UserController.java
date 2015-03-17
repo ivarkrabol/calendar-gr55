@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import exceptions.DBConnectionException;
 import application.Main;
+import javafx.scene.image.Image;
 import models.Group;
 import models.User;
 import javafx.collections.FXCollections;
@@ -15,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 
+import javax.swing.text.Element;
 import javax.swing.text.html.ImageView;
 
 
@@ -53,9 +55,14 @@ public class UserController extends Controller {
     public void initialize(URL location, ResourceBundle resources) {
     	displayUser();
     	displayGroups();
-    	
+
     }
-    
+
+    private void displayImage(){
+        //JUST BULL for fun! Can't get it to work.. hehe
+        Image im = user.getImage(getApplication().getDb(), getApplication().getModelCache());
+        //image.setImage(im);
+    }
     private void displayUser() {
     	String navn = user.getFirstName() + " " + user.getLastName();
     	userNameLabel.setText(navn);
@@ -78,8 +85,6 @@ public class UserController extends Controller {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-    	
-    	
     }
     
 

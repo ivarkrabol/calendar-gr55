@@ -11,7 +11,7 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.UserController">
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.UserController">
     <children>
     <BorderPane layoutX="0.5" prefHeight="524.0" prefWidth="680.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <top>
@@ -125,6 +125,11 @@
                               </Label>
                            </children>
                         </GridPane>
+                        <ImageView fitHeight="347.0" fitWidth="403.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1">
+                           <image>
+                              <Image url="@funny.jpg" />
+                           </image>
+                        </ImageView>
                      </children>
                   </GridPane>
                </children>
