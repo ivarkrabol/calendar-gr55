@@ -10,7 +10,7 @@ import java.util.ResourceBundle;
 /**
  * Created by morit_000 on 16.03.2015.
  */
-public class MessageDetailsController extends UserController{
+public class MessageDetailsController extends MessageController{
 
 
     @FXML
@@ -30,11 +30,23 @@ public class MessageDetailsController extends UserController{
     @FXML
     private ComboBox<String> comboBox;
 
+    private String string;
+
+
+    public void setSel(String string) {
+        this.string = string;
+        senderNameLabel.setText(string);
+    }
+
+    public String getSel() {
+        return string;
+    }
+
 
     public void initialize(URL url, ResourceBundle resource) {
         //System.out.print(senderName);
         fromLabel.setText("From:");
-        senderNameLabel.setText("");//navnet til den du trykker på, klarer ikke å få den fra MessageControllerklassen
+        //navnet til den du trykker på, klarer ikke å få den fra MessageControllerklassen
         receivedLabel.setText("Received:");
         timeLabel.setText("");
         descriptionLabel.setText("Description:");

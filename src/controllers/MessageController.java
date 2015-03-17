@@ -4,9 +4,13 @@ import exceptions.DBConnectionException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import models.Message;
 
 import java.net.URL;
@@ -126,7 +130,7 @@ public class MessageController extends UserController {
     }
 
 
-    public void refreshInbox() { //vet ikke om denne funker?
+    public void refreshInbox() {
         initialize(url, resource);
 
     }
@@ -139,11 +143,32 @@ public class MessageController extends UserController {
     public void handleMouseClick(MouseEvent click) {
         if (click.getClickCount() == 2) {
             if (inboxListView.getSelectionModel().getSelectedItem() != null || inboxListView2.getSelectionModel().getSelectedItem() != null) {
-                newStage("/views/ViewMessage.fxml", "Message details", new MessageDetailsController());
+                String str = inboxListView.getSelectionModel().getSelectedItem();
+                newMessageStage("/views/ViewMessage.fxml", "Message details", str);
                 System.out.print(getSelectedSenderName());//denne her funker ikke??
             }
         }
     }
+
+
+
+    private void newMessageStage(String location, String title, String selected){
+        Stage currentStage = new Stage();
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(location));
+            AnchorPane root = fxmlLoader.load();
+            currentStage.setTitle(title);
+            currentStage.setScene(new Scene(root));
+            MessageDetailsController controller = fxmlLoader.getController();
+            controller.setSel(selected);
+            controller.setApp(getApplication());
+            controller.setStage(currentStage);
+            currentStage.show();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
 
