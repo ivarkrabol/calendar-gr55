@@ -81,8 +81,10 @@ public class CalendarController extends Controller{
         week.setText("" + LocalDate.now().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
         setStyle(week, true);
         setStyle(year, true);
+        
         setMaps();
         calendarModel = getApplication().getUser().getCalendar();
+        setWeekDays();
     }
 
     public final void setMaps(){
@@ -111,7 +113,6 @@ public class CalendarController extends Controller{
     public void handleEditAppoinment(Appointment a) {
         newAppointmentStage("/views/EditAppointment.fxml", "Edit Appointment", a);
     }
-
 
     @FXML public void handleNewGroup() {
         newStage("/views/EditGroup.fxml", "New Group", new EditGroupController());
@@ -243,7 +244,6 @@ public class CalendarController extends Controller{
             e.printStackTrace();
         }
     }
-
 }
 
 
