@@ -41,8 +41,8 @@ public class Main extends Application {
             modelCache = new ModelCache();
             login();
             primaryStage.show();
-        } catch (Exception ex) {
-            System.out.println("Exception: " + ex);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -51,7 +51,7 @@ public class Main extends Application {
         try {
             config.load("config.properties");
         } catch (IOException e) {
-             System.out.println("Exception " + e);
+            e.printStackTrace();
         }
     }
 
@@ -61,7 +61,7 @@ public class Main extends Application {
             db.configure(config);
             db.connect();
         }catch(Exception e){
-            System.out.println("Exception " + e);
+            e.printStackTrace();
         }
     }
 
@@ -71,7 +71,7 @@ public class Main extends Application {
             LoginController login = (LoginController) replaceSceneContent("/views/Login.fxml");
             login.setApp(this);
         }catch(Exception e){
-            System.out.println("Exception " + e);
+            e.printStackTrace();
         }
     }
 

@@ -1,6 +1,8 @@
 package models;
 
 import exceptions.DBConnectionException;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import util.DB;
@@ -12,13 +14,13 @@ import java.sql.SQLException;
 public class User extends Model{
 
     private int id;
-    private String email;
     private String lastName;
     private String firstName;
     private int phoneNr;
     private String password;
     private Calendar calendar;
 
+    private StringProperty email = new SimpleStringProperty();
 
 
     public User() {
@@ -40,11 +42,15 @@ public class User extends Model{
     }
 
     public String getEmail() {
-        return email;
+        return this.email.get();
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email.set(email);
+    }
+
+    public StringProperty emailProperty() {
+        return email;
     }
 
     public String getLastName() {
@@ -80,7 +86,7 @@ public class User extends Model{
     }
 
     public final void setCalendar(DB db, ModelCache modelCache){
-         calendar = new Calendar(this.getId(), db, modelCache, Calendar.OwnerType.user);
+         calendar = new Calendar(this.getId(), db, modelCache, Calendar.OwnerType.USER);
 
     }
 
@@ -109,6 +115,18 @@ public class User extends Model{
         return user;
     }
 
+    public static ObservableList<User> getAllUsers(DB db, ModelCache mc) throws SQLException, DBConnectionException {
+        ObservableList<User> users = FXCollections.observableArrayList();
+        String query = "SELECT  `UserID` \n" +
+                "FROM  `USER`";
+        ResultSet rs = db.query(query);
+        while (rs.next()) {
+            User user = User.getById(rs.getInt("UserID"), db, mc);
+            users.add(user);
+        }
+        return users;
+    }
+
     @Override
     public void refreshFromDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
         String sql = "" +
@@ -127,9 +145,7 @@ public class User extends Model{
 
     @Override
     public void saveToDB(DB db) throws SQLException, DBConnectionException {
-
-
-        String sql = "UPDATE USER\n" +
+        String sql = "UPDATE USER SET\n" +
                 "EMail = '" + getEmail() + "',\n" +
                 "LastName = '" + getLastName() + "',\n" +
                 "FirstName = '" + getFirstName() + "',\n" +

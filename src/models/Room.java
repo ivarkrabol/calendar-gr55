@@ -83,7 +83,7 @@ public class Room extends Model{
 
     @Override
     public void saveToDB(DB db) throws SQLException, DBConnectionException {
-        String sql = "UPDATE ROOM\n" +
+        String sql = "UPDATE ROOM SET\n" +
                 "Size = '" + getSize() + "'\n" +
                 "WHERE RoomName ='" + getName()+"'";
 

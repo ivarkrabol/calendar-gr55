@@ -143,7 +143,7 @@ public class Message extends Model{
 
     @Override
     public void saveToDB(DB db) throws SQLException, DBConnectionException {
-        String sql = "UPDATE MESSAGE\n" +
+        String sql = "UPDATE MESSAGE SET\n" +
                 "RecipientID = " + getRecipient().getId() + ",\n" +
                 "SenderID = " + getSender().getId() + ",\n" +
                 "SentTime = '" + getSentTime() + "',\n" +

@@ -22,7 +22,7 @@ public class Group extends Model {
     }
 
     public void addMember(User user, DB db, ModelCache mc) throws SQLException, DBConnectionException { //should this also include an Appointment ID function
-        String sql = "UPDATE PARTICIPANTS\n" +
+        String sql = "UPDATE PARTICIPANTS SET\n" +
                 "UserID = '" + user.getId() + "',\n" +
                 "GroupID = '" + getId() + "',\n" +
                 "WHERE GroupID = " + getId();

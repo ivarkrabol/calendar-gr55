@@ -16,7 +16,7 @@ import java.util.*;
 public class Calendar extends Model {
 
     public enum OwnerType {
-        user ("UserID"), group ("GroupID");
+        USER ("UserID"), GROUP ("GroupID");
         private final String idFieldName;
         private OwnerType(String s) { idFieldName = s; }
         @Override public String toString(){ return idFieldName;}
