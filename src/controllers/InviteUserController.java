@@ -153,7 +153,7 @@ public class InviteUserController extends Controller {
         } catch (DBConnectionException e) {
             e.printStackTrace();
         }
-        //setAppointment(appointment);
+        setAppointment(appointment);
     }
 
     @FXML public void handleCancel(ActionEvent actionEvent) {
