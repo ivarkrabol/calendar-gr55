@@ -6,8 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -24,34 +23,18 @@ import java.util.ResourceBundle;
 public class MessageController extends UserController {
 
     private Message message;
-
-    @FXML
-    private Label showInboxLabel;
-    @FXML
-    private Label showInboxLabel2;
-    @FXML
-    private Label showInboxLabel3;
-
     private ResourceBundle resource;
     private URL url;
 
-
     @FXML
-    private ListView<String> inboxListView;
-
+    private TableView<Message> inbox;
     @FXML
-    private ListView<String> inboxListView2;
-
+    private TableColumn<Message, String> from;
     @FXML
-    private ListView<Timestamp> inboxListView3;
+    private TableColumn<Message, String> msg;
+    @FXML
+    private TableColumn<Message, Timestamp> recieved;
 
-    public ListView<String> getInboxListView() {
-        return inboxListView;
-    }
-
-    public ListView<String> getInboxListView2() {
-        return inboxListView2;
-    }
 
 
     @FXML
@@ -70,58 +53,30 @@ public class MessageController extends UserController {
         }
     }
 
-    public ObservableList<String> getSenderName() throws SQLException, DBConnectionException {
-        ObservableList<Message> inbox = FXCollections.observableArrayList();
-        ObservableList<String> SenderList = FXCollections.observableArrayList();
-        inbox.addAll(Message.getInbox(getApplication().getUser().getId(), getApplication().getDb(), getApplication().getModelCache()));
-        int i = 0;
-        while (i < inbox.size()) {
-            String str = inbox.get(i).getSender().getFirstName() + " " + inbox.get(i).getSender().getLastName();
-            SenderList.add(str);
-            i++;
-        }
-
-        return SenderList;
+    public void setInbox() throws SQLException, DBConnectionException {
+        inbox.setItems(Message.getInbox(getApplication().getUser().getId(), getApplication().getDb(), getApplication().getModelCache()));
+        from.setCellValueFactory(cellData -> cellData.getValue().usernameProperty());
+        msg.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
+        recieved.setCellValueFactory(cellData -> cellData.getValue().sentTimeProperty());
+        inbox.setRowFactory(tv -> {
+            TableRow<Message> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                    Message rowData = row.getItem();
+                    newMessageStage("/views/ViewMessage.fxml", "Message details", rowData);
+                }
+            });
+            return row;
+        });
     }
 
-    public ObservableList<String> getDescription() throws SQLException, DBConnectionException {
-        ObservableList<Message> inbox = FXCollections.observableArrayList();
-        ObservableList<String> DescriptionList = FXCollections.observableArrayList();
-        inbox.addAll(Message.getInbox(getApplication().getUser().getId(), getApplication().getDb(), getApplication().getModelCache()));
-        int i = 0;
-        while (i < inbox.size()) {
-            String str = inbox.get(i).getDescription();
-            DescriptionList.add(str);
-            i++;
-        }
 
-        return DescriptionList;
-    }
-
-    public ObservableList<Timestamp> getDate() throws SQLException, DBConnectionException {
-        ObservableList<Message> inbox = FXCollections.observableArrayList();
-        ObservableList<Timestamp> timeList = FXCollections.observableArrayList();
-        inbox.addAll(Message.getInbox(getApplication().getUser().getId(), getApplication().getDb(), getApplication().getModelCache()));
-        int i = 0;
-        while (i < inbox.size()) {
-            Timestamp str = inbox.get(i).getSentTime();
-            timeList.add(str);
-            i++;
-        }
-
-        return timeList;
-    }
 
 
     public void initialize(URL url, ResourceBundle resource) {
-        showInboxLabel.setText("From:");
-        showInboxLabel2.setText("Description:");
-        showInboxLabel3.setText("Received:");
 
-        try {
-            inboxListView.setItems(getSenderName());
-            inboxListView2.setItems(getDescription());
-            inboxListView3.setItems(getDate());
+        try {setInbox();
+
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (DBConnectionException e) {
@@ -135,24 +90,10 @@ public class MessageController extends UserController {
 
     }
 
-    public String getSelectedSenderName() {
-        String str = inboxListView.getSelectionModel().getSelectedItem();
-        return str;
-    }
-
-    public void handleMouseClick(MouseEvent click) {
-        if (click.getClickCount() == 2) {
-            if (inboxListView.getSelectionModel().getSelectedItem() != null || inboxListView2.getSelectionModel().getSelectedItem() != null) {
-                String str = inboxListView.getSelectionModel().getSelectedItem();
-                newMessageStage("/views/ViewMessage.fxml", "Message details", str);
-                System.out.print(getSelectedSenderName());//denne her funker ikke??
-            }
-        }
-    }
 
 
 
-    private void newMessageStage(String location, String title, String selected){
+    private void newMessageStage(String location, String title, Message selected){
         Stage currentStage = new Stage();
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(location));
@@ -160,7 +101,7 @@ public class MessageController extends UserController {
             currentStage.setTitle(title);
             currentStage.setScene(new Scene(root));
             MessageDetailsController controller = fxmlLoader.getController();
-            controller.setSel(selected);
+            controller.setMessage(selected);
             controller.setApp(getApplication());
             controller.setStage(currentStage);
             currentStage.show();
