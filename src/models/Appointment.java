@@ -253,7 +253,7 @@ public class Appointment extends Attendable implements Comparable<Appointment>  
     }
     public ObservableList<User> getInvitedParticipants() {
         ObservableList<User> invitedParticipants = FXCollections.observableArrayList();
-        invitedParticipants.addAll(getResponses().keySet());
+        invitedParticipants.addAll(getByResponse(Response.NOT_ANSWERED));
         return invitedParticipants;
     }
     public ObservableList<User> getDeclinedParticipants() {
