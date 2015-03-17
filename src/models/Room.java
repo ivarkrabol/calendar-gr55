@@ -27,11 +27,16 @@ public class Room extends Model{
 
     public void setNameProperty(String nameProperty) {this.nameProperty.set(nameProperty);}
     private int size;
+    private int availability;
 
     public Room(String name) {
         setNameProperty(name);
     }
-
+    
+    public Room(String name, int size) {
+        setNameProperty(name);
+        setSize(size);
+    }
 
     public int getSize() {
         return size;
@@ -93,10 +98,9 @@ public class Room extends Model{
     @Override
     public void insertToDB(DB db) throws SQLException, DBConnectionException {
         String sql = "INSERT INTO ROOM\n" +
-                "(RoomName, Size)\n" +
+                "(RoomName, Size, Availability)\n" +
                 "VALUES (\n" +
-                "'" + getName() + "', \n" +
-                + getSize() + ")";
+                "'" + getName() + "'," + getSize() + ", '1')";
         db.update(sql);
     }
 }

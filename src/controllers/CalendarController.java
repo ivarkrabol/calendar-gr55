@@ -117,13 +117,13 @@ public class CalendarController extends Controller{
         newStage("/views/EditGroup.fxml", "New Group", new EditGroupController());
     }
     @FXML public void handlePersons() {
-        newStage("/views/SearchUser.fxml", "Persons", new UserController());
-    }
-    @FXML public void handleGroups(){
-        newStage("/views/ViewUserGroups.fxml", "Groups", new Controller());
+        newStage("/views/SearchUser.fxml", "Persons", new SearchController());
     }
     @FXML public void handleAddUser() {
         newStage("/views/AddUser.fxml", "Add user", new AddUserController());
+    }
+    @FXML public void handleAddRoom() {
+        newStage("/views/AddRoom.fxml", "Add room", new AddRoomController());
     }
 
     @FXML public void weekTextFieldFocusChange() {

@@ -1,6 +1,8 @@
 package models;
 
 import exceptions.DBConnectionException;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import util.DB;
@@ -12,8 +14,40 @@ import java.sql.SQLException;
 public class Group extends Model {
 
     private int id;
-
-    public void setId(int id) {
+    private String groupName;
+    private String description;
+    private int adminId;
+    
+    public Group() {
+    }
+    public Group(String groupName, String description, int adminId){
+        this.setGroupName(groupName);
+        this.setDescription(description);
+        this.setAdminId(adminId);
+    }
+    
+    private void setAdminId(int adminId) {
+    	this.adminId = adminId;
+	}
+    private int getAdminId(){
+    	return adminId;
+    }
+    
+    private void setDescription(String description) {
+    	this.description = description;
+	}
+    private String getDescription(){
+    	return description;
+    }
+    
+	public void setGroupName(String gname) {
+		this.groupName = gname;
+	}
+    public String getGroupName(){
+    	return groupName;
+    }
+    
+	public void setId(int id) {
         this.id = id;
     }
 
@@ -33,7 +67,7 @@ public class Group extends Model {
     public static ObservableList<Group> getGroupsUserIsPartOf(int UserID, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         ResultSet rs;
         ObservableList<Group> groups = FXCollections.observableArrayList();
-        rs = db.query("SELECT GroupID FROM UserInGroup WHERE UserID = " + UserID);
+        rs = db.query("SELECT GroupID FROM PARTICIPANTS WHERE UserID = " + UserID + " AND GroupID is not NULL");
         while (rs.next()) {
             int temp = rs.getInt("GroupID");
             groups.add(getById(temp, db, mc));
@@ -41,9 +75,6 @@ public class Group extends Model {
         return groups;
 
     }
-
-
-
     public static Group getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException { // this isn't done
         Group group;
         if (mc.contains(Group.class, id)) group = mc.get(Group.class, id);
@@ -55,15 +86,22 @@ public class Group extends Model {
         group.refreshFromDB(db, mc);
         return group;
     }
+    
+    public static String getName(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException  {
+        ResultSet results = db.query("SELECT GroupName FROM `GROUP` WHERE GroupID = " + id);
+        String groupName = null;
+        while (results.next()) {
+        	groupName = results.getString("GroupName");
+        }
+        return groupName;
+    }
 
 
     @Override
     public void refreshFromDB(DB db, ModelCache mc) throws SQLException, DBConnectionException { // ikke ferdig
         String sql = "" +
-                "SELECT Description, AdministratorID\n" +
-                "FROM GROUP\n" +
-                "WHERE GroupID = " + id;
-
+                "SELECT 'Description', 'AdministratorID'\n" +
+                "FROM `GROUP` WHERE GroupID = " + id;
         ResultSet results = db.query(sql);
         if (!results.next()) throw new SQLException("No Group with that ID in database");
         if (results.next()) throw new SQLException("Result not unique");
@@ -77,7 +115,13 @@ public class Group extends Model {
 
     @Override
     public void insertToDB(DB db) throws SQLException, DBConnectionException {
-
+        String updateSql = "INSERT INTO `GROUP`\n" +
+                "(GroupName, Description, AdministratorID)\n" +
+                "VALUES (\n" +
+                "'" + getGroupName() + "',\n" +
+                "'" + getDescription() + "',\n" +
+                "'" + getAdminId() + "' );";
+        db.update(updateSql);
     }
 }
 

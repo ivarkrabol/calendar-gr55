@@ -257,7 +257,9 @@ public class EditAppointmentController extends Controller{
     public void setRooms() {
         LocalDateTime start = LocalDateTime.of(date, startTime);
         LocalDateTime end = LocalDateTime.of(endDate, endTime);
-        try{roomBox.setItems(Room.getAvailable(start, end, getApplication().getDb(), getApplication().getModelCache()));}
+        try{roomBox.setItems(Room.getAvailable(start, end, getApplication().getDb(), getApplication().getModelCache()));
+        	roomBox.setValue(appointmentModel.getRoom());
+        }
         catch (SQLException e){e.printStackTrace();}
         catch (DBConnectionException e){e.printStackTrace();}
         roomBox.setCellFactory((combobox) -> {

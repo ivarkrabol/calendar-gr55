@@ -31,6 +31,7 @@
                         <Menu fx:id="adminButton" mnemonicParsing="false" text="Admin" visible="false">
                             <items>
                                 <MenuItem fx:id="addUser" mnemonicParsing="false" onAction="#handleAddUser" text="Add user" />
+                        <MenuItem fx:id="addRoom" mnemonicParsing="false" onAction="#handleAddRoom" text="Add room" />
                             </items>
                         </Menu>
                     </menus>
@@ -55,13 +56,11 @@
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
                                 <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleNewAppoinment" prefHeight="158.0" prefWidth="172.0" text="New Appointment" />
                                 <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleNewGroup" prefHeight="158.0" prefWidth="172.0" text="New Group" GridPane.rowIndex="1" />
-                                <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlePersons" prefHeight="158.0" prefWidth="172.0" text="Persons" GridPane.rowIndex="3" />
-                                <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleGroups" prefHeight="158.0" prefWidth="172.0" text="Groups" GridPane.rowIndex="2" />
+                                <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlePersons" prefHeight="158.0" prefWidth="172.0" text="Persons" GridPane.rowIndex="2" />
                             </children>
                         </GridPane>
                         <Label prefHeight="141.0" prefWidth="680.0" text="   Calendar">
