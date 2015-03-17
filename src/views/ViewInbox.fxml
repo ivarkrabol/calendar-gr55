@@ -48,7 +48,7 @@
                      <columns>
                         <TableColumn fx:id="from" maxWidth="1000.0" minWidth="-Infinity" prefWidth="200.0" text="From" />
                         <TableColumn fx:id="msg" minWidth="-Infinity" prefWidth="600.0" text="Message" />
-                        <TableColumn fx:id="recieved" maxWidth="1000.0" minWidth="-Infinity" prefWidth="200.0" text="Recieved" />
+                        <TableColumn fx:id="recieved" maxWidth="1000.0" minWidth="-Infinity" prefWidth="200.0" text="Received" />
                      </columns>
                   </TableView>
                     </children>
