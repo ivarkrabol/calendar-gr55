@@ -135,8 +135,9 @@ public class EditAppointmentController extends Controller{
         endDate = appointmentModel.getEndDateProperty();
         endTimeField.setText(appointmentModel.localTimeFormat(appointmentModel.getEndTimeProperty()));
         dateField.setValue(appointmentModel.getStartDateProperty());
-        dateField.setValue(appointmentModel.getEndDateProperty());
-        setRooms();
+        endDateField.setValue(appointmentModel.getEndDateProperty());
+        if(date == null) roomBox.setValue(appointmentModel.getRoom());
+        else setRooms();
         startTimeTextFieldFocusChange();
         endTimeTextFieldFocusChange();
         disableFields(true);
