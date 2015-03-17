@@ -141,10 +141,6 @@ public class Appointment extends Attendable implements Comparable<Appointment>  
         this.id = id;
     }
 
-    public User getAdministrator() {
-        return administrator;
-    }
-
     @Override
     protected String getInvitationText() {
         return "You have been invited to an appointment by " + administrator.getEmail() + "\n" +
@@ -153,10 +149,6 @@ public class Appointment extends Attendable implements Comparable<Appointment>  
                 " to " + LocalDateTime.of(getEndDateProperty(), getEndTimeProperty()) + "\n" +
                 (getRoom() != null ? "Room: " + getRoom().getName() + "\n\n" : "\n") +
                 "Use the button below to choose whether or not you wish to attend.";
-    }
-
-    private void setAdministrator(User administrator) {
-        this.administrator = administrator;
     }
 
     public String getTitle() {

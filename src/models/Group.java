@@ -1,8 +1,6 @@
 package models;
 
 import exceptions.DBConnectionException;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import util.DB;
@@ -11,60 +9,63 @@ import util.ModelCache;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Group extends Model {
+public class Group extends Attendable {
 
     private int id;
-    private String groupName;
+    private String name;
     private String description;
-    private int adminId;
+    private Group parent;
     
-    public Group() {
+    private Group() {
     }
-    public Group(String groupName, String description, int adminId){
-        this.setGroupName(groupName);
+
+    public Group(String name, String description){
+        this.setName(name);
         this.setDescription(description);
-        this.setAdminId(adminId);
     }
     
-    private void setAdminId(int adminId) {
-    	this.adminId = adminId;
-	}
-    private int getAdminId(){
-    	return adminId;
-    }
-    
-    private void setDescription(String description) {
-    	this.description = description;
-	}
     private String getDescription(){
     	return description;
     }
-    
-	public void setGroupName(String gname) {
-		this.groupName = gname;
+
+    private void setDescription(String description) {
+    	this.description = description;
 	}
-    public String getGroupName(){
-    	return groupName;
+
+    public String getName(){
+    	return name;
     }
-    
-	public void setId(int id) {
-        this.id = id;
-    }
+
+	public void setName(String gname) {
+		this.name = gname;
+	}
 
     public int getId() {
         return id;
     }
 
-    public void addMember(User user, DB db, ModelCache mc) throws SQLException, DBConnectionException { //should this also include an Appointment ID function
-        String sql = "UPDATE PARTICIPANTS SET\n" +
-                "UserID = '" + user.getId() + "',\n" +
-                "GroupID = '" + getId() + "',\n" +
-                "WHERE GroupID = " + getId();
-        db.query(sql);
+	private void setId(int id) {
+        this.id = id;
     }
 
+    public Group getParent() {
+        return parent;
+    }
 
-    public static ObservableList<Group> getGroupsUserIsPartOf(int UserID, DB db, ModelCache mc) throws SQLException, DBConnectionException {
+    public void setParent(Group parent) {
+        this.parent = parent;
+    }
+    //    USES 'invite(User user)' (inherited from Attendable class) in stead
+//    public void addMember(User user, DB db, ModelCache mc) throws SQLException, DBConnectionException { //should this also include an Appointment ID function
+//        String sql = "UPDATE PARTICIPANTS SET\n" +
+//                "UserID = '" + user.getId() + "',\n" +
+//                "GroupID = '" + getId() + "',\n" +
+//                "WHERE GroupID = " + getId();
+//        db.query(sql);
+//    }
+
+
+    public static ObservableList<Group> getGroupsByUser(int UserID, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         ResultSet rs;
         ObservableList<Group> groups = FXCollections.observableArrayList();
         rs = db.query("SELECT GroupID FROM PARTICIPANTS WHERE UserID = " + UserID + " AND GroupID is not NULL");
@@ -75,53 +76,73 @@ public class Group extends Model {
         return groups;
 
     }
+
     public static Group getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException { // this isn't done
         Group group;
         if (mc.contains(Group.class, id)) group = mc.get(Group.class, id);
-        else {
-            group = new Group();
-        }
+        else group = new Group();
         group.setId(id);
         mc.put(id, group);
         group.refreshFromDB(db, mc);
         return group;
     }
-    
-    public static String getName(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException  {
-        ResultSet results = db.query("SELECT GroupName FROM `GROUP` WHERE GroupID = " + id);
-        String groupName = null;
-        while (results.next()) {
-        	groupName = results.getString("GroupName");
-        }
-        return groupName;
-    }
-
 
     @Override
-    public void refreshFromDB(DB db, ModelCache mc) throws SQLException, DBConnectionException { // ikke ferdig
+    protected String getInvitationText() {
+        return "You have been invited to a group by " + administrator.getEmail() + "\n" +
+                "Name: " + getName() + "\n" +
+                "Description: " + getDescription() + "\n" +
+                (parent == null ? "\n" : "Parent group: " + parent.getName() + "\n\n") +
+                "Use the button below to choose whether or not you wish to join.";
+    }
+
+    @Override
+    protected String[] getIdPair() {
+        return new String[] {"GroupID", ""+getId()};
+    }
+
+    @Override
+    public void refreshFromDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
         String sql = "" +
-                "SELECT 'Description', 'AdministratorID'\n" +
-                "FROM `GROUP` WHERE GroupID = " + id;
+                "SELECT `GroupName`, `Description`, `ParentGroupId`, `AdministratorID`\n" +
+                "FROM `GROUP`\n" +
+                "WHERE GroupID = " + id;
+
         ResultSet results = db.query(sql);
         if (!results.next()) throw new SQLException("No Group with that ID in database");
+        setName(results.getString("GroupName"));
+        setDescription(results.getString("Description"));
+        setParent(Group.getById(results.getInt("ParentGroupID"), db, mc));
+        setAdministrator(User.getById(results.getInt("AdministratorID"), db, mc));
         if (results.next()) throw new SQLException("Result not unique");
 
     }
 
     @Override
     public void saveToDB(DB db) throws SQLException, DBConnectionException {
-
+        String sql = "UPDATE `GROUP` SET\n" +
+                "`GroupName` = '" + getName() + "',\n" +
+                "`Description` = '" + getDescription() + "',\n" +
+                (getParent() == null ? "" : "`ParentGroupID` = " + getParent().getId() + ",\n") +
+                "`AdministratorID` = " + getAdministrator().getId() + ",\n" +
+                "WHERE UserID = " + getId();
+        db.update(sql);
     }
 
     @Override
     public void insertToDB(DB db) throws SQLException, DBConnectionException {
         String updateSql = "INSERT INTO `GROUP`\n" +
-                "(GroupName, Description, AdministratorID)\n" +
+                "(`GroupName`, `Description`, `ParentGroupID`, `AdministratorID`)\n" +
                 "VALUES (\n" +
-                "'" + getGroupName() + "',\n" +
+                "'" + getName() + "',\n" +
                 "'" + getDescription() + "',\n" +
-                "'" + getAdminId() + "' );";
+                getParent().getId() + ",\n" +
+                getAdministrator().getId() + " );";
         db.update(updateSql);
+        String querySql = "SELECT MAX(GroupID) AS ID FROM GROUP";
+        ResultSet results = db.query(querySql);
+        if (!results.next()) throw new SQLException("This shouldn't happen. Sooo...");
+        setId(results.getInt("ID"));
     }
 }
 

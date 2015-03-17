@@ -2,8 +2,6 @@ package controllers;
 
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import exceptions.DBConnectionException;
 import application.Main;
@@ -16,7 +14,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 
-import javax.swing.text.Element;
 import javax.swing.text.html.ImageView;
 
 
@@ -74,10 +71,10 @@ public class UserController extends Controller {
 	public void displayGroups() {
     	ObservableList<Group> groups;
 		try {
-			groups = Group.getGroupsUserIsPartOf(user.getId(), getApplication().getDb(), getApplication().getModelCache());
+			groups = Group.getGroupsByUser(user.getId(), getApplication().getDb(), getApplication().getModelCache());
 			ObservableList<String> groupNames = FXCollections.observableArrayList();
 			for (int i = 0; i < groups.size(); i++) {
-				groupNames.add(Group.getName(groups.get(i).getId(), getApplication().getDb(), getApplication().getModelCache()));
+				groupNames.add(groups.get(i).getName());
 			}
 			groupList.setItems(groupNames);
 		} catch (DBConnectionException e) {

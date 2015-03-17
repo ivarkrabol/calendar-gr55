@@ -28,6 +28,10 @@ public abstract class Attendable extends Model {
         return administrator;
     }
 
+    public void setAdministrator(User administrator) {
+        this.administrator = administrator;
+    }
+
     public Map<User, Response> getResponses() {
         return new HashMap<User, Response>(responses);
     }
