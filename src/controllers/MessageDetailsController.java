@@ -3,6 +3,7 @@ package controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import models.Message;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -30,29 +31,15 @@ public class MessageDetailsController extends MessageController{
     @FXML
     private ComboBox<String> comboBox;
 
-    private String string;
+    private Message message;
 
 
-    public void setSel(String string) {
-        this.string = string;
-        senderNameLabel.setText(string);
-    }
-
-    public String getSel() {
-        return string;
+    public void setMessage(Message message) {
+        this.message = message;
     }
 
 
     public void initialize(URL url, ResourceBundle resource) {
-        //System.out.print(senderName);
-        fromLabel.setText("From:");
-        //navnet til den du trykker på, klarer ikke å få den fra MessageControllerklassen
-        receivedLabel.setText("Received:");
-        timeLabel.setText("");
-        descriptionLabel.setText("Description:");
-        descriptionInformationLabel.setText("");
-        invitationLabel.setText("Accept Invitation: ");
-        //TODO have to initialize combobox
     }
 
 
