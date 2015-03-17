@@ -131,7 +131,7 @@ public class InviteUserController extends Controller {
                                     .title("Remove person?")
                                     .message("Do want to remove this person from the appointment?")
                                     .showConfirm();
-                            if (response == Actions.YES) {
+                            if (response == Dialog.ACTION_YES) {
                                 listOfPerson.getItems().remove(user);
                                 //add method to remove participant from the participant table, and send message
                             }
