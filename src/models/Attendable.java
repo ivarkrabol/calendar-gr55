@@ -24,12 +24,17 @@ public abstract class Attendable extends Model {
     protected User administrator;
     private Map<User, Response> responses;
 
+    public Attendable() {
+        responses = new HashMap<>();
+    }
+
     public User getAdministrator() {
         return administrator;
     }
 
     public void setAdministrator(User administrator) {
         this.administrator = administrator;
+        responses.put(administrator, Response.HAS_ACCEPTED);
     }
 
     public Map<User, Response> getResponses() {

@@ -98,9 +98,12 @@ public class Appointment extends Attendable implements Comparable<Appointment>  
 
 
 
-    public Appointment(){ }
+    private Appointment(){
+        super();
+    }
     public Appointment(String title, String description, LocalDate startDate,
-                       LocalDate endDate, LocalTime startTime, LocalTime endTime, Room room, User user){
+                       LocalDate endDate, LocalTime startTime, LocalTime endTime, Room room, User administrator){
+        super();
         setTitle(title);
         setDescription(description);
         setStartDateProperty(startDate);
@@ -108,7 +111,7 @@ public class Appointment extends Attendable implements Comparable<Appointment>  
         setStartTimeProperty(startTime);
         setEndTimeProperty(endTime);
         setRoom(room);
-        setAdministrator(user);
+        setAdministrator(administrator);
     }
 
     public void setAppointment(String title, String description, LocalDate startDate,
@@ -242,40 +245,23 @@ public class Appointment extends Attendable implements Comparable<Appointment>  
         return admin.isEmpty();
     }
 
-//    public void setParticipants(DB db, int id, ModelCache mc) throws DBConnectionException, SQLException  {
-//        declinedParticipants=getStatusToApp(db, id, mc, "HasDeclined");
-//        acceptedParticipants = getStatusToApp(db, id, mc, "HasAccepted");
-//        invitedParticipants=getStatusToApp(db, id, mc, "NotAnswered");
-//    }
     public ObservableList<User> getAcceptedParticipants() {
         ObservableList<User> acceptedParticipants = FXCollections.observableArrayList();
         acceptedParticipants.addAll(getByResponse(Response.HAS_ACCEPTED));
         return acceptedParticipants;
     }
+
     public ObservableList<User> getInvitedParticipants() {
         ObservableList<User> invitedParticipants = FXCollections.observableArrayList();
         invitedParticipants.addAll(getByResponse(Response.NOT_ANSWERED));
         return invitedParticipants;
     }
+
     public ObservableList<User> getDeclinedParticipants() {
         ObservableList<User> declinedParticipants = FXCollections.observableArrayList();
         declinedParticipants.addAll(getByResponse(Response.HAS_DECLINED));
         return declinedParticipants;
     }
-
-//    public ObservableList<User> getStatusToApp(DB db, int id, ModelCache mc, String status) throws DBConnectionException, SQLException  {
-//        ObservableList<User> participants = FXCollections.observableArrayList();
-//        String query = "SELECT  `UserID` \n" +
-//                "FROM  `PARTICIPANTS` \n" +
-//                "WHERE  `AppointmentID` ="+id+"\n" +
-//                "AND  `Response` =  '"+status+"'";
-//        ResultSet rs = db.query(query);
-//        while (rs.next()) {
-//            User user = User.getById(rs.getInt("UserID"), db, mc);
-//            participants.add(user);
-//        }
-//        return participants;
-//    }
 
     public static Appointment getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         Appointment appointment;
@@ -357,11 +343,6 @@ public class Appointment extends Attendable implements Comparable<Appointment>  
             String room =  "UPDATE APPOINTMENT SET RoomName = '"+getRoom().getName()+"' WHERE AppointmentID =  '"+getId()+"'";
             db.update(room);
         }
-
-//        String sql3 = "INSERT INTO `PARTICIPANTS` (`UserID`, `AppointmentID`, `Response`) VALUES ('"+ getAdministrator().getId() + "', '"
-//                + getId() + "', 'HasAccepted')"
-//                ;
-//        db.update(sql3);
 
         super.insertToDB(db);
     }

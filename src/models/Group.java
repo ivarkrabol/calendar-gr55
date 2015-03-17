@@ -17,9 +17,11 @@ public class Group extends Attendable {
     private Group parent;
     
     private Group() {
+        super();
     }
 
     public Group(String name, String description){
+        super();
         this.setName(name);
         this.setDescription(description);
     }

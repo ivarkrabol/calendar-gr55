@@ -64,9 +64,9 @@ public class EditAppointmentController extends Controller{
     }
     @FXML public void endTimeTextFieldFocusChange() {endTimeValid();}
     @FXML public void handleInviteParticipants(){
-        if(this.appointmentModel==null){
-            appointmentModel = new Appointment();
-        }
+//        if(this.appointmentModel==null){
+//            appointmentModel = new Appointment();
+//        }
         newInvitedStage("/views/InviteUser.fxml", "Invited participants", appointmentModel);
     }
 
@@ -222,7 +222,7 @@ public class EditAppointmentController extends Controller{
             int hours = getHour(time);
             int mins = getMin(time);
             this.endTime = LocalTime.of(hours, mins);
-            if(checkTime(hours, mins, time) && (this.startTime.isBefore(this.endTime))){
+            if(checkTime(hours, mins, time) && (LocalDateTime.of(this.date, this.startTime).isBefore(LocalDateTime.of(this.endDate, this.endTime)))){
                 setStyle(endTimeField, true);
                 setRooms();
                 return true;
