@@ -18,7 +18,7 @@ public class Message extends Model{
     private int id;
     private User recipient;
     private User sender;
-    private SimpleStringProperty username = new SimpleStringProperty();
+    private SimpleStringProperty username = new SimpleStringProperty(); //FIXME: I don't get this.
     private SimpleStringProperty description = new SimpleStringProperty();
     private Property<Timestamp> sentTime =  new ObjectPropertyBase<Timestamp>(null) {
 
@@ -77,9 +77,14 @@ public class Message extends Model{
     public Message(User recipient, User sender, boolean invitation) {
         this.recipient = recipient;
         this.invitation = invitation;
-        this.read = false;
     }
 
+    public Message(User recipient, User sender, String description, boolean invitation) {
+        this.recipient = recipient;
+        this.sender = sender;
+        this.setDescription(description);
+        this.invitation = invitation;
+    }
 
     public int getId() {
         return id;
@@ -127,8 +132,7 @@ public class Message extends Model{
         this.read = read;
     }
 
-
-    //should move this method into User?
+    //should move this method into User? Ivar says no (maybe rename this, and create method in User calling this method)
     public static ObservableList<Message> getInbox(int UserID, DB db, ModelCache mc) throws SQLException, DBConnectionException  {
         ResultSet rs;
         ObservableList<Message> inbox = FXCollections.observableArrayList();
@@ -176,7 +180,7 @@ public class Message extends Model{
 
 
     @Override
-    public void saveToDB(DB db) throws SQLException, DBConnectionException {
+    public void saveToDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
         String sql = "UPDATE MESSAGE SET\n" +
                 "RecipientID = " + getRecipient().getId() + ",\n" +
                 "SenderID = " + getSender().getId() + ",\n" +
@@ -186,19 +190,20 @@ public class Message extends Model{
                 "WHERE MessageID = " + getId();
 
         db.update(sql);
+
+        refreshFromDB(db, mc);
     }
 
     @Override
-    public void insertToDB(DB db) throws SQLException, DBConnectionException {
+    public void insertToDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
         String updateSql = "INSERT INTO MESSAGE\n" +
-                "(RecipientID, SenderID, SentTime, Description, IsInvitation, HasBeenRead)\n" +
+                "(RecipientID, SenderID, SentTime, Description, IsInvitation)\n" +
                 "VALUES (\n" +
                 getRecipient().getId() + ",\n" +
                 getSender().getId() + ",\n" +
                 "NOW(),\n" +
                 "'" + getDescription() + "',\n" +
-                String.valueOf(isInvitation()) + ",\n" +
-                String.valueOf(isRead()) + ")";
+                String.valueOf(isInvitation()) + ")";
         System.out.println(updateSql);
         db.update(updateSql);
         String querySql = "SELECT MAX(MessageID) AS ID FROM MESSAGE";
@@ -206,5 +211,7 @@ public class Message extends Model{
         ResultSet results = db.query(querySql);
         if (!results.next()) throw new SQLException("This shouldn't happen. Sooo...");
         setId(results.getInt("ID"));
+
+        refreshFromDB(db, mc);
     }
 }

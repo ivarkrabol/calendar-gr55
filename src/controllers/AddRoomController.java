@@ -28,9 +28,8 @@ public class AddRoomController extends Controller {
     @FXML
     void handleSave(ActionEvent event) throws DBConnectionException, SQLException {
     	if (inputValid()){
-            DB db= getApplication().getDb();
             Room room = new Room(rname.getText(), Integer.parseInt(rsize.getText()));
-            room.insertToDB(db);
+            room.insertToDB(getApplication().getDb(), getApplication().getModelCache());
         	this.getStage().close();
     	}
     }

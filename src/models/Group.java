@@ -114,14 +114,15 @@ public class Group extends Attendable {
         if (!results.next()) throw new SQLException("No Group with that ID in database");
         setName(results.getString("GroupName"));
         setDescription(results.getString("Description"));
-        setParent(Group.getById(results.getInt("ParentGroupID"), db, mc));
+        int parentId = results.getInt("ParentGroupID");
+        if (!results.wasNull()) setParent(Group.getById(parentId, db, mc));
         setAdministrator(User.getById(results.getInt("AdministratorID"), db, mc));
         if (results.next()) throw new SQLException("Result not unique");
 
     }
 
     @Override
-    public void saveToDB(DB db) throws SQLException, DBConnectionException {
+    public void saveToDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
         String sql = "UPDATE `GROUP` SET\n" +
                 "`GroupName` = '" + getName() + "',\n" +
                 "`Description` = '" + getDescription() + "',\n" +
@@ -129,10 +130,12 @@ public class Group extends Attendable {
                 "`AdministratorID` = " + getAdministrator().getId() + ",\n" +
                 "WHERE UserID = " + getId();
         db.update(sql);
+
+        refreshFromDB(db, mc);
     }
 
     @Override
-    public void insertToDB(DB db) throws SQLException, DBConnectionException {
+    public void insertToDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
         String updateSql = "INSERT INTO `GROUP`\n" +
                 "(`GroupName`, `Description`, `ParentGroupID`, `AdministratorID`)\n" +
                 "VALUES (\n" +
@@ -145,6 +148,8 @@ public class Group extends Attendable {
         ResultSet results = db.query(querySql);
         if (!results.next()) throw new SQLException("This shouldn't happen. Sooo...");
         setId(results.getInt("ID"));
+
+        refreshFromDB(db, mc);
     }
 }
 

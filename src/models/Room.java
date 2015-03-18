@@ -87,20 +87,24 @@ public class Room extends Model{
     }
 
     @Override
-    public void saveToDB(DB db) throws SQLException, DBConnectionException {
+    public void saveToDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
         String sql = "UPDATE ROOM SET\n" +
                 "Size = '" + getSize() + "'\n" +
                 "WHERE RoomName ='" + getName()+"'";
 
         db.update(sql);
+
+        refreshFromDB(db, mc);
     }
 
     @Override
-    public void insertToDB(DB db) throws SQLException, DBConnectionException {
+    public void insertToDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
         String sql = "INSERT INTO ROOM\n" +
                 "(RoomName, Size, Availability)\n" +
                 "VALUES (\n" +
                 "'" + getName() + "'," + getSize() + ", '1')";
         db.update(sql);
+
+        refreshFromDB(db, mc);
     }
 }

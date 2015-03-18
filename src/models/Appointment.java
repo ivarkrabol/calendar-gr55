@@ -106,10 +106,10 @@ public class Appointment extends Attendable implements Comparable<Appointment>  
         super();
         setTitle(title);
         setDescription(description);
-        setStartDateProperty(startDate);
-        setEndDateProperty(endDate);
-        setStartTimeProperty(startTime);
-        setEndTimeProperty(endTime);
+        setStartDate(startDate);
+        setEndDate(endDate);
+        setStartTime(startTime);
+        setEndTime(endTime);
         setRoom(room);
         setAdministrator(administrator);
     }
@@ -118,10 +118,10 @@ public class Appointment extends Attendable implements Comparable<Appointment>  
                        LocalDate endDate, LocalTime startTime, LocalTime endTime, Room room){
         setTitle(title);
         setDescription(description);
-        setStartDateProperty(startDate);
-        setEndDateProperty(endDate);
-        setStartTimeProperty(startTime);
-        setEndTimeProperty(endTime);
+        setStartDate(startDate);
+        setEndDate(endDate);
+        setStartTime(startTime);
+        setEndTime(endTime);
         setRoom(room);
     }
 
@@ -148,8 +148,8 @@ public class Appointment extends Attendable implements Comparable<Appointment>  
     protected String getInvitationText() {
         return "You have been invited to an appointment by " + administrator.getEmail() + "\n" +
                 "Title: " + getTitle() + "\n" +
-                "Time: " + LocalDateTime.of(getStartDateProperty(), getStartTimeProperty()) +
-                " to " + LocalDateTime.of(getEndDateProperty(), getEndTimeProperty()) + "\n" +
+                "Time: " + LocalDateTime.of(getStartDate(), getStartTime()) +
+                " to " + LocalDateTime.of(getEndDate(), getEndTime()) + "\n" +
                 (getRoom() != null ? "Room: " + getRoom().getName() + "\n\n" : "\n") +
                 "Use the button below to choose whether or not you wish to attend.";
     }
@@ -188,49 +188,49 @@ public class Appointment extends Attendable implements Comparable<Appointment>  
         return roomProperty;
     }
 
-    public LocalDate getStartDateProperty() {
+    public LocalDate getStartDate() {
         return startDateProperty.getValue();
     }
 
-    public Property<LocalDate> startDateProperty() {
-        return startDateProperty;
-    }
-
-    public void setStartDateProperty(LocalDate startDateProperty) {
+    public void setStartDate(LocalDate startDateProperty) {
         this.startDateProperty.setValue(startDateProperty);
     }
 
-    public LocalTime getStartTimeProperty() {
+    public Property<LocalDate> StartDateProperty() {
+        return startDateProperty;
+    }
+
+    public LocalTime getStartTime() {
         return startTimeProperty.getValue();
     }
 
-    public Property<LocalTime> startTimeProperty() {
+    public Property<LocalTime> StartTimeProperty() {
         return startTimeProperty;
     }
 
-    public void setStartTimeProperty(LocalTime startTimeProperty) {this.startTimeProperty.setValue(startTimeProperty);}
+    public void setStartTime(LocalTime startTimeProperty) {this.startTimeProperty.setValue(startTimeProperty);}
 
-    public LocalDate getEndDateProperty() {
+    public LocalDate getEndDate() {
         return endDateProperty.getValue();
     }
 
-    public Property<LocalDate> endDateProperty() {
+    public Property<LocalDate> EndDateProperty() {
         return endDateProperty;
     }
 
-    public void setEndDateProperty(LocalDate endDateProperty) {
+    public void setEndDate(LocalDate endDateProperty) {
         this.endDateProperty.setValue(endDateProperty);
     }
 
-    public LocalTime getEndTimeProperty() {
+    public LocalTime getEndTime() {
         return endTimeProperty.getValue();
     }
 
-    public Property<LocalTime> endTimeProperty() {
+    public Property<LocalTime> EndTimeProperty() {
         return endTimeProperty;
     }
 
-    public void setEndTimeProperty(LocalTime endTimeProperty) {
+    public void setEndTime(LocalTime endTimeProperty) {
         this.endTimeProperty.setValue(endTimeProperty);
     }
 
@@ -288,12 +288,12 @@ public class Appointment extends Attendable implements Comparable<Appointment>  
         ResultSet results = db.query(sql);
         if(!results.next()) throw new SQLException("No Appointment with ID '" + id + "' found");
         setTitle(results.getString("Title"));
-        setStartDateProperty(results.getTimestamp("StartTime").toLocalDateTime().toLocalDate());
-        setStartTimeProperty(results.getTimestamp("StartTime").toLocalDateTime().toLocalTime());
-        setEndDateProperty(results.getTimestamp("EndTime").toLocalDateTime().toLocalDate());
-        setEndTimeProperty(results.getTimestamp("EndTime").toLocalDateTime().toLocalTime());
+        setStartDate(results.getTimestamp("StartTime").toLocalDateTime().toLocalDate());
+        setStartTime(results.getTimestamp("StartTime").toLocalDateTime().toLocalTime());
+        setEndDate(results.getTimestamp("EndTime").toLocalDateTime().toLocalDate());
+        setEndTime(results.getTimestamp("EndTime").toLocalDateTime().toLocalTime());
         setAdministrator(User.getById(results.getInt("AdministratorID"), db, mc));
-        setCalendarProperty("" + localTimeFormat(getStartTimeProperty()) + "-" + localTimeFormat(getEndTimeProperty()) + "\n" + getTitle());
+        setCalendarProperty("" + localTimeFormat(getStartTime()) + "-" + localTimeFormat(getEndTime()) + "\n" + getTitle());
         setDescription(results.getString("Description"));
         String room=results.getString("RoomName");
         if(room == null){
@@ -307,10 +307,10 @@ public class Appointment extends Attendable implements Comparable<Appointment>  
     }
 
     @Override
-    public void saveToDB(DB db) throws SQLException, DBConnectionException {
+    public void saveToDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
         String sql = "UPDATE APPOINTMENT\n SET Title ='" +getTitle()+
-                "', StartTime ='" + LocalDateTime.of(getStartDateProperty(), getStartTimeProperty())+ "',\n" +
-                "EndTime ='" + LocalDateTime.of(getEndDateProperty(), getEndTimeProperty()) + "',\n" +
+                "', StartTime ='" + LocalDateTime.of(getStartDate(), getStartTime())+ "',\n" +
+                "EndTime ='" + LocalDateTime.of(getEndDate(), getEndTime()) + "',\n" +
                 "AdministratorID ='" + getAdministrator().getId() + "',\n" +
                 "Description ='" + getDescription() + "'\n"+
                 "WHERE AppointmentID =" + getId();
@@ -320,16 +320,18 @@ public class Appointment extends Attendable implements Comparable<Appointment>  
         }
         db.update(sql);
 
-        super.saveToDB(db);
+        refreshFromDB(db, mc);
+
+        super.saveToDB(db, mc);
     }
 
     @Override
-    public void insertToDB(DB db) throws SQLException, DBConnectionException {
+    public void insertToDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
         String sql = "INSERT INTO `APPOINTMENT` "
             + "(`Title`, `StartTime`, `EndTime`, `AdministratorID`, "
             + "`Description`) VALUES ('"+ getTitle() +"', "
-            + "'"+ LocalDateTime.of(getStartDateProperty(), getStartTimeProperty()) + "', "
-            + "'" + LocalDateTime.of(getEndDateProperty(), getEndTimeProperty()) + "', "
+            + "'"+ LocalDateTime.of(getStartDate(), getStartTime()) + "', "
+            + "'" + LocalDateTime.of(getEndDate(), getEndTime()) + "', "
             + "'" + getAdministrator().getId() +"', "
             + "'" + getDescription() + "')";
         db.update(sql);
@@ -344,7 +346,9 @@ public class Appointment extends Attendable implements Comparable<Appointment>  
             db.update(room);
         }
 
-        super.insertToDB(db);
+        refreshFromDB(db, mc);
+
+        super.insertToDB(db, mc);
     }
 
     public void removeFromDB(DB db) throws SQLException, DBConnectionException {
@@ -368,9 +372,9 @@ public class Appointment extends Attendable implements Comparable<Appointment>  
 
     @Override
     public int compareTo(Appointment appointment) {
-        if(this.getStartTimeProperty().isBefore(appointment.getStartTimeProperty())){
+        if(this.getStartTime().isBefore(appointment.getStartTime())){
             return -1;
-        }if(this.getStartTimeProperty().isAfter(appointment.getStartTimeProperty())){
+        }if(this.getStartTime().isAfter(appointment.getStartTime())){
             return 1;
         }else{ return 0;}
     }

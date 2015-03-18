@@ -11,10 +11,14 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import models.Message;
 import models.Room;
+import models.User;
 import org.controlsfx.dialog.Dialogs;
 import models.Appointment;
 import javafx.fxml.FXML;
+import util.DB;
+import util.ModelCache;
 
 
 public class EditAppointmentController extends Controller{
@@ -94,23 +98,38 @@ public class EditAppointmentController extends Controller{
             if(this.appointmentModel==null){
                 appointmentModel = new Appointment(titleField.getText(), descriptionField.getText(), date, endDate, startTime, endTime, room, getApplication().getUser());
                 try {
-                    appointmentModel.insertToDB(getApplication().getDb());
+                    appointmentModel.insertToDB(getApplication().getDb(), getApplication().getModelCache());
                 } catch (SQLException e) {
                     e.printStackTrace();
                 } catch (DBConnectionException e) {
                     e.printStackTrace();
                 }
             }else{
-                try{
-                    appointmentModel.setAppointment(titleField.getText(), descriptionField.getText(), date, endDate, startTime, endTime, room);
-                    appointmentModel.saveToDB(getApplication().getDb());
+                boolean changed = !appointmentModel.getTitle().equals(titleField.getText())
+                        || !appointmentModel.getDescription().equals(descriptionField.getText())
+                        || !appointmentModel.getStartDate().equals(date)
+                        || !appointmentModel.getEndDate().equals(endDate)
+                        || !appointmentModel.getStartTime().equals(startTime)
+                        || !appointmentModel.getEndTime().equals(endTime)
+                        || !appointmentModel.getRoom().equals(room);
+                if(changed) {
+                    try{
+                        DB db = getApplication().getDb();
+                        ModelCache mc = getApplication().getModelCache();
+                        String messageContent = "Changes have been made to '" + titleField.getText() + "'.";
+                        for(User recipient : appointmentModel.getInvitedParticipants()) {
+                            new Message(recipient, getApplication().getUser(), messageContent, false).insertToDB(db, mc);
+                        }
+                        appointmentModel.setAppointment(titleField.getText(), descriptionField.getText(), date, endDate, startTime, endTime, room);
+                        appointmentModel.saveToDB(db, mc);
+                    }
+                    catch (SQLException e){
+                        e.printStackTrace();
+                    }catch (DBConnectionException e){
+                        e.printStackTrace();
+                    }
                 }
-                catch (SQLException e){
-                    e.printStackTrace();
-                }catch (DBConnectionException e){
-                    e.printStackTrace();
-                }
-            }
+        }
             this.getStage().close();
         }
     }
@@ -128,14 +147,14 @@ public class EditAppointmentController extends Controller{
         this.appointmentModel = appointmentModel;
         titleField.setText(appointmentModel.getTitle());
         descriptionField.setText(appointmentModel.getDescription());
-        startTimeField.setText(appointmentModel.localTimeFormat(appointmentModel.getStartTimeProperty()));
-        startTime=appointmentModel.getStartTimeProperty();
-        endTime = appointmentModel.getEndTimeProperty();
-        date = appointmentModel.getStartDateProperty();
-        endDate = appointmentModel.getEndDateProperty();
-        endTimeField.setText(appointmentModel.localTimeFormat(appointmentModel.getEndTimeProperty()));
-        dateField.setValue(appointmentModel.getStartDateProperty());
-        endDateField.setValue(appointmentModel.getEndDateProperty());
+        startTimeField.setText(appointmentModel.localTimeFormat(appointmentModel.getStartTime()));
+        startTime=appointmentModel.getStartTime();
+        endTime = appointmentModel.getEndTime();
+        date = appointmentModel.getStartDate();
+        endDate = appointmentModel.getEndDate();
+        endTimeField.setText(appointmentModel.localTimeFormat(appointmentModel.getEndTime()));
+        dateField.setValue(appointmentModel.getStartDate());
+        endDateField.setValue(appointmentModel.getEndDate());
         if(date == null) roomBox.setValue(appointmentModel.getRoom());
         else setRooms();
         startTimeTextFieldFocusChange();
@@ -151,7 +170,7 @@ public class EditAppointmentController extends Controller{
             cancelButton.setVisible(true);
             deleteButton.setVisible(false);
             saveButton.setVisible(false);
-        }if(appointmentModel.getStartDateProperty().isBefore(LocalDate.now())){
+        }if(appointmentModel.getStartDate().isBefore(LocalDate.now())){
             editButton.setVisible(false);
         }
     }

@@ -49,9 +49,8 @@ public class AddUserController extends Controller {
     @FXML
     void handleSave(ActionEvent event) throws DBConnectionException, SQLException {
     	if (inputValid()){
-            DB db= getApplication().getDb();
             User user = new User(email.getText(), lname.getText(), fname.getText(), phonenumber.getText(), password.getText());
-            user.insertToDB(db);
+            user.insertToDB(getApplication().getDb(), getApplication().getModelCache());
         	this.getStage().close();
     	}
     }

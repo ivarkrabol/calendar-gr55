@@ -13,7 +13,7 @@ import java.time.temporal.WeekFields;
 import java.util.*;
 
 
-public class Calendar extends Model {
+public class Calendar {
 
     public enum OwnerType {
         USER ("UserID"), GROUP ("GroupID");
@@ -106,7 +106,7 @@ public class Calendar extends Model {
     public ObservableList<Appointment> getAppointmentsByDate(LocalDate localdate){
         ObservableList<Appointment> dayAppointments = FXCollections.observableArrayList();
         for(Appointment a : appointments){
-            if(a.getStartDateProperty().isEqual(localdate)){
+            if(a.getStartDate().isEqual(localdate)){
                 dayAppointments.add(a);
             }
         }
@@ -127,20 +127,6 @@ public class Calendar extends Model {
     public LocalDate getDate(int day) {
         calendar.setWeekDate(yearNumber, weekNumber, day);
         return calendar.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-    }
-
-    @Override
-    public void refreshFromDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
-    }
-
-    @Override
-    public void saveToDB(DB db) throws SQLException, DBConnectionException {
-        throw new SQLException("Calendar is not a DB object and should not be saved");
-    }
-
-    @Override
-    public void insertToDB(DB db) throws SQLException, DBConnectionException {
-        throw new SQLException("Calendar is not a DB object");
     }
 
     public int getWeekNumber(LocalDate day){

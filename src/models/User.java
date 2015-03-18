@@ -175,7 +175,7 @@ public class User extends Model{
     }
 
     @Override
-    public void saveToDB(DB db) throws SQLException, DBConnectionException {
+    public void saveToDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
         String sql = "UPDATE USER SET\n" +
                 "EMail = '" + getEmail() + "',\n" +
                 "LastName = '" + getLastName() + "',\n" +
@@ -183,10 +183,12 @@ public class User extends Model{
                 "PhoneNr = '" + getPhoneNr() + "'\n" +
                 "WHERE UserID = " + getId();
         db.update(sql);
+
+        refreshFromDB(db, mc);
     }
 
     @Override
-    public void insertToDB(DB db) throws SQLException, DBConnectionException {
+    public void insertToDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
         String updateSql = "INSERT INTO USER\n" +
                 "(EMail, LastName, FirstName, PhoneNr)\n" +
                 "VALUES (\n" +
@@ -199,5 +201,7 @@ public class User extends Model{
         ResultSet results = db.query(querySql);
         if (!results.next()) throw new SQLException("This shouldn't happen. Sooo...");
         setId(results.getInt("ID"));
+
+        refreshFromDB(db, mc);
     }
 }

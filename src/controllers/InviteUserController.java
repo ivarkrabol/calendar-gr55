@@ -20,6 +20,7 @@ import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
 import util.DB;
+import util.ModelCache;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -151,8 +152,9 @@ public class InviteUserController extends Controller {
         try {
             Message invitation = appointment.invite(selectedUser);
             DB db = getApplication().getDb();
-            appointment.saveToDB(db);
-            invitation.insertToDB(db);
+            ModelCache mc = getApplication().getModelCache();
+            appointment.saveToDB(db, mc);
+            invitation.insertToDB(db, mc);
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (DBConnectionException e) {
