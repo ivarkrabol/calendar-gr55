@@ -1,12 +1,6 @@
 package application;
 
-
-
 import controllers.LoginController;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import models.Appointment;
-import models.Calendar;
 import models.User;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -17,9 +11,7 @@ import javafx.scene.layout.AnchorPane;
 import util.Config;
 import util.DB;
 import util.ModelCache;
-
 import java.io.IOException;
-import java.util.Observable;
 
 
 public class Main extends Application {

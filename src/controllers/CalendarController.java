@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import models.*;
 import models.Calendar;
 
@@ -83,6 +84,7 @@ public class CalendarController extends Controller{
         setStyle(year, true);
         setMaps();
         calendarModel = getApplication().getUser().getCalendar();
+        setWeekDays();
     }
 
     public final void setMaps(){
@@ -111,7 +113,6 @@ public class CalendarController extends Controller{
     public void handleEditAppoinment(Appointment a) {
         newAppointmentStage("/views/EditAppointment.fxml", "Edit Appointment", a);
     }
-
 
     @FXML public void handleNewGroup() {
         newStage("/views/EditGroup.fxml", "New Group", new EditGroupController());
@@ -243,7 +244,6 @@ public class CalendarController extends Controller{
             e.printStackTrace();
         }
     }
-
 }
 
 

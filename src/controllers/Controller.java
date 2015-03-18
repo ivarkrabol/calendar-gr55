@@ -4,13 +4,16 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import application.Main;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class Controller implements Initializable{
 
@@ -26,14 +29,13 @@ public class Controller implements Initializable{
     public void setApp(Main application){
         Controller.application = application;
     }
-
-
     protected void newStage(String location, String title, Controller Controller){
         Stage currentStage = new Stage();
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(location));
             AnchorPane root = fxmlLoader.load();
             currentStage.setTitle(title);
+            //currentStage.initModality(Modality.APPLICATION_MODAL);
             currentStage.setScene(new Scene(root));
             Controller controller = fxmlLoader.getController();
             controller.setApp(getApplication());
