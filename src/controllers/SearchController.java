@@ -21,7 +21,8 @@ public class SearchController extends Controller{
 
     private DB db;
     private ModelCache mc;
-    private User selectedUser;
+    public static User selectedUser;
+    public static User user;
 
     @FXML
     private TextField searchUser;
@@ -72,20 +73,24 @@ public class SearchController extends Controller{
         });
         userList.setOnAction((event) -> { //problemet er at man ser sin egen Calender igjen, og at dersom man lukker med back, får man en annens calender.
                     selectedUser = userList.getSelectionModel().getSelectedItem();
-                    GuestCalendarController calender = null;
+                    GuestCalendarController calendar = null;
+                    user = getApplication().getUser(); // må ta vare på den gamle brukeren.
                     try {
-                        User user = getApplication().getUser(); // må ta vare på den gamle brukeren.
-                        calender = (GuestCalendarController) getApplication().replaceSceneContent("/views/ViewGuestCalendar.fxml");
-                        getStage().close();
-                        calender.getApplication().setUser(selectedUser); // denne setter den for seint
-                        calender.setWeekDays();
-                        calender.setApp(getApplication());
-
+                    	
+                    	newStage("/views/ViewGuestCalendar.fxml", "Guest calendar", calendar);
+                    	
+                        //calender = (GuestCalendarController) getApplication().replaceSceneContent("/views/ViewGuestCalendar.fxml");
+                        //getStage().close();
+                       
+                        //calender.setWeekDays();
+                        //calender.setApp(getApplication());
+                    	
 
 
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    this.getStage().close();
 
                 }
         );
