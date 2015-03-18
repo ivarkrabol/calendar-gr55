@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import models.*;
 import models.Calendar;
 
@@ -81,7 +82,6 @@ public class CalendarController extends Controller{
         week.setText("" + LocalDate.now().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
         setStyle(week, true);
         setStyle(year, true);
-        
         setMaps();
         calendarModel = getApplication().getUser().getCalendar();
         setWeekDays();

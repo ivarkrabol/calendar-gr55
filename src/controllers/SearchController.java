@@ -1,10 +1,16 @@
 package controllers;
 
 import exceptions.DBConnectionException;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.StringConverter;
 import models.User;
 import util.DB;
@@ -21,7 +27,8 @@ public class SearchController extends Controller{
 
     private DB db;
     private ModelCache mc;
-    private User selectedUser;
+    public static User selectedUser;
+    public static User user;
 
     @FXML
     private TextField searchUser;
@@ -70,26 +77,21 @@ public class SearchController extends Controller{
                 return null;
             }
         });
-        userList.setOnAction((event) -> { //problemet er at man ser sin egen Calender igjen, og at dersom man lukker med back, får man en annens calender.
+        userList.setOnAction((event) -> { 
                     selectedUser = userList.getSelectionModel().getSelectedItem();
-                    GuestCalendarController calender = null;
+                    GuestCalendarController calendar = null;
+                    user = getApplication().getUser();
                     try {
-                        User user = getApplication().getUser(); // må ta vare på den gamle brukeren.
-                        calender = (GuestCalendarController) getApplication().replaceSceneContent("/views/ViewGuestCalendar.fxml");
-                        getStage().close();
-                        calender.getApplication().setUser(selectedUser); // denne setter den for seint
-                        calender.setWeekDays();
-                        calender.setApp(getApplication());
-
-
-
+                        calendar = (GuestCalendarController) getApplication().replaceSceneContent("/views/ViewGuestCalendar.fxml");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    this.getStage().close();
 
                 }
         );
     }
+
 
 
 }
