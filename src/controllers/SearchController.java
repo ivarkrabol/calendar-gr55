@@ -91,28 +91,7 @@ public class SearchController extends Controller{
                 }
         );
     }
-    private void newGuestCalendarStage(String location, String title, Controller Controller){
-        Stage currentStage = new Stage();
-	    currentStage.setOnCloseRequest(new EventHandler<WindowEvent>(){
-			@Override
-			public void handle(WindowEvent event) {
-				getApplication().setUser(user);
-			}
-        });
-        
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(location));
-            AnchorPane root = fxmlLoader.load();
-            currentStage.setTitle(title);
-            currentStage.setScene(new Scene(root));
-            Controller controller = fxmlLoader.getController();
-            controller.setApp(getApplication());
-            controller.setStage(currentStage);
-            currentStage.show();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
+
 
 
 }
