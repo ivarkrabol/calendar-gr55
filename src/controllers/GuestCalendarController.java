@@ -1,13 +1,10 @@
 package controllers;
 
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.stage.WindowEvent;
 import models.Appointment;
 import models.Calendar;
-
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;
@@ -15,8 +12,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
-
-import com.sun.javafx.scene.control.SelectedCellsMap;
 
 /**
  * Created by morit_000 on 17.03.2015.
@@ -63,21 +58,18 @@ public class GuestCalendarController extends Controller{
 
 
     @FXML
-    public void handleCloseStage() throws Exception { //doesn't quite work
-        //getStage().close();
-//        CalendarController calender = null;
-//        calender = (CalendarController) getApplication().replaceSceneContent("/views/ViewCalendar.fxml");
-//        calender.setWeekDays();
-//        calender.setApp(getApplication());
+    public void handleBack() throws Exception { 
     	getApplication().setUser(SearchController.user);
-    	this.getStage().close();
-
+        CalendarController calender = null;
+        calender = (CalendarController) getApplication().replaceSceneContent("/views/ViewCalendar.fxml");
+        calender.setWeekDays();
+        calender.setApp(getApplication());
     }
 
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-    	getApplication().setUser(SearchController.selectedUser); // denne setter den for seint
+    	getApplication().setUser(SearchController.selectedUser);
         year.setText(""+ LocalDate.now().getYear());
         week.setText("" + LocalDate.now().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
         setStyle(week, true);

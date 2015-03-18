@@ -11,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -28,25 +29,13 @@ public class Controller implements Initializable{
     public void setApp(Main application){
         Controller.application = application;
     }
-
-
     protected void newStage(String location, String title, Controller Controller){
         Stage currentStage = new Stage();
-        //if(Controller.getClass() == (GuestCalendarController.class)){
-	        currentStage.setOnCloseRequest(new EventHandler<WindowEvent>(){
-	
-				@Override
-				public void handle(WindowEvent event) {
-					getApplication().setUser(SearchController.user);
-					
-				}
-	        	
-	        });
-        //}
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(location));
             AnchorPane root = fxmlLoader.load();
             currentStage.setTitle(title);
+            //currentStage.initModality(Modality.APPLICATION_MODAL);
             currentStage.setScene(new Scene(root));
             Controller controller = fxmlLoader.getController();
             controller.setApp(getApplication());
