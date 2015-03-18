@@ -3,15 +3,18 @@ package application;
 
 
 import controllers.LoginController;
+import controllers.SearchController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.Appointment;
 import models.Calendar;
 import models.User;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import util.Config;
@@ -41,6 +44,18 @@ public class Main extends Application {
             modelCache = new ModelCache();
             login();
             primaryStage.show();
+            /////////
+            /*
+            primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>(){
+
+				@Override
+				public void handle(WindowEvent event) {
+					setUser(SearchController.selectedUser);
+					System.out.println("vindu lukkes");
+				}
+            	
+            });*/
+            /////////
         } catch (Exception e) {
             e.printStackTrace();
         }
