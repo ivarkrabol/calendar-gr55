@@ -69,6 +69,7 @@ public class GuestCalendarController extends Controller{
 //        calender = (CalendarController) getApplication().replaceSceneContent("/views/ViewCalendar.fxml");
 //        calender.setWeekDays();
 //        calender.setApp(getApplication());
+    	getApplication().setUser(SearchController.user);
     	this.getStage().close();
 
     }
@@ -76,10 +77,7 @@ public class GuestCalendarController extends Controller{
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-    	//this.getStage().close();
-    	
-    	    
-		getApplication().setUser(SearchController.selectedUser); // denne setter den for seint
+    	getApplication().setUser(SearchController.selectedUser); // denne setter den for seint
         year.setText(""+ LocalDate.now().getYear());
         week.setText("" + LocalDate.now().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
         setStyle(week, true);
@@ -87,24 +85,9 @@ public class GuestCalendarController extends Controller{
         setMaps();
         calendarModel = getApplication().getUser().getCalendar();
         setWeekDays();
-        //test();
     }
 
-    private void test() {
-    	
-        getStage().setOnCloseRequest(new EventHandler<WindowEvent>(){
-
-			@Override
-			public void handle(WindowEvent event) {
-				getApplication().setUser(SearchController.selectedUser);
-				
-			}
-        	
-        });
-		
-	}
-
-
+    
 	public final void setMaps(){
         weekDaysTable = new HashMap<Integer, ListView<Appointment>>();
         weekDaysTable.put(java.util.Calendar.MONDAY, mon);
