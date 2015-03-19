@@ -1,5 +1,7 @@
 package controllers;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -32,6 +34,7 @@ public class MessageDetailsController extends MessageController{
     private ComboBox<String> comboBox;
 
     private Message message;
+    private ObservableList<String> list = FXCollections.observableArrayList();
 
 
     public void setMessage(Message message) {
@@ -51,6 +54,10 @@ public class MessageDetailsController extends MessageController{
         receivedLabel.setText("Received: ");;
         descriptionLabel.setText("Descripion: ");
         invitationLabel.setText("Accept invitation: ");
+        list.add(0,"Accept");
+        list.add(1,"Decline");
+        comboBox.setItems(list);
+        
 
     }
 

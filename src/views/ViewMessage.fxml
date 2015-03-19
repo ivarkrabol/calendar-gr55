@@ -46,7 +46,7 @@
                   <Label fx:id="senderNameLabel" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                   <Label fx:id="timeLabel" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                   <Label fx:id="descriptionInformationLabel" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                  <ComboBox prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                  <ComboBox fx:id = "comboBox" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                </children>
                 </GridPane>
             </center>
