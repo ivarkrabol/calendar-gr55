@@ -11,14 +11,16 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import models.*;
+import models.Appointment;
 import models.Calendar;
 
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 
 public class CalendarController extends Controller{
@@ -42,6 +44,8 @@ public class CalendarController extends Controller{
     private Label satText;
     @FXML
     private Label sunText;
+    @FXML
+    private Label CalenderLabel;
 
     @FXML
     private ListView<Appointment> mon;
@@ -85,6 +89,7 @@ public class CalendarController extends Controller{
         setMaps();
         calendarModel = getApplication().getUser().getCalendar();
         setWeekDays();
+        CalenderLabel.setText("   " + getApplication().getUser().getFirstName()+ " " + getApplication().getUser().getLastName() + "'s" + " Calendar");
     }
 
     public final void setMaps(){

@@ -36,6 +36,9 @@ public class GuestCalendarController extends Controller{
     private Label satText;
     @FXML
     private Label sunText;
+    @FXML
+    private Label CalenderLabel;
+
 
     @FXML
     private ListView<Appointment> mon;
@@ -77,6 +80,7 @@ public class GuestCalendarController extends Controller{
         setMaps();
         calendarModel = getApplication().getUser().getCalendar();
         setWeekDays();
+        CalenderLabel.setText("   " + getApplication().getUser().getFirstName()+ " " + getApplication().getUser().getLastName() + "'s" + " Calendar");
     }
 
     
