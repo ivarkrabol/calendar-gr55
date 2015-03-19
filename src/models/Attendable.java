@@ -58,7 +58,7 @@ public abstract class Attendable extends Model {
     public Message invite(User user) throws AlreadyInvitedException {
         if(responses.containsKey(user)) throw new AlreadyInvitedException();
         responses.put(user, Response.NOT_ANSWERED);
-        Message invitation = new Message(user, administrator, true);
+        Message invitation = new Message(user, administrator, true, this);
         System.out.println(invitation.getSender().getId());
         invitation.setDescription(getInvitationText());
         return invitation;

@@ -120,7 +120,7 @@ public class EditAppointmentController extends Controller{
                         ModelCache mc = getApplication().getModelCache();
                         String messageContent = "Changes have been made to '" + titleField.getText() + "'.";
                         for (User recipient : appointmentModel.getInvitedParticipants()) {
-                            new Message(recipient, getApplication().getUser(), messageContent, false).insertToDB(db, mc);
+                            new Message(recipient, getApplication().getUser(), messageContent, false, appointmentModel).insertToDB(db, mc);
                         }
                         appointmentModel.setAppointment(titleField.getText(), descriptionField.getText(), date, endDate, startTime, endTime, room);
                         appointmentModel.saveToDB(db, mc);

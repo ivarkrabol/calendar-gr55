@@ -13,32 +13,28 @@ import util.ModelCache;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.concurrent.Callable;
 
 public class Message extends Model{
+
+//    public enum AttendableType {
+//        APPOINTMENT ("AppointmentID"){@Override public Attendable getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {return Appointment.getById(id, db, mc);}},
+//        GROUP ("GroupID"){@Override public Attendable getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {return Group.getById(id, db, mc);}};
+//        private String idFieldName;
+//        private AttendableType(String idFieldName) {this.idFieldName = idFieldName;}
+//        public Attendable getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {return null;}
+//        @Override public String toString() {return idFieldName;}
+//    }
 
     private int id;
     private User recipient;
     private User sender;
-    private int GroupID;
+    private boolean invitation;
+    private boolean read;
+    private Attendable attendable;
+//    private AttendableType attendableType;
 
-    public int getGroupID() {
-        return GroupID;
-    }
-
-    public void setGroupID(int groupID) {
-        GroupID = groupID;
-    }
-
-    public int getAppointmentID() {
-        return AppointmentID;
-    }
-
-    public void setAppointmentID(int appointmentID) {
-        AppointmentID = appointmentID;
-    }
-
-    private int AppointmentID;
-    private SimpleStringProperty username = new SimpleStringProperty(); //FIXME: I don't get this.
+    private SimpleStringProperty username = new SimpleStringProperty();
     private SimpleStringProperty description = new SimpleStringProperty();
     private SimpleBooleanProperty hasBeenRead = new SimpleBooleanProperty();
     private Property<Timestamp> sentTime =  new ObjectPropertyBase<Timestamp>(null) {
@@ -53,6 +49,25 @@ public class Message extends Model{
             return "room";
         }
     };
+
+    private Message() {
+
+    }
+
+    public Message(User recipient, User sender, boolean invitation, Attendable attendable) {
+        this.recipient = recipient;
+        this.sender = sender;
+        this.invitation = invitation;
+        this.attendable = attendable;
+    }
+
+    public Message(User recipient, User sender, String description, boolean invitation, Attendable attendable) {
+        this.recipient = recipient;
+        this.sender = sender;
+        this.setDescription(description);
+        this.invitation = invitation;
+        this.attendable = attendable;
+    }
 
     public void setSender(User sender) {
         this.sender = sender;
@@ -89,26 +104,6 @@ public class Message extends Model{
 
     public SimpleBooleanProperty hasBeenReadProperty() {
         return hasBeenRead;
-    }
-
-    private boolean invitation;
-    private boolean read;
-
-    private Message() {
-
-    }
-
-    public Message(User recipient, User sender, boolean invitation) {
-        this.recipient = recipient;
-        this.sender = sender;
-        this.invitation = invitation;
-    }
-
-    public Message(User recipient, User sender, String description, boolean invitation) {
-        this.recipient = recipient;
-        this.sender = sender;
-        this.setDescription(description);
-        this.invitation = invitation;
     }
 
     public int getId() {
@@ -156,14 +151,30 @@ public class Message extends Model{
         this.hasBeenRead.set(read);
     }
 
+    public Attendable getAttendable() {
+        return this.attendable;
+    }
+
+    public void setAttendable(Attendable attendable) {
+        this.attendable = attendable;
+    }
+
+//    public AttendableType getAttendableType() {
+//        return attendableType;
+//    }
+//
+//    public void setAttendableType(AttendableType attendableType) {
+//        this.attendableType = attendableType;
+//    }
+
     //should move this method into User? Ivar says no (maybe rename this, and create method in User calling this method)
     public static ObservableList<Message> getInbox(int UserID, DB db, ModelCache mc) throws SQLException, DBConnectionException  {
         ResultSet rs;
         ObservableList<Message> inbox = FXCollections.observableArrayList();
         rs = db.query("SELECT MessageID FROM MESSAGE WHERE RecipientID = " + UserID);
         while (rs.next()) {
-            int temp = rs.getInt("MessageID");
-            inbox.add(getById(temp, db, mc));
+            int messageId = rs.getInt("MessageID");
+            inbox.add(getById(messageId, db, mc));
         }
         return inbox;
     }
@@ -188,7 +199,7 @@ public class Message extends Model{
     @Override
     public void refreshFromDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
         String sql = "" +
-                "SELECT RecipientID, SenderID, SentTime, Description, IsInvitation, HasBeenRead, AppointmentID, GroupID\n" +
+                "SELECT RecipientID, SenderID, SentTime, Description, IsInvitation, HasBeenRead, GroupID, AppointmentID\n" +
                 "FROM MESSAGE\n" +
                 "WHERE MessageID = " + id;
 
@@ -199,9 +210,16 @@ public class Message extends Model{
         setSentTime(results.getTimestamp("SentTime"));
         setDescription(results.getString("Description"));
         setInvitation(results.getBoolean("IsInvitation"));
-        setAppointmentID(results.getInt("AppointmentID"));
-        setGroupID(results.getInt("GroupID"));
         setRead(results.getBoolean("HasBeenRead"));
+        int groupId = results.getInt("GroupID");
+        if(results.wasNull()) {
+//            setAttendableType(AttendableType.APPOINTMENT);
+            System.out.println(results.getInt("AppointmentID"));
+            setAttendable(Appointment.getById(results.getInt("AppointmentID"), db, mc));
+        } else {
+//            setAttendableType(AttendableType.GROUP);
+            setAttendable(Group.getById(groupId, db, mc));
+        }
         if(results.next()) throw new SQLException("Result not unique");
 
     }
@@ -215,7 +233,8 @@ public class Message extends Model{
                 "SenderID = " + getSender().getId() + ",\n" +
                 "Description = '" + getDescription() + "',\n" +
                 "IsInvitation = '" + (isInvitation() ? 1 : 0) + "',\n" +
-                "HasBeenRead = " + (isRead() ? 1 : 0) + "\n" +
+                "HasBeenRead = " + (isRead() ? 1 : 0) + ",\n" +
+                getAttendable().getIdPair()[0] + " = " + getAttendable().getIdPair()[1] + "\n" +
                 "WHERE MessageID = " + getId();
 
         db.update(sql);
@@ -226,13 +245,14 @@ public class Message extends Model{
     @Override
     public void insertToDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
         String updateSql = "INSERT INTO MESSAGE\n" +
-                "(RecipientID, SenderID, SentTime, Description, IsInvitation)\n" +
+                "(RecipientID, SenderID, SentTime, Description, IsInvitation, " + getAttendable().getIdPair()[0] + ")\n" +
                 "VALUES (\n" +
                 getRecipient().getId() + ",\n" +
                 getSender().getId() + ",\n" +
                 "NOW(),\n" +
                 "'" + getDescription() + "',\n" +
-                String.valueOf(isInvitation()) + ")";
+                String.valueOf(isInvitation()) + ",\n" +
+                "" + getAttendable().getIdPair()[1] + ")";
         System.out.println(updateSql);
         db.update(updateSql);
         String querySql = "SELECT MAX(MessageID) AS ID FROM MESSAGE";

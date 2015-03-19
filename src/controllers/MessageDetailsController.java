@@ -7,6 +7,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import models.Appointment;
+import models.Attendable;
+import models.Group;
 import models.Message;
 import util.DB;
 import util.ModelCache;
@@ -77,35 +79,21 @@ public class MessageDetailsController extends MessageController{
         descriptionLabel.setText("Descripion: ");
         invitationLabel.setText("Accept invitation: ");
         list.add(0, "Accept");
-        list.add(1,"Decline");
+        list.add(1, "Decline");
         comboBox.setItems(list);
         comboBox.setOnAction((event) -> {
                     selectedChoice = comboBox.getSelectionModel().getSelectedItem();
-                    if (selectedChoice == "Accept") {
-                        int appID = message.getAppointmentID();
-                        try {
-                            Appointment appointment = Appointment.getById(appID, db, mc);
-                            appointment.acceptInvite(getApplication().getUser());
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        } catch (DBConnectionException e) {
-                            e.printStackTrace();
-                        }
-                        getStage().close();
-
-                    } else if (selectedChoice == "Decline") {
-                        int appID = message.getAppointmentID();
-                        try {
-                            Appointment appointment = Appointment.getById(appID, db, mc);
-                            appointment.declineInvite(getApplication().getUser());
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        } catch (DBConnectionException e) {
-                            e.printStackTrace();
-                        }
-                        getStage().close();
-
+                    Attendable attendable = message.getAttendable();
+                    if(selectedChoice.equals("Accept")) attendable.acceptInvite(message.getRecipient());
+                    else if(selectedChoice.equals("Decline")) attendable.declineInvite(message.getRecipient());
+                    try {
+                        attendable.saveToDB(getApplication().getDb(), getApplication().getModelCache());
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    } catch (DBConnectionException e) {
+                        e.printStackTrace();
                     }
+                    this.getStage().close();
                 }
         );
 
