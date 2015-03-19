@@ -40,9 +40,9 @@
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                         </GridPane>
-                        <Label prefHeight="141.0" prefWidth="680.0" text="   Calendar">
+                        <Label fx:id="CalenderLabel" prefHeight="141.0" prefWidth="680.0">
                             <font>
-                                <Font size="50.0" />
+                                <Font name="Monotype Corsiva" size="60.0" />
                             </font>
                         </Label>
                         <GridPane gridLinesVisible="true" GridPane.rowIndex="1">

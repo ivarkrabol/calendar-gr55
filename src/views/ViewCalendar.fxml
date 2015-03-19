@@ -57,9 +57,9 @@
                                 <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlePersons" prefHeight="158.0" prefWidth="172.0" text="Persons" GridPane.rowIndex="2" />
                             </children>
                         </GridPane>
-                        <Label prefHeight="141.0" prefWidth="680.0" text="   Calendar">
+                        <Label fx:id="CalenderLabel" prefHeight="141.0" prefWidth="680.0">
                             <font>
-                                <Font size="50.0" />
+                                <Font name="Monotype Corsiva" size="60.0" />
                             </font>
                         </Label>
                         <GridPane gridLinesVisible="true" GridPane.rowIndex="1">

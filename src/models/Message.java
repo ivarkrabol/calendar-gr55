@@ -19,6 +19,25 @@ public class Message extends Model{
     private int id;
     private User recipient;
     private User sender;
+    private int GroupID;
+
+    public int getGroupID() {
+        return GroupID;
+    }
+
+    public void setGroupID(int groupID) {
+        GroupID = groupID;
+    }
+
+    public int getAppointmentID() {
+        return AppointmentID;
+    }
+
+    public void setAppointmentID(int appointmentID) {
+        AppointmentID = appointmentID;
+    }
+
+    private int AppointmentID;
     private SimpleStringProperty username = new SimpleStringProperty(); //FIXME: I don't get this.
     private SimpleStringProperty description = new SimpleStringProperty();
     private SimpleBooleanProperty hasBeenRead = new SimpleBooleanProperty();
@@ -163,10 +182,12 @@ public class Message extends Model{
 
 
 
+
+
     @Override
     public void refreshFromDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
         String sql = "" +
-                "SELECT RecipientID, SenderID, SentTime, Description, IsInvitation, HasBeenRead\n" +
+                "SELECT RecipientID, SenderID, SentTime, Description, IsInvitation, HasBeenRead, AppointmentID, GroupID\n" +
                 "FROM MESSAGE\n" +
                 "WHERE MessageID = " + id;
 
@@ -177,6 +198,8 @@ public class Message extends Model{
         setSentTime(results.getTimestamp("SentTime"));
         setDescription(results.getString("Description"));
         setInvitation(results.getBoolean("IsInvitation"));
+        setAppointmentID(results.getInt("AppointmentID"));
+        setGroupID(results.getInt("GroupID"));
         setRead(results.getBoolean("HasBeenRead"));
         if(results.next()) throw new SQLException("Result not unique");
 
