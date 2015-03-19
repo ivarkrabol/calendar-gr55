@@ -32,6 +32,7 @@ public class MessageDetailsController extends MessageController{
     private Label invitationLabel;
     @FXML
     private ComboBox<String> comboBox;
+    private String selectedChoice;
 
     private Message message;
     private ObservableList<String> list = FXCollections.observableArrayList();
@@ -54,10 +55,20 @@ public class MessageDetailsController extends MessageController{
         receivedLabel.setText("Received: ");;
         descriptionLabel.setText("Descripion: ");
         invitationLabel.setText("Accept invitation: ");
-        list.add(0,"Accept");
+        list.add(0, "Accept");
         list.add(1,"Decline");
         comboBox.setItems(list);
-        
+        comboBox.setOnAction((event) -> {
+                    selectedChoice = comboBox.getSelectionModel().getSelectedItem();
+                    if (selectedChoice == "Accept") {
+
+
+                        getStage().close();
+
+                    }
+                }
+        );
+
 
     }
 

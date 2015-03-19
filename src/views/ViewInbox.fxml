@@ -46,8 +46,8 @@
                      </font></Label>
                   <TableView fx:id="inbox" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                      <columns>
-                        <TableColumn fx:id="read" maxWidth="1000.0" minWidth="-Infinity" prefWidth="103.0" />
-                        <TableColumn fx:id="from" maxWidth="1000.0" minWidth="-Infinity" prefWidth="297.0" text="From" />
+                        <TableColumn fx:id="read" maxWidth="1000.0" minWidth="-Infinity" prefWidth="148.0" text="Has been read" />
+                        <TableColumn fx:id="from" maxWidth="1000.0" minWidth="-Infinity" prefWidth="252.0" text="From" />
                         <TableColumn fx:id="msg" minWidth="-Infinity" prefWidth="600.0" text="Message" />
                         <TableColumn fx:id="recieved" maxWidth="1000.0" minWidth="-Infinity" prefWidth="200.0" text="Received" />
                      </columns>
