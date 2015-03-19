@@ -59,8 +59,8 @@ public class AddUserController extends Controller {
 		String error = "";
         if (!textFieldValid(fname)){error += "The user must have a first name\n";}
         if (!textFieldValid(lname)){error += "The user must have a last name\n";}
-        if (!textFieldValid(email)){error += "The user must have a  mail address\n";}
-        if (!textFieldValid(phonenumber)){error += "The user must have a phone number\n";}
+        if (!emailValid()){error += "Please enter a valid email address\n";}
+        if (!phonenumberValid()){error += "Please enter a valid phone number\n";}
         if (!textFieldValid(password)){error += "The user must have a password\n";}
         
         if(error.length()==0){return true;}
@@ -81,5 +81,27 @@ public class AddUserController extends Controller {
             setStyle(text, true);
             return true;
         }
+    }
+
+    private boolean phonenumberValid() {
+        if(textFieldValid(phonenumber)) {
+            try { Integer.parseInt(phonenumber.getText()); }
+            catch (NumberFormatException e) {
+                setStyle(phonenumber, false);
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private boolean emailValid() {
+        if(textFieldValid(email)) {
+            if(email.getText().matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}$")) {
+                return true;
+            }
+        }
+        setStyle(email, false);
+        return false;
     }
 }
