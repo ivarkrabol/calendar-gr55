@@ -38,8 +38,7 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button cancelButton="true" defaultButton="true" mnemonicParsing="false" onAction="#handleCancel" prefWidth="60.0" text="Cancel" GridPane.rowIndex="1" />
-                        <Button mnemonicParsing="false" onAction="#handleSave" prefWidth="60.0" text="Save" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Button cancelButton="true" defaultButton="true" mnemonicParsing="false" onAction="#handleCancel" prefWidth="60.0" text="Close" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                </children>
