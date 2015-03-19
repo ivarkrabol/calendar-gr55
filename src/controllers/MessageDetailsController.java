@@ -1,5 +1,7 @@
 package controllers;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -30,16 +32,44 @@ public class MessageDetailsController extends MessageController{
     private Label invitationLabel;
     @FXML
     private ComboBox<String> comboBox;
+    private String selectedChoice;
 
     private Message message;
+    private ObservableList<String> list = FXCollections.observableArrayList();
 
 
     public void setMessage(Message message) {
         this.message = message;
+        senderNameLabel.setText(message.getUsername());
+        descriptionInformationLabel.setText(message.getDescription());
+        timeLabel.setText(message.getSentTime().toString());
+    }
+
+    public void handleCloseWindow() {
+        getStage().close();
     }
 
 
     public void initialize(URL url, ResourceBundle resource) {
+        fromLabel.setText("From: ");
+        receivedLabel.setText("Received: ");;
+        descriptionLabel.setText("Descripion: ");
+        invitationLabel.setText("Accept invitation: ");
+        list.add(0, "Accept");
+        list.add(1,"Decline");
+        comboBox.setItems(list);
+        comboBox.setOnAction((event) -> {
+                    selectedChoice = comboBox.getSelectionModel().getSelectedItem();
+                    if (selectedChoice == "Accept") {
+
+
+                        getStage().close();
+
+                    }
+                }
+        );
+
+
     }
 
 
