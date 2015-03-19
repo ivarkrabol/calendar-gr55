@@ -69,9 +69,7 @@ public class EditAppointmentController extends Controller{
     @FXML public void endTimeTextFieldFocusChange() {endTimeValid();}
     @FXML public void handleInviteParticipants(){
 //        System.out.println(appointmentModel.getAdministrator().getEmail());
-        if(!save()) return;
-        System.out.println(appointmentModel.getAdministrator().getId());
-        newInvitedStage("/views/InviteUser.fxml", "Invited participants", appointmentModel);
+        if(save()) newInvitedStage("/views/InviteUser.fxml", "Invited participants", appointmentModel);
     }
 
 
@@ -115,7 +113,7 @@ public class EditAppointmentController extends Controller{
                         || !appointmentModel.getEndDate().equals(endDate)
                         || !appointmentModel.getStartTime().equals(startTime)
                         || !appointmentModel.getEndTime().equals(endTime)
-                        || !appointmentModel.getRoom().equals(room);
+                        || (room != null && !appointmentModel.getRoom().equals(room));
                 if (changed) {
                     try {
                         DB db = getApplication().getDb();
@@ -161,7 +159,6 @@ public class EditAppointmentController extends Controller{
         dateField.setValue(appointmentModel.getStartDate());
         endDateField.setValue(appointmentModel.getEndDate());
         if(date == null) roomBox.setValue(appointmentModel.getRoom());
-        else setRooms();
         startTimeTextFieldFocusChange();
         endTimeTextFieldFocusChange();
         disableFields(true);
@@ -282,7 +279,8 @@ public class EditAppointmentController extends Controller{
     public void setRooms() {
         LocalDateTime start = LocalDateTime.of(date, startTime);
         LocalDateTime end = LocalDateTime.of(endDate, endTime);
-        try{roomBox.setItems(Room.getAvailable(start, end, getApplication().getDb(), getApplication().getModelCache()));
+        try{
+            roomBox.setItems(Room.getAvailable(start, end, getApplication().getDb(), getApplication().getModelCache()));
         	if(appointmentModel != null){roomBox.setValue(appointmentModel.getRoom());}
         }
         catch (SQLException e){e.printStackTrace();}

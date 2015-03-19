@@ -29,7 +29,7 @@ public class Controller implements Initializable{
     public void setApp(Main application){
         Controller.application = application;
     }
-    protected void newStage(String location, String title, Controller controller){
+    protected void newStage(String location, String title){
         Stage currentStage = new Stage();
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(location));
@@ -37,7 +37,7 @@ public class Controller implements Initializable{
             currentStage.setTitle(title);
             //currentStage.initModality(Modality.APPLICATION_MODAL);
             currentStage.setScene(new Scene(root));
-            //Controller controller = fxmlLoader.getController();
+            Controller controller = fxmlLoader.getController();
             controller.setApp(getApplication());
             controller.setStage(currentStage);
             currentStage.show();
