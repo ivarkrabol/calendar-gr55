@@ -168,6 +168,12 @@ public class Message extends Model{
     }
 
 
+    public static void deleteMessage(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {
+        db.update("DELETE FROM MESSAGE WHERE MessageID =" + id);
+    }
+
+
+
     public static Message getById(int id, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         Message message;
         if(mc.contains(Message.class, id)) message = mc.get(Message.class, id);

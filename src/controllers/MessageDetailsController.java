@@ -57,6 +57,13 @@ public class MessageDetailsController extends MessageController{
 
     }
 
+    public void handleDeleteButton() throws SQLException, DBConnectionException {
+        DB db = getApplication().getDb();
+        ModelCache mc = getApplication().getModelCache();
+        Message.deleteMessage(message.getId(), db, mc);
+        getStage().close();
+    }
+
     public void handleCloseWindow() {
         getStage().close();
     }

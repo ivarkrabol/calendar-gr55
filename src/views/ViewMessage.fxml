@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
@@ -41,12 +42,16 @@
                <children>
                   <Label fx:id="fromLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label fx:id="receivedLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <Label fx:id="descriptionLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <Label fx:id="descriptionLabel" layoutY="100.0" text="Label" translateY="-50.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin></Label>
                   <Label fx:id="invitationLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                   <Label fx:id="senderNameLabel" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                   <Label fx:id="timeLabel" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                  <Label fx:id="descriptionInformationLabel" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                  <ComboBox fx:id = "comboBox" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                  <Label fx:id="descriptionInformationLabel" text="Label" translateY="-50.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                  <ComboBox fx:id="comboBox" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                  <Button fx:id = "deleteButton" onAction="#handleDeleteButton" mnemonicParsing="false" text="Delete Message" translateX="200.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                </children>
                 </GridPane>
             </center>
