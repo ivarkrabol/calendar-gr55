@@ -3,6 +3,7 @@ package models;
 import exceptions.DBConnectionException;
 import javafx.beans.property.ObjectPropertyBase;
 import javafx.beans.property.Property;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,6 +21,7 @@ public class Message extends Model{
     private User sender;
     private SimpleStringProperty username = new SimpleStringProperty(); //FIXME: I don't get this.
     private SimpleStringProperty description = new SimpleStringProperty();
+    private SimpleBooleanProperty hasBeenRead = new SimpleBooleanProperty();
     private Property<Timestamp> sentTime =  new ObjectPropertyBase<Timestamp>(null) {
 
         @Override
@@ -66,6 +68,9 @@ public class Message extends Model{
         return sentTime;
     }
 
+    public SimpleBooleanProperty hasBeenReadProperty() {
+        return hasBeenRead;
+    }
 
     private boolean invitation;
     private boolean read;
@@ -103,7 +108,6 @@ public class Message extends Model{
     }
 
 
-
     public String getDescription() {
         return description.get();
     }
@@ -125,11 +129,11 @@ public class Message extends Model{
     }
 
     public boolean isRead() {
-        return read;
+        return hasBeenRead.get();
     }
 
     public void setRead(boolean read) {
-        this.read = read;
+        this.hasBeenRead.set(read);
     }
 
     //should move this method into User? Ivar says no (maybe rename this, and create method in User calling this method)
@@ -185,8 +189,8 @@ public class Message extends Model{
                 "RecipientID = " + getRecipient().getId() + ",\n" +
                 "SenderID = " + getSender().getId() + ",\n" +
                 "Description = '" + getDescription() + "',\n" +
-                "IsInvitation = '" + isInvitation() + "',\n" +
-                "HasBeenRead = '" + isRead() + "'\n" +
+                "IsInvitation = '" + (isInvitation() ? 1 : 0) + "',\n" +
+                "HasBeenRead = " + (isRead() ? 1 : 0) + "\n" +
                 "WHERE MessageID = " + getId();
 
         db.update(sql);

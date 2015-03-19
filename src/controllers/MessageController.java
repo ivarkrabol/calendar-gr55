@@ -1,16 +1,17 @@
 package controllers;
 
 import exceptions.DBConnectionException;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import models.Message;
+import util.DB;
+import util.ModelCache;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -34,6 +35,10 @@ public class MessageController extends UserController {
     private TableColumn<Message, String> msg;
     @FXML
     private TableColumn<Message, Timestamp> recieved;
+    @FXML
+    private TableColumn<Message, Boolean> read;
+
+
 
 
 
@@ -53,8 +58,19 @@ public class MessageController extends UserController {
         }
     }
 
+    public void setReadStyle(TableColumn<Message, String> tableColumn, Boolean b) {
+        if (b) { tableColumn.setStyle("-fx-background-color: #CCFFCC;");
+
+        } else {
+            tableColumn.setStyle("-fx-background-color: #FFB2B2;");
+        }
+    }
+
     public void setInbox() throws SQLException, DBConnectionException {
+        DB db = getApplication().getDb();
+        ModelCache mc = getApplication().getModelCache();
         inbox.setItems(Message.getInbox(getApplication().getUser().getId(), getApplication().getDb(), getApplication().getModelCache()));
+        read.setCellValueFactory(cellData -> cellData.getValue().hasBeenReadProperty());
         from.setCellValueFactory(cellData -> cellData.getValue().usernameProperty());
         msg.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
         recieved.setCellValueFactory(cellData -> cellData.getValue().sentTimeProperty());
@@ -63,13 +79,20 @@ public class MessageController extends UserController {
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     Message rowData = row.getItem();
+                    rowData.setRead(true);
+                    try {
+                        rowData.saveToDB(db, mc);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    } catch (DBConnectionException e) {
+                        e.printStackTrace();
+                    }
                     newMessageStage("/views/ViewMessage.fxml", "Message details", rowData);
                 }
             });
             return row;
         });
     }
-
 
 
 
