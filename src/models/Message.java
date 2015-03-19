@@ -81,6 +81,7 @@ public class Message extends Model{
 
     public Message(User recipient, User sender, boolean invitation) {
         this.recipient = recipient;
+        this.sender = sender;
         this.invitation = invitation;
     }
 

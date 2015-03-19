@@ -68,9 +68,9 @@ public class EditAppointmentController extends Controller{
     }
     @FXML public void endTimeTextFieldFocusChange() {endTimeValid();}
     @FXML public void handleInviteParticipants(){
-//        if(this.appointmentModel==null){
-//            appointmentModel = new Appointment();
-//        }
+//        System.out.println(appointmentModel.getAdministrator().getEmail());
+        if(!save()) return;
+        System.out.println(appointmentModel.getAdministrator().getId());
         newInvitedStage("/views/InviteUser.fxml", "Invited participants", appointmentModel);
     }
 
@@ -94,8 +94,12 @@ public class EditAppointmentController extends Controller{
         inviteButton.setDisable(b);
         roomBox.setDisable(b);}
     @FXML public void handleSave() {
-        if (inputValid()){
-            if(this.appointmentModel==null){
+        if(save()) this.getStage().close();
+    }
+
+    private boolean save() {
+        if (inputValid()) {
+            if (this.appointmentModel == null) {
                 appointmentModel = new Appointment(titleField.getText(), descriptionField.getText(), date, endDate, startTime, endTime, room, getApplication().getUser());
                 try {
                     appointmentModel.insertToDB(getApplication().getDb(), getApplication().getModelCache());
@@ -104,7 +108,7 @@ public class EditAppointmentController extends Controller{
                 } catch (DBConnectionException e) {
                     e.printStackTrace();
                 }
-            }else{
+            } else {
                 boolean changed = !appointmentModel.getTitle().equals(titleField.getText())
                         || !appointmentModel.getDescription().equals(descriptionField.getText())
                         || !appointmentModel.getStartDate().equals(date)
@@ -112,27 +116,28 @@ public class EditAppointmentController extends Controller{
                         || !appointmentModel.getStartTime().equals(startTime)
                         || !appointmentModel.getEndTime().equals(endTime)
                         || !appointmentModel.getRoom().equals(room);
-                if(changed) {
-                    try{
+                if (changed) {
+                    try {
                         DB db = getApplication().getDb();
                         ModelCache mc = getApplication().getModelCache();
                         String messageContent = "Changes have been made to '" + titleField.getText() + "'.";
-                        for(User recipient : appointmentModel.getInvitedParticipants()) {
+                        for (User recipient : appointmentModel.getInvitedParticipants()) {
                             new Message(recipient, getApplication().getUser(), messageContent, false).insertToDB(db, mc);
                         }
                         appointmentModel.setAppointment(titleField.getText(), descriptionField.getText(), date, endDate, startTime, endTime, room);
                         appointmentModel.saveToDB(db, mc);
-                    }
-                    catch (SQLException e){
+                    } catch (SQLException e) {
                         e.printStackTrace();
-                    }catch (DBConnectionException e){
+                    } catch (DBConnectionException e) {
                         e.printStackTrace();
                     }
                 }
+            }
+            return true;
         }
-            this.getStage().close();
-        }
+        return false;
     }
+
     @FXML public void handleDelete() {
         if(appointmentModel != null){
             try{appointmentModel.removeFromDB(getApplication().getDb());}

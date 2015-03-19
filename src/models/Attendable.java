@@ -59,6 +59,7 @@ public abstract class Attendable extends Model {
         if(responses.containsKey(user)) throw new AlreadyInvitedException();
         responses.put(user, Response.NOT_ANSWERED);
         Message invitation = new Message(user, administrator, true);
+        System.out.println(invitation.getSender().getId());
         invitation.setDescription(getInvitationText());
         return invitation;
     }
@@ -101,6 +102,7 @@ public abstract class Attendable extends Model {
     }
 
     private void updateParticipantsDB(DB db) throws SQLException, DBConnectionException {
+        if(responses.isEmpty()) return;
         StringBuilder sql = new StringBuilder();
         sql.append("INSERT INTO `PARTICIPANTS`\n");
         sql.append("(`UserID`, `" + getIdPair()[0] + "`, `Response`)\n");
