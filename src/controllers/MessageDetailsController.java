@@ -36,10 +36,22 @@ public class MessageDetailsController extends MessageController{
 
     public void setMessage(Message message) {
         this.message = message;
+        senderNameLabel.setText(message.getUsername());
+        descriptionInformationLabel.setText(message.getDescription());
+        timeLabel.setText(message.getSentTime().toString());
+    }
+
+    public void handleCloseWindow() {
+        getStage().close();
     }
 
 
     public void initialize(URL url, ResourceBundle resource) {
+        fromLabel.setText("From: ");
+        receivedLabel.setText("Received: ");;
+        descriptionLabel.setText("Descripion: ");
+        invitationLabel.setText("Accept invitation: ");
+
     }
 
 

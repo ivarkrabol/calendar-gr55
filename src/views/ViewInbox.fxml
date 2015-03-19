@@ -9,7 +9,7 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MessageController">
+<AnchorPane prefHeight="789.0" prefWidth="1192.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MessageController">
     <children>
         <BorderPane layoutX="0.5" layoutY="7.0" minWidth="1000.0" prefHeight="800.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <top>
@@ -42,11 +42,12 @@
                     <children>
                   <Label prefHeight="116.0" prefWidth="180.0" text="INBOX">
                      <font>
-                        <Font size="30.0" />
+                        <Font name="System Bold" size="30.0" />
                      </font></Label>
                   <TableView fx:id="inbox" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                      <columns>
-                        <TableColumn fx:id="from" maxWidth="1000.0" minWidth="-Infinity" prefWidth="200.0" text="From" />
+                        <TableColumn fx:id="read" maxWidth="1000.0" minWidth="-Infinity" prefWidth="103.0" />
+                        <TableColumn fx:id="from" maxWidth="1000.0" minWidth="-Infinity" prefWidth="297.0" text="From" />
                         <TableColumn fx:id="msg" minWidth="-Infinity" prefWidth="600.0" text="Message" />
                         <TableColumn fx:id="recieved" maxWidth="1000.0" minWidth="-Infinity" prefWidth="200.0" text="Received" />
                      </columns>

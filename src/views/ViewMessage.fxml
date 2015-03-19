@@ -17,10 +17,7 @@
                     <menus>
                         <Menu mnemonicParsing="false" text="Menu">
                             <items>
-                                <MenuItem mnemonicParsing="false" onAction="#handleBack" text="Back" />
-                            </items>
-                            <items>
-                                <MenuItem mnemonicParsing="false" onAction="#handleLogout" text="Logout" />
+                                <MenuItem mnemonicParsing="false" onAction="#handleCloseWindow" text="Close Window" />
                             </items>
                         </Menu>
                     </menus>
