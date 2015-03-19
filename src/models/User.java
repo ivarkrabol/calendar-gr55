@@ -87,6 +87,10 @@ public class User extends Model{
         this.password = password;
     }
 
+    private String getPassword() {
+        return password;
+    }
+
     public Calendar getCalendar() {
         return calendar;
     }
@@ -190,12 +194,13 @@ public class User extends Model{
     @Override
     public void insertToDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
         String updateSql = "INSERT INTO USER\n" +
-                "(EMail, LastName, FirstName, PhoneNr)\n" +
+                "(EMail, LastName, FirstName, PhoneNr, Password)\n" +
                 "VALUES (\n" +
                 "'" + getEmail() + "',\n" +
                 "'" + getLastName() + "',\n" +
                 "'" + getFirstName() + "',\n" +
-                "'" + getPhoneNr() + "' );";
+                "'" + getPhoneNr() + "',\n" +
+                "'" + getPassword() + "' );";
         db.update(updateSql);
         String querySql = "SELECT MAX(UserID) AS ID FROM USER";
         ResultSet results = db.query(querySql);

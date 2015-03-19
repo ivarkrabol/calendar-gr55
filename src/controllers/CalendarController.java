@@ -112,7 +112,7 @@ public class CalendarController extends Controller{
     }
 
     @FXML public void handleNewAppoinment() {
-        newStage("/views/EditAppointment.fxml", "New Appointment", new EditAppointmentController());
+        newStage("/views/EditAppointment.fxml", "New Appointment");
     }
 
     public void handleEditAppoinment(Appointment a) {
@@ -120,16 +120,16 @@ public class CalendarController extends Controller{
     }
 
     @FXML public void handleNewGroup() {
-        newStage("/views/EditGroup.fxml", "New Group", new EditGroupController());
+        newStage("/views/EditGroup.fxml", "New Group");
     }
     @FXML public void handlePersons() {
-        newStage("/views/SearchUser.fxml", "Persons", new SearchController());
+        newStage("/views/SearchUser.fxml", "Persons");
     }
     @FXML public void handleAddUser() {
-        newStage("/views/AddUser.fxml", "Add user", new AddUserController());
+        newStage("/views/AddUser.fxml", "Add user");
     }
     @FXML public void handleAddRoom() {
-        newStage("/views/AddRoom.fxml", "Add room", new AddRoomController());
+        newStage("/views/AddRoom.fxml", "Add room");
     }
 
     @FXML public void weekTextFieldFocusChange() {

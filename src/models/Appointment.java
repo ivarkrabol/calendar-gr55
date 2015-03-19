@@ -320,9 +320,9 @@ public class Appointment extends Attendable implements Comparable<Appointment>  
         }
         db.update(sql);
 
-        refreshFromDB(db, mc);
-
         super.saveToDB(db, mc);
+
+        refreshFromDB(db, mc);
     }
 
     @Override
@@ -346,9 +346,9 @@ public class Appointment extends Attendable implements Comparable<Appointment>  
             db.update(room);
         }
 
-        refreshFromDB(db, mc);
-
         super.insertToDB(db, mc);
+
+        refreshFromDB(db, mc);
     }
 
     public void removeFromDB(DB db) throws SQLException, DBConnectionException {
@@ -379,6 +379,16 @@ public class Appointment extends Attendable implements Comparable<Appointment>  
         }else{ return 0;}
     }
 
-
-
+    @Override
+    public String toString() {
+        return "Appointment{" +
+                "id=" + getId() +
+                ", title=" + getTitle() +
+                ", room=" + getRoom() +
+                ", startDate=" + getStartDate() +
+                ", startTime=" + getStartTime() +
+                ", endDate=" + getEndDate() +
+                ", endTime=" + getEndTime() +
+                '}';
+    }
 }

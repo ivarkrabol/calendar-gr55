@@ -48,21 +48,31 @@ public class Room extends Model{
 
     public static ObservableList<Room> getAvailable(LocalDateTime start, LocalDateTime end, DB db, ModelCache mc) throws SQLException, DBConnectionException {
         ObservableList<Room> rooms = FXCollections.observableArrayList();
-        String sql2 = "SELECT r.RoomName\n" +
-                "FROM ROOM as r \n" +
-                "WHERE r.Availability = 1  and r.roomname not in\n" +
-                "(select a.roomname from APPOINTMENT as a where \n" +
-                "a.StartTime >= '" +start+"'\n" +
-                "AND a.EndTime <= '" +end+"')";
-        
-        String sql = "select RoomName from ROOM as r where r.RoomName != ANY\n" +
-        			" (select RoomName from APPOINTMENT where \n" +
-        			" StartTime between '" +start+ "' and '"+end+"'\n" +
-        			" OR EndTime between  '" +start+ "' and '" +end+ "')" +
-        			"OR r.RoomName not in (select RoomName from APPOINTMENT where "+
-        			" StartTime between '" +start+ "' and '"+end+"'\n" +
-        			" OR EndTime between  '" +start+ "' and '" +end+ "')";
-        System.out.println(sql);
+//        String sql = "SELECT r.RoomName\n" +
+//                "FROM ROOM as r \n" +
+//                "WHERE r.Availability = 1  and r.roomname not in\n" +
+//                "(select a.roomname from APPOINTMENT as a where \n" +
+//                "a.StartTime >= '" +start+"'\n" +
+//                "AND a.EndTime <= '" +end+"')";
+//
+//        String sql = "select RoomName from ROOM as r where r.RoomName != ANY\n" +
+//        			" (select RoomName from APPOINTMENT where \n" +
+//        			" StartTime between '" +start+ "' and '"+end+"'\n" +
+//        			" OR EndTime between  '" +start+ "' and '" +end+ "')" +
+//        			"OR r.RoomName not in (select RoomName from APPOINTMENT where "+
+//        			" StartTime between '" +start+ "' and '"+end+"'\n" +
+//        			" OR EndTime between  '" +start+ "' and '" +end+ "')";
+
+        // This! I hope
+        String sql = "SELECT `r`.`RoomName` FROM `ROOM` `r`\n" +
+                "LEFT JOIN (\n" +
+                "SELECT `RoomName` as `arn` FROM `APPOINTMENT`\n" +
+                "WHERE `StartTime` < TIMESTAMP('" + end + "')\n" +
+                "AND `EndTime` > TIMESTAMP('" + start + "')\n" +
+                ") AS `a` ON `r`.`RoomName` = `arn`\n" +
+                "WHERE `arn` IS NULL";
+
+//        System.out.println(sql);
         ResultSet results = db.query(sql);
         while(results.next()) {
             rooms.add(getByName(results.getString("RoomName"), db, mc));

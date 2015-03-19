@@ -26,7 +26,7 @@ public class Controller implements Initializable{
     public void setApp(Main application){
         Controller.application = application;
     }
-    protected void newStage(String location, String title, Controller Controller){
+    protected void newStage(String location, String title){
         Stage currentStage = new Stage();
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(location));

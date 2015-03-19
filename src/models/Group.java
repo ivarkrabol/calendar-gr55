@@ -119,6 +119,8 @@ public class Group extends Attendable {
         setAdministrator(User.getById(results.getInt("AdministratorID"), db, mc));
         if (results.next()) throw new SQLException("Result not unique");
 
+        super.refreshFromDB(db, mc);
+
     }
 
     @Override
@@ -130,6 +132,8 @@ public class Group extends Attendable {
                 "`AdministratorID` = " + getAdministrator().getId() + ",\n" +
                 "WHERE UserID = " + getId();
         db.update(sql);
+
+        super.saveToDB(db, mc);
 
         refreshFromDB(db, mc);
     }
@@ -148,6 +152,8 @@ public class Group extends Attendable {
         ResultSet results = db.query(querySql);
         if (!results.next()) throw new SQLException("This shouldn't happen. Sooo...");
         setId(results.getInt("ID"));
+
+        super.insertToDB(db, mc);
 
         refreshFromDB(db, mc);
     }
