@@ -178,11 +178,6 @@ public class Message extends Model{
         return message;
     }
 
-
-
-
-
-
     @Override
     public void refreshFromDB(DB db, ModelCache mc) throws SQLException, DBConnectionException {
         String sql = "" +

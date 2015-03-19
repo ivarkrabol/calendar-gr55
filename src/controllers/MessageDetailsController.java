@@ -1,13 +1,18 @@
 package controllers;
 
+import exceptions.DBConnectionException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import models.Appointment;
 import models.Message;
+import util.DB;
+import util.ModelCache;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 /**
@@ -43,6 +48,13 @@ public class MessageDetailsController extends MessageController{
         senderNameLabel.setText(message.getUsername());
         descriptionInformationLabel.setText(message.getDescription());
         timeLabel.setText(message.getSentTime().toString());
+        if (!message.isInvitation()) {
+            comboBox.setVisible(false);
+            invitationLabel.setVisible(false);
+        }
+
+
+
     }
 
     public void handleCloseWindow() {
@@ -51,6 +63,8 @@ public class MessageDetailsController extends MessageController{
 
 
     public void initialize(URL url, ResourceBundle resource) {
+        DB db = getApplication().getDb();
+        ModelCache mc = getApplication().getModelCache();
         fromLabel.setText("From: ");
         receivedLabel.setText("Received: ");;
         descriptionLabel.setText("Descripion: ");
@@ -61,13 +75,33 @@ public class MessageDetailsController extends MessageController{
         comboBox.setOnAction((event) -> {
                     selectedChoice = comboBox.getSelectionModel().getSelectedItem();
                     if (selectedChoice == "Accept") {
+                        int appID = message.getAppointmentID();
+                        try {
+                            Appointment appointment = Appointment.getById(appID, db, mc);
+                            appointment.acceptInvite(getApplication().getUser());
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        } catch (DBConnectionException e) {
+                            e.printStackTrace();
+                        }
+                        getStage().close();
 
-
+                    } else if (selectedChoice == "Decline") {
+                        int appID = message.getAppointmentID();
+                        try {
+                            Appointment appointment = Appointment.getById(appID, db, mc);
+                            appointment.declineInvite(getApplication().getUser());
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        } catch (DBConnectionException e) {
+                            e.printStackTrace();
+                        }
                         getStage().close();
 
                     }
                 }
         );
+
 
 
     }

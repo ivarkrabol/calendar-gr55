@@ -108,7 +108,7 @@ public class MessageController extends UserController {
     }
 
 
-    public void refreshInbox() {
+    public void refreshInbox() throws SQLException, DBConnectionException {
         initialize(url, resource);
 
     }

@@ -1,20 +1,20 @@
 package controllers;
 
-import java.net.URL;
-import java.sql.SQLException;
-import java.util.ResourceBundle;
-import exceptions.DBConnectionException;
 import application.Main;
-import javafx.scene.image.Image;
-import models.Group;
-import models.User;
+import exceptions.DBConnectionException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
+import models.Group;
+import models.User;
 
 import javax.swing.text.html.ImageView;
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.ResourceBundle;
 
 
 public class UserController extends Controller {
