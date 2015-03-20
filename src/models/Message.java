@@ -159,14 +159,6 @@ public class Message extends Model{
         this.attendable = attendable;
     }
 
-//    public AttendableType getAttendableType() {
-//        return attendableType;
-//    }
-//
-//    public void setAttendableType(AttendableType attendableType) {
-//        this.attendableType = attendableType;
-//    }
-
     //should move this method into User? Ivar says no (maybe rename this, and create method in User calling this method)
     public static ObservableList<Message> getInbox(int UserID, DB db, ModelCache mc) throws SQLException, DBConnectionException  {
         ResultSet rs;
@@ -213,11 +205,8 @@ public class Message extends Model{
         setRead(results.getBoolean("HasBeenRead"));
         int groupId = results.getInt("GroupID");
         if(results.wasNull()) {
-//            setAttendableType(AttendableType.APPOINTMENT);
-            System.out.println(results.getInt("AppointmentID"));
             setAttendable(Appointment.getById(results.getInt("AppointmentID"), db, mc));
         } else {
-//            setAttendableType(AttendableType.GROUP);
             setAttendable(Group.getById(groupId, db, mc));
         }
         if(results.next()) throw new SQLException("Result not unique");
@@ -253,7 +242,6 @@ public class Message extends Model{
                 "'" + getDescription() + "',\n" +
                 String.valueOf(isInvitation()) + ",\n" +
                 "" + getAttendable().getIdPair()[1] + ")";
-        System.out.println(updateSql);
         db.update(updateSql);
         String querySql = "SELECT MAX(MessageID) AS ID FROM MESSAGE";
 
