@@ -59,7 +59,7 @@
                         </GridPane>
                         <Label fx:id="CalenderLabel" prefHeight="141.0" prefWidth="680.0">
                             <font>
-                                <Font name="Monotype Corsiva" size="60.0" />
+                                <Font name="Monotype Corsiva" size="40.0" />
                             </font>
                         </Label>
                         <GridPane gridLinesVisible="true" GridPane.rowIndex="1">
