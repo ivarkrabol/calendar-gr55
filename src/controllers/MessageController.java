@@ -1,6 +1,7 @@
 package controllers;
 
 import exceptions.DBConnectionException;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -36,7 +37,7 @@ public class MessageController extends UserController {
     @FXML
     private TableColumn<Message, Timestamp> recieved;
     @FXML
-    private TableColumn<Message, Boolean> read;
+    private TableColumn<Message, String> read;
 
 
 
@@ -63,7 +64,7 @@ public class MessageController extends UserController {
         DB db = getApplication().getDb();
         ModelCache mc = getApplication().getModelCache();
         inbox.setItems(Message.getInbox(getApplication().getUser().getId(), getApplication().getDb(), getApplication().getModelCache()));
-        read.setCellValueFactory(cellData -> cellData.getValue().hasBeenReadProperty());
+        read.setCellValueFactory(cellData -> cellData.getValue().msgStatusProperty());
         from.setCellValueFactory(cellData -> cellData.getValue().usernameProperty());
         msg.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
         recieved.setCellValueFactory(cellData -> cellData.getValue().sentTimeProperty());

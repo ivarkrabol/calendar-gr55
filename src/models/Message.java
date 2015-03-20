@@ -37,6 +37,7 @@ public class Message extends Model{
     private SimpleStringProperty username = new SimpleStringProperty();
     private SimpleStringProperty description = new SimpleStringProperty();
     private SimpleBooleanProperty hasBeenRead = new SimpleBooleanProperty();
+    private SimpleStringProperty msgStatus = new SimpleStringProperty();
     private Property<Timestamp> sentTime =  new ObjectPropertyBase<Timestamp>(null) {
 
         @Override
@@ -105,6 +106,13 @@ public class Message extends Model{
     public SimpleBooleanProperty hasBeenReadProperty() {
         return hasBeenRead;
     }
+    ////////////
+    public SimpleStringProperty msgStatusProperty() {
+        return msgStatus;
+    }
+    public void setMsgStatus(SimpleStringProperty msgStatus) {
+        this.msgStatus = msgStatus;
+    }
 
     public int getId() {
         return id;
@@ -148,6 +156,12 @@ public class Message extends Model{
     }
 
     public void setRead(boolean read) {
+    	if(read==true){
+    		msgStatus.set("Read");
+    	}
+    	else if(read==false){
+    		msgStatus.set("New!");
+    	}
         this.hasBeenRead.set(read);
     }
 
