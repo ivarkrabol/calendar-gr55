@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Map;
+
 import exceptions.DBConnectionException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -11,11 +13,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
-import models.Message;
-import models.Room;
-import models.User;
+import models.*;
 import org.controlsfx.dialog.Dialogs;
-import models.Appointment;
 import javafx.fxml.FXML;
 import util.DB;
 import util.ModelCache;
@@ -118,8 +117,10 @@ public class EditAppointmentController extends Controller{
                     try {
                         DB db = getApplication().getDb();
                         ModelCache mc = getApplication().getModelCache();
-                        String messageContent = "Changes have been made to '" + titleField.getText() + "'.";
-                        for (User recipient : appointmentModel.getInvitedParticipants()) {
+                        String messageContent = "Changes have been made to " + titleField.getText() + "test.";
+                        Map<User, Attendable.Response> participants = appointmentModel.getResponses();
+                        for (User recipient : participants.keySet()) {
+                            if(participants.get(recipient) == Attendable.Response.HAS_DECLINED) continue;
                             new Message(recipient, getApplication().getUser(), messageContent, false, appointmentModel).insertToDB(db, mc);
                         }
                         appointmentModel.setAppointment(titleField.getText(), descriptionField.getText(), date, endDate, startTime, endTime, room);
