@@ -40,13 +40,6 @@ public class MessageController extends UserController {
 
 
 
-
-
-    @FXML
-    public void handleViewInbox() {
-
-    }
-
     @FXML
     public void handleBack() {
         try {

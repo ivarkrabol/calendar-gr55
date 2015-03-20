@@ -40,7 +40,7 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                  <Label prefHeight="116.0" prefWidth="180.0" text="INBOX">
+                  <Label prefHeight="116.0" prefWidth="180.0" text=" INBOX">
                      <font>
                         <Font name="System Bold" size="30.0" />
                      </font></Label>
