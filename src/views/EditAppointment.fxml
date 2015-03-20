@@ -31,7 +31,11 @@
                 <DatePicker fx:id="endDateField" onAction="#endDateFieldFocusChange" onKeyPressed="#endDateFieldFocusChange" promptText="MM/DD/YYYY" showWeekNumbers="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                 <TextField fx:id="startTimeField" onAction="#startTimeTextFieldFocusChange" onKeyPressed="#startTimeTextFieldFocusChange" promptText="10:00" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                 <TextField fx:id="endTimeField" onAction="#endTimeTextFieldFocusChange" onKeyPressed="#endTimeTextFieldFocusChange" promptText="12:00" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-
+                <Label prefHeight="57.0" prefWidth="171.0" text="   Title" GridPane.rowIndex="0" GridPane.columnIndex="0">
+                    <font>
+                        <Font size="18.0" />
+                    </font>
+                </Label>
                 <Label prefHeight="57.0" prefWidth="171.0" text="   Description" GridPane.rowIndex="1">
                     <font>
                         <Font size="18.0" />
